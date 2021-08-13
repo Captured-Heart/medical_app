@@ -1,16 +1,17 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:medical_app/Patients/Screens/page5_7/worriesPage.dart';
+import 'package:medical_app/Patients/Widgets/specialistProfile/addAnonymous.dart';
 import 'package:medical_app/Patients/Widgets/specialistProfile/reviewsContainer.dart';
 
-class DocProfileTabBarView extends StatelessWidget {
-  const DocProfileTabBarView({
+class RegDocProfileTabBarView extends StatelessWidget {
+  const RegDocProfileTabBarView({
     Key? key,
-    required this.size,
+    required this.size, this.press,
   }) : super(key: key);
 
   final Size size;
-
+final press;
   @override
   Widget build(BuildContext context) {
     return TabBarView(
@@ -91,16 +92,10 @@ class DocProfileTabBarView extends StatelessWidget {
         //?Reviews
         ListView(
           children: [
-            // AddAnnonymousReview(
-            //   size: size,
-            //   press: () {
-            //     Navigator.pop(context);
-            //     _showDialogFlash(
-            //       vertical: size.height * 0.04,
-            //       horizontal: size.width * 0.09,
-            //     );
-            //   },
-            // ),
+            AddAnnonymousReview(
+              size: size,
+              press:press,
+            ),
             ReviewsContainer(size: size),
             ReviewsContainer(size: size),
             ReviewsContainer(size: size),

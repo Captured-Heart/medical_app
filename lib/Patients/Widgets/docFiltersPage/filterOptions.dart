@@ -1,10 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:medical_app/Patients/Screens/page18/profileSettings.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/advSettings.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/main.dart';
-import 'package:medical_app/page1/topHeader.dart';
-import 'package:medical_app/page18/profileSettings.dart';
+import 'package:medical_app/Patients/Widgets/page1-4_Widgets/topHeader.dart';
 
 class FilterOptions extends StatelessWidget {
   const FilterOptions({

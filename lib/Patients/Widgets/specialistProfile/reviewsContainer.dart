@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medical_app/Patients/Screens/docProfile.dart';
+import 'package:medical_app/Patients/Widgets/specialistProfile/ratings.dart';
 
 class ReviewsContainer extends StatelessWidget {
   const ReviewsContainer({

@@ -1,19 +1,25 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:medical_app/Patients/Screens/appointMentPage.dart';
-import 'package:medical_app/Patients/Screens/docFilters.dart';
-import 'package:medical_app/Patients/Widgets/HomePage/allAndFavTabBarView.dart';
-import 'package:medical_app/Patients/Widgets/HomePage/allAndFavourites.dart';
+import 'package:medical_app/Patients/Screens/page5_7/appointMentPage.dart';
+import 'package:medical_app/Patients/Widgets/page1-4_Widgets/allAndFavTabBarView.dart';
+import 'package:medical_app/Patients/Widgets/page1-4_Widgets/allAndFavourites.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/specialistHeader.dart';
-import 'package:medical_app/Patients/Widgets/HomePage/accToRatingRow.dart';
-import 'package:medical_app/page1/topHeader.dart';
-import 'package:medical_app/page7/linkCard.dart';
-import 'package:medical_app/Patients/Screens/docProfile.dart';
-
+import 'package:medical_app/Patients/Widgets/page1-4_Widgets/accToRatingRow.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:medical_app/themes/theme.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+import 'Patients/Screens/page1-4/docFilters.dart';
+import 'Patients/Screens/page15/patientsProfile.dart';
+import 'Patients/Screens/page5_7/linkCard.dart';
+import 'Patients/Screens/page8-10/docProfile.dart';
+import 'Patients/Widgets/page1-4_Widgets/topHeader.dart';
+
+
+Future main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
   runApp(
       // DevicePreview(
       //   builder: (context) => MyApp(),
@@ -43,6 +49,8 @@ class MyApp extends StatelessWidget {
             AppointMentPage.routes: (context) => AppointMentPage(),
             LinkCardPage.routes: (context) => LinkCardPage(),
             DocProfile.routes: (context) => DocProfile(),
+            PatientsProfile.routes: (context) => PatientsProfile(),
+
           },
         );
       });

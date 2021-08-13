@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "41717460674",
+    "project_id": "medical-app-c7b63",
+    "storage_bucket": "medical-app-c7b63.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:41717460674:android:d6bb908aeaea56ca94155b",
+        "android_client_info": {
+          "package_name": "com.Captured_Heart.medical_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "41717460674-gfiivvb20qijs8m5k4sfuip40vkt56l4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCg8j89dodJ0XtFplmOlVXqjLAbdOo4Jnk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "41717460674-gfiivvb20qijs8m5k4sfuip40vkt56l4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
