@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:group_button/group_button.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/main.dart';
 import 'package:medical_app/Patients/Widgets/page1-4_Widgets/topHeader.dart';
@@ -17,7 +18,6 @@ class _AppointMentPageState extends State<AppointMentPage> {
   DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +35,13 @@ class _AppointMentPageState extends State<AppointMentPage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Container(
-              height: size.height * 0.53,
+              height: size.height * 0.57,
               margin: EdgeInsets.symmetric(
                 horizontal: size.width * 0.06,
               ),
               child: TableCalendar(
                 focusedDay: DateTime.now(),
+                rowHeight: 50,
                 firstDay: DateTime.utc(2010, 3, 14),
                 lastDay: DateTime.utc(2030, 3, 14),
                 headerStyle: HeaderStyle(
@@ -95,25 +96,52 @@ class _AppointMentPageState extends State<AppointMentPage> {
                       horizontal: size.width * 0.06,
                       vertical: size.width * 0.04,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ManButton(
-                          text: '12:30',
-                          bGcolor: Theme.of(context).buttonColor,
-                          textColor: Theme.of(context).primaryColor,
-                        ),
-                        ManButton(
-                          text: '14:00',
-                        ),
-                        ManButton(
-                          text: '15:30',
-                        ),
-                        ManButton(
-                          text: '17:00',
-                        ),
+                    child: GroupButton(
+                      isRadio: false,
+                      spacing: 10,
+                      runSpacing: 10,
+                      mainGroupAlignment: MainGroupAlignment.start,
+                      groupRunAlignment: GroupRunAlignment.center,
+                      crossGroupAlignment: CrossGroupAlignment.start,
+                      onSelected: (index, isSelected) =>
+                          print('$index button is selected'),
+                      buttons: [
+                        '12:30',
+                        '14:00',
+                        '15:30',
+                        '17:00',
                       ],
+                      unselectedTextStyle: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: Theme.of(context).highlightColor,
+                      ),
+                      buttonHeight: size.height * 0.035,
+                      unselectedColor: Colors.transparent,
+                      selectedColor: Theme.of(context).buttonColor,
+                      borderRadius: BorderRadius.circular(30),
+                      unselectedBorderColor:
+                          Theme.of(context).canvasColor.withOpacity(0.2),
+                      groupingType: GroupingType.wrap,
                     ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //   children: [
+                    //     ManButton(
+                    //       text: '12:30',
+                    //       bGcolor: Theme.of(context).buttonColor,
+                    //       textColor: Theme.of(context).primaryColor,
+                    //     ),
+                    //     ManButton(
+                    //       text: '14:00',
+                    //     ),
+                    //     ManButton(
+                    //       text: '15:30',
+                    //     ),
+                    //     ManButton(
+                    //       text: '17:00',
+                    //     ),
+                    //   ],
+                    // ),
                   )
                 ],
               ),
@@ -143,11 +171,11 @@ class BackIconToHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
+      padding: EdgeInsets.zero,
       icon: Icon(Icons.arrow_back_ios),
       iconSize: 20.0,
       onPressed: () {
-    Navigator.pushReplacementNamed(context, MyHomePage.routes);
-
+        Navigator.pushReplacementNamed(context, MyHomePage.routes);
       },
     );
   }

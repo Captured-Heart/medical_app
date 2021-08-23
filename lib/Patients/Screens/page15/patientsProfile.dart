@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medical_app/Patients/Screens/page18/profileSettings.dart';
@@ -55,13 +57,31 @@ class _PatientsProfileState extends State<PatientsProfile> {
                         MaterialPageRoute(
                             builder: (context) => ProfileSettings()));
                   },
-                  child: ProfPicAndName(
-                    size: size,
-                    imgString: 'assets/images/oleg.jpg',
-                    name: 'Oleg',
-                  ),
+                  child: FutureBuilder(
+                      future: getRecords(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                        if (snapshot.hasData) {
+                          return Row(
+                              children: snapshot.data!.docs
+                                  .map(
+                                    (document) => ProfPicAndName(
+                                      size: size,
+                                      imageUrl: document['imageUrl'],
+                                      // 'assets/images/oleg.jpg',
+                                      name: document['name'],
+                                    ),
+                                  )
+                                  .toList());
+                        } else {
+                          return Text('');
+                        }
+                      }),
                 ),
-                SizedBox(height: size.height * 0.03),
+                SizedBox(height: size.height * 0.01),
                 Divider(
                   thickness: 1,
                   // height: 50,
@@ -78,35 +98,57 @@ class _PatientsProfileState extends State<PatientsProfile> {
                     });
                   },
                 ),
-                Container(
-                  height: recordsExpand ? size.height * 0.076 : 0,
-                  color: Theme.of(context).primaryColor,
-                  margin: EdgeInsets.symmetric(vertical: size.height * 0.012),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      RecordsSubSection(
-                        size: size,
-                        title: 'May 23, 17:00',
-                        trailingWidget: Text('Specialist: Ivanov Ivan'),
-                        leadingWidget: VerticalDivider(
-                          thickness: 2,
-                          color: Color(0xff58A4EB),
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      RecordsSubSection(
-                        size: size,
-                        title: 'May 24, 13:00',
-                        trailingWidget: Text('Specialist: Ivanov Ivan'),
-                        leadingWidget: VerticalDivider(
-                          thickness: 2,
-                          color: Color(0xff58A4EB),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                recordsExpand
+                    ? Container(
+                        // height: recordsExpand ? size.height * size.height : 0,
+                        color: Theme.of(context).primaryColor,
+                        margin:
+                            EdgeInsets.symmetric(vertical: size.height * 0.012),
+                        child: FutureBuilder(
+                            future: getProfile(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              }
+                              if (snapshot.hasData) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ListView(
+                                      children: snapshot.data!.docs
+                                          .map(
+                                            (document) => Padding(
+                                              padding: EdgeInsets.only(
+                                                top: 3.0,
+                                              ),
+                                              child: RecordsSubSection(
+                                                size: size,
+                                                title: 'May 23, 17:00',
+                                                trailingWidget:
+                                                    Text(document['name']),
+                                                leadingWidget: VerticalDivider(
+                                                  thickness: 2,
+                                                  color: Color(0xff58A4EB),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                      shrinkWrap: true,
+                                    ),
+                                    SizedBox(height: 8),
+                                  ],
+                                );
+                              } else {
+                                return Center(
+                                    child: Text(
+                                        'Please Check your Network Connection'));
+                              }
+                            }),
+                      )
+                    : Container(),
 
                 //?CORRESPONDENCE
                 CorrespondenceProfileOptions(
@@ -117,41 +159,70 @@ class _PatientsProfileState extends State<PatientsProfile> {
                     });
                   },
                 ),
-                Container(
-                  height: correspondenceExpand ? size.height * 0.12 : 0,
-                  color: Theme.of(context).primaryColor,
-                  margin: EdgeInsets.symmetric(vertical: size.height * 0.012),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CorrespondenceSubSection(
-                        size: size,
-                        title: 'Ivanov Ivan',
-                        trailingWidget: Text(
-                          'Look',
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        leadingWidget: Image.asset('assets/images/ivan.png'),
-                      ),
-                      SizedBox(height: 10),
-                      CorrespondenceSubSection(
-                        size: size,
-                        title: 'Vetrov Peter',
-                        trailingWidget: Text(
-                          'Look',
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        leadingWidget: Image.asset('assets/images/peter.png'),
-                      ),
-                    ],
-                  ),
-                ),
+                correspondenceExpand
+                    ? FutureBuilder(
+                        future: getCorrespondence(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            return Container(
+                              color: Theme.of(context).primaryColor,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: size.height * 0.012),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    child: ListView(
+                                      children: snapshot.data!.docs
+                                          .map(
+                                            (document) => Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 5.0,
+                                              ),
+                                              child: CorrespondenceSubSection(
+                                                size: size,
+                                                title: document['name'],
+                                                trailingWidget: Text(
+                                                  'Look',
+                                                  style: TextStyle(
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                    color: Colors.blue,
+                                                  ),
+                                                ),
+                                                leadingWidget:
+                                                    CachedNetworkImage(
+                                                  imageUrl:
+                                                      document['imageUrl'],
+                                                  placeholder: (context, url) =>
+                                                      Center(
+                                                          child:
+                                                              CircularProgressIndicator(
+                                                    color: Theme.of(context)
+                                                        .buttonColor,
+                                                  )),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                      shrinkWrap: true,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                ],
+                              ),
+                            );
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        })
+                    : Container(),
 
 //?PAYMENT OPTIONS
                 PaymentProfileOptions(
@@ -162,53 +233,62 @@ class _PatientsProfileState extends State<PatientsProfile> {
                     });
                   },
                 ),
-                Container(
-                  height: paymentExpand ? size.height * 0.17 : 0,
-                  color: Theme.of(context).primaryColor,
-                  margin: EdgeInsets.symmetric(vertical: size.height * 0.012),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: size.width * 0.047,
-                          right: size.width * 0.047,
-                          top: size.height * 0.03,
-                        ),
-                        child: NumberSessionSumRow(),
-                      ),
+                paymentExpand
+                    ? FutureBuilder(
+                        future: getPayments(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            return Container(
+                              color: Theme.of(context).primaryColor,
+                              margin: EdgeInsets.symmetric(
+                                vertical: size.height * 0.012,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: size.width * 0.047,
+                                      right: size.width * 0.047,
+                                      top: size.height * 0.03,
+                                    ),
+                                    child: NumberSessionSumRow(),
+                                  ),
 
-                      //?PAYMENT_OPTION_ROW
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: size.width * 0.047,
-                          right: size.width * 0.047,
-                          top: size.height * 0.01,
-                        ),
-                        child: PaymentNumberSessionRow(
-                          leading: '345365',
-                          name: 'Ivanov Ivan',
-                          date: 'May 21, 17:00',
-                          sum: '2900₽',
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: size.width * 0.047,
-                          right: size.width * 0.047,
-                          top: size.height * 0.01,
-                        ),
-                        child: PaymentNumberSessionRow(
-                          leading: '845365',
-                          name: 'Ivanov Ivan',
-                          date: 'May 19, 17:00',
-                          sum: '2900₽',
-                        ),
-                      ),
-                      // SizedBox(height: 10),
-                    ],
-                  ),
-                ),
+                                  //?PAYMENT_OPTION_ROW
+                                  ListView(
+                                    children: snapshot.data!.docs
+                                        .map(
+                                          (document) => Padding(
+                                            padding: EdgeInsets.only(
+                                              left: size.width * 0.047,
+                                              right: size.width * 0.047,
+                                              top: size.height * 0.01,
+                                            ),
+                                            child: PaymentNumberSessionRow(
+                                                leading: document['number'],
+                                                // '345365',
+                                                name: document['name'],
+                                                // 'Ivanov Ivan',
+                                                date: document['date'],
+                                                //  'May 21, 17:00',
+                                                sum: '${document['price']}₽'
+                                                // '2900₽',
+                                                ),
+                                          ),
+                                        )
+                                        .toList(),
+                                    shrinkWrap: true,
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        })
+                    : Container(),
 
                 Divider(
                   thickness: 1,
@@ -304,4 +384,28 @@ class _PatientsProfileState extends State<PatientsProfile> {
       ),
     );
   }
+
+  var db = FirebaseFirestore.instance;
+
+  Future<QuerySnapshot> getRecords() async => await db
+      .collection('patients')
+      .doc('patientsID')
+      .collection('Records')
+      .get();
+
+  Future<QuerySnapshot> getCorrespondence() async => await db
+      .collection('patients')
+      .doc('patientsID')
+      .collection('favourites')
+      .get();
+  Future<QuerySnapshot> getPayments() async => await db
+      .collection('patients')
+      .doc('patientsID')
+      .collection('Payments')
+      .get();
+  Future<QuerySnapshot> getProfile() async => await db
+      .collection('patients')
+      .doc('patientsID')
+      .collection('Profile')
+      .get();
 }

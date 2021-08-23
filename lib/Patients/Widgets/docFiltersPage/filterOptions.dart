@@ -1,10 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:group_button/group_button.dart';
 import 'package:medical_app/Patients/Screens/page18/profileSettings.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/advSettings.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/main.dart';
 import 'package:medical_app/Patients/Widgets/page1-4_Widgets/topHeader.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class FilterOptions extends StatelessWidget {
   const FilterOptions({
@@ -21,7 +23,7 @@ class FilterOptions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: size.width,
-      height: advSettings ? size.height * 0.53 : size.height * 0.8,
+      height: advSettings ? size.height * 0.55 : size.height * 0.85,
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
         borderRadius: BorderRadiusDirectional.only(
@@ -41,11 +43,24 @@ class FilterOptions extends StatelessWidget {
           SizedBox(height: size.height * 0.03),
 
           //?MAN, WOMAN ROWOPTIONS (THEY MAYBE CLICKABLE AND SENT TO THE FIRESTORE)
-          ManWomanRowOptions(
-            text: 'Man',
-            text2: 'Woman',
-            text3: 'No Matter',
+          GroupButton(
+            isRadio: false,
+            spacing: 10,
+            onSelected: (index, isSelected) =>
+                print('$index button is selected'),
+            buttons: [
+              'Man',
+              'Woman',
+              'No Matter',
+            ],
+            unselectedColor: Colors.transparent,
+            selectedColor: Theme.of(context).buttonColor,
+            borderRadius: BorderRadius.circular(30),
+            unselectedBorderColor:
+                Theme.of(context).canvasColor.withOpacity(0.3),
+            groupingType: GroupingType.wrap,
           ),
+
           SizedBox(height: size.height * 0.05),
           Text(
             'What worries you?',
@@ -72,12 +87,42 @@ class FilterOptions extends StatelessWidget {
 
           //?ADD 2 SLIDERS
           !advSettings
-              ? Padding(
-                  padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                  child: LanguageFormInput(
-                    size: size,
-                    text: 'Language',
-                  ),
+              ? Column(
+                  children: [
+                    Text('Specialist experience 3-12 years '),
+                    SfRangeSlider(
+                      values: SfRangeValues(4.0, 28.0),
+                      onChanged: (onChanged) {},
+                      inactiveColor: Colors.red,
+                      activeColor: Theme.of(context).buttonColor,
+                      min: 0,
+                      max: 25,
+                      // thumbShape: Shape,
+                      showLabels: true,
+                      showTicks: true,
+                    ),
+                    Text('Price 1 500 - 17 500 ₽/hour'),
+                     SfRangeSlider(
+                      values: SfRangeValues(4.0, 28.0),
+                      onChanged: (onChanged) {},
+                      inactiveColor: Colors.red,
+                      activeColor: Theme.of(context).buttonColor,
+                      min: 1500,
+                      max: 20000,
+                      // thumbShape: Shape,
+                      showLabels: true,
+                      showTicks: true,
+                    ),
+                     
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: size.width * 0.05, vertical: 5),
+                      child: LanguageFormInput(
+                        size: size,
+                        text: 'Language',
+                      ),
+                    ),
+                  ],
                 )
               : Container(height: 0),
           SizedBox(height: size.height * 0.00005),
@@ -90,11 +135,11 @@ class FilterOptions extends StatelessWidget {
             size: size,
             text: 'Apply',
             horizontal: 0.25,
-            press: (){
+            press: () {
               Navigator.pushReplacementNamed(context, MyHomePage.routes);
             },
           ),
-          Spacer(),
+          Spacer(flex: 4),
         ],
       ),
     );

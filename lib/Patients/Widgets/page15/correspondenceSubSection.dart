@@ -15,12 +15,14 @@ class CorrespondenceSubSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: size.height * 0.05,
+      height: size.height * 0.055,
       margin: EdgeInsets.only(left: size.width * 0.03, right: size.width * 0.1),
       child: Row(
         children: [
           ClipRRect(
-              borderRadius: BorderRadius.circular(12), child: leadingWidget),
+            borderRadius: BorderRadius.all(Radius.circular(50)),
+            child: leadingWidget,
+          ),
           Expanded(
               child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.0),

@@ -1,12 +1,18 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:medical_app/Patients/Screens/page5_7/worriesPage.dart';
 import 'package:medical_app/Patients/Widgets/specialistProfile/reviewsContainer.dart';
 
 class DocProfileTabBarView extends StatelessWidget {
-  const DocProfileTabBarView({
+  final String about;
+
+  final String? reviewsId;
+
+  DocProfileTabBarView({
     Key? key,
     required this.size,
+    required this.about,  this.reviewsId,
   }) : super(key: key);
 
   final Size size;
@@ -16,40 +22,24 @@ class DocProfileTabBarView extends StatelessWidget {
     return TabBarView(
       children: [
         //?About
-        ListView(
-          children: [
-            ListTile(
-              title: Text(
-                '''Doctor of doctoral sciences. Great fellow, grandson granny, mommy's son. As my grandfather said - "I am your grandfather"''',
-                style: TextStyle(fontSize: 15),
-              ),
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              visualDensity:
-                  VisualDensity(horizontal: 0, vertical: -4),
-            ),
-            ListTile(
-              title: Text(
-                'Psychotherapist',
-                style: TextStyle(fontSize: 15),
-              ),
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              visualDensity:
-                  VisualDensity(horizontal: 0, vertical: -4),
-            ),
-            ListTile(
-              title: Text(
-                '10 years of experience',
-                style: TextStyle(fontSize: 15),
-              ),
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              visualDensity:
-                  VisualDensity(horizontal: 0, vertical: -4),
-            ),
-          ],
-        ),
+        FutureBuilder(
+          //! YOU MIGHT MANUALLY ADD THE STREAM HERE AFTER SOURCING FOR THE DOCiD
+            future: getAbout(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {}
+              return ListView(children: [
+                ListTile(
+                  title: Text(
+                    about,
+                    // '''Doctor of doctoral sciences. Great fellow, grandson granny, mommy's son. As my grandfather said - "I am your grandfather"''',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                ),
+              ]);
+            }),
 
         //?Education
         ListView(
@@ -61,8 +51,7 @@ class DocProfileTabBarView extends StatelessWidget {
               ),
               contentPadding: EdgeInsets.zero,
               dense: true,
-              visualDensity:
-                  VisualDensity(horizontal: 0, vertical: -4),
+              visualDensity: VisualDensity(horizontal: 0, vertical: -4),
             ),
             ListTile(
               title: AutoSizeText(
@@ -71,8 +60,7 @@ class DocProfileTabBarView extends StatelessWidget {
               ),
               contentPadding: EdgeInsets.zero,
               dense: true,
-              visualDensity:
-                  VisualDensity(horizontal: 0, vertical: -4),
+              visualDensity: VisualDensity(horizontal: 0, vertical: -4),
             ),
           ],
         ),
@@ -91,16 +79,6 @@ class DocProfileTabBarView extends StatelessWidget {
         //?Reviews
         ListView(
           children: [
-            // AddAnnonymousReview(
-            //   size: size,
-            //   press: () {
-            //     Navigator.pop(context);
-            //     _showDialogFlash(
-            //       vertical: size.height * 0.04,
-            //       horizontal: size.width * 0.09,
-            //     );
-            //   },
-            // ),
             ReviewsContainer(size: size),
             ReviewsContainer(size: size),
             ReviewsContainer(size: size),
@@ -109,4 +87,17 @@ class DocProfileTabBarView extends StatelessWidget {
       ],
     );
   }
+
+  final db = FirebaseFirestore.instance;
+
+  Future<QuerySnapshot> getAbout() async => await db
+      .collection('doctors')
+      .doc('doctorsID')
+      .collection('Profiles')
+      .get();
+       Future<QuerySnapshot> getReviews() async => await db
+      .collection('doctors')
+      .doc('doctorsID')
+      .collection('Profiles').doc(reviewsId).collection('Reviews')
+      .get();
 }

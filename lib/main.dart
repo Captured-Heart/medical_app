@@ -9,14 +9,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:medical_app/themes/theme.dart';
 import 'package:provider/provider.dart';
 
+import 'Patients/Screens/RegScreens/SignUp1.dart';
+import 'Patients/Screens/RegScreens/signUp2.dart';
 import 'Patients/Screens/page1-4/docFilters.dart';
 import 'Patients/Screens/page15/patientsProfile.dart';
 import 'Patients/Screens/page5_7/linkCard.dart';
 import 'Patients/Screens/page8-10/docProfile.dart';
 import 'Patients/Widgets/page1-4_Widgets/topHeader.dart';
 
-
-Future main() async{
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
@@ -50,7 +51,8 @@ class MyApp extends StatelessWidget {
             LinkCardPage.routes: (context) => LinkCardPage(),
             DocProfile.routes: (context) => DocProfile(),
             PatientsProfile.routes: (context) => PatientsProfile(),
-
+            SignUp1.routes: (context) => SignUp1(),
+            SignUp2.routes: (context) => SignUp2(),
           },
         );
       });
@@ -78,16 +80,20 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  
                   DiscountContainer(),
                   SpecialistContainer(),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: [
-                        AccToRatingRow(size: size),
-                        AllAndFavouritesRow(size: size),
-                        AllAndFavTabBarView(size: size),
-                      ],
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          AccToRatingRow(size: size),
+                          AllAndFavouritesRow(size: size),
+                          
+                          AllAndFavTabBarView(size: size),
+                        ],
+                      ),
                     ),
                   ),
                 ],

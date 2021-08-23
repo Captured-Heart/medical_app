@@ -1,7 +1,9 @@
 import 'package:badges/badges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medical_app/Patients/Screens/page15/patientsProfile.dart';
+import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/Patients/Widgets/page15/profilePicAndName.dart';
 import 'package:medical_app/Patients/Widgets/page15/todaySessionOption.dart';
@@ -20,6 +22,7 @@ class SpecialistOffice extends StatelessWidget {
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         elevation: 0,
+        leading: BackIcon(),
       ),
       body: SafeArea(
         child: Container(
@@ -29,11 +32,28 @@ class SpecialistOffice extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ProfPicAndName(
-                  size: size,
-                  imgString: 'assets/images/ivan.png',
-                  name: ' Ivanov \n Ivan',
-                ),
+                FutureBuilder(
+                    future: getRecords(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      if (snapshot.hasData) {
+                        return Row(
+                            children: snapshot.data!.docs
+                                .map(
+                                  (document) => ProfPicAndName(
+                                    size: size,
+                                    imageUrl: document['imageUrl'],
+                                    // 'assets/images/oleg.jpg',
+                                    name: document['name'],
+                                  ),
+                                )
+                                .toList());
+                      } else {
+                        return Text('');
+                      }
+                    }),
                 SizedBox(height: size.height * 0.03),
                 Divider(
                   thickness: 1,
@@ -79,9 +99,10 @@ class SpecialistOffice extends StatelessWidget {
                   icon: FontAwesomeIcons.solidCommentDots,
                   press: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CorrespondencePage()));
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CorrespondencePage()),
+                    );
                   },
                   leadingWidget: Container(
                     padding: EdgeInsets.all(10),
@@ -111,8 +132,7 @@ class SpecialistOffice extends StatelessWidget {
                   text: Text('Personal Information'),
                   icon: FontAwesomeIcons.solidUser,
                   press: () {
-                 
-                     Navigator.push(
+                    Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => PersonalInformationPage()));
@@ -143,10 +163,8 @@ class SpecialistOffice extends StatelessWidget {
                     // setState(() {
                     //   recordsExpand = !recordsExpand;
                     // });
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SalaryPage()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SalaryPage()));
                   },
                   leadingWidget: Container(
                     padding: EdgeInsets.all(10),
@@ -185,11 +203,9 @@ class SpecialistOffice extends StatelessWidget {
                     size: size,
                     text: 'To begin',
                     horizontal: size.width * 0.0002,
-                    press: (){
-                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PostPage()));
+                    press: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => PostPage()));
                     },
                   ),
                 ),
@@ -216,6 +232,14 @@ class SpecialistOffice extends StatelessWidget {
       ),
     );
   }
+
+  final db = FirebaseFirestore.instance;
+
+  Future<QuerySnapshot> getRecords() async => await db
+      .collection('patients')
+      .doc('patientsID')
+      .collection('Records')
+      .get();
 }
 
 class SpecialistProfileOptions extends StatelessWidget {

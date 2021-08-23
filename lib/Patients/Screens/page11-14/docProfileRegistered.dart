@@ -64,7 +64,8 @@ class _RegDocProfileState extends State<RegDocProfile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ImageRatingsAndSignUpButton(
+                  RegImageRatingsAndSignUpButton(
+                    ratings: '4',
                     size: size,
                     name: 'Ivanov Ivan',
                     imageUrl: 'assets/images/ivan.png',

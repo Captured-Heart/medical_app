@@ -1,7 +1,11 @@
 import 'package:badges/badges.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
 
 class CorrespondencePage extends StatelessWidget {
+  final db = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -10,6 +14,7 @@ class CorrespondencePage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
+        leading: BackIcon(),
         title: Text(
           'Correspondence',
           style: TextStyle(
@@ -25,64 +30,83 @@ class CorrespondencePage extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: size.width * 0.045),
           child: Column(
             children: [
-              CorrespondenceOptions(
-                size: size,
-                imageUrl: 'assets/images/oleg.jpg',
-                name: 'Oleg',
-                showBadge: true,
-              ),
-              CorrespondenceOptions(
-                size: size,
-                imageUrl: 'assets/images/another.png',
-                name: 'Николай',
-                showBadge: false,
-              )
-              // ListTile(
-              //   leading: Image.asset('assets/images/oleg.jpg'),
-              //   title: Badge(
-              //     badgeContent: Text('3'),
-              //     alignment: Alignment.topRight,
-              //     padding: EdgeInsets.all(3),
-              //     child: Text('Oleg'),
-              //   ),
-              //   trailing: Text('Look'),
-              //   contentPadding: EdgeInsets.zero,
-              //   dense: true,
-              // )
+              StreamBuilder(
+                  stream: getCorrespondenceStreams(context),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView(
+                        children: snapshot.data!.docs
+                            .map(
+                              (document) => CorrespondenceOptions(
+                                size: size,
+                                imageUrl: document['imageUrl'],
+                                name: 'Oleg',
+                                showBadge: true,
+                                badgeNumber: document['badge'],
+                              ),
+                            )
+                            .toList(),
+                        shrinkWrap: true,
+                      );
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  }),
             ],
           ),
         ),
       ),
     );
   }
+
+  Stream<QuerySnapshot> getCorrespondenceStreams(BuildContext context) async* {
+    yield* db
+        .collection('doctors')
+        .doc('doctorsID')
+        .collection('Profiles')
+        .doc('kwJxtEME34ghgT72wEe0')
+        .collection('Correspondence')
+        // .orderBy('dateCreated', descending: true)
+        .snapshots();
+  }
 }
+// final uuid = await authMethods.getCurrentUID();
 
 class CorrespondenceOptions extends StatelessWidget {
   final bool showBadge;
+
+  final String badgeNumber;
 
   const CorrespondenceOptions({
     Key? key,
     required this.size,
     required this.imageUrl,
-    required this.name, required this.showBadge,
+    required this.name,
+    required this.showBadge,
+    required this.badgeNumber,
   }) : super(key: key);
   final Size size;
   final String imageUrl, name;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      width: 140,
+      height: 60,
       padding: EdgeInsets.only(top: size.height * 0.009),
       child: Row(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: Image.asset(imageUrl, scale: 0.95),
+            child: Image.network(
+              imageUrl,
+              width: 60,
+            ),
           ),
           SizedBox(width: 10),
           Badge(
             badgeContent: Text(
-              '3',
+              badgeNumber,
               style: TextStyle(
                 color: Theme.of(context).primaryColor,
                 fontSize: 12,

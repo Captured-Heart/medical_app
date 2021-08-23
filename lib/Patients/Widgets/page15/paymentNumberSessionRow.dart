@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class PaymentNumberSessionRow extends StatelessWidget {
@@ -13,41 +14,50 @@ class PaymentNumberSessionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          leading,
-          style: TextStyle(
-            fontWeight: FontWeight.w400,
+        Container(
+          width: size.width * 0.13,
+          child: AutoSizeText(
+            leading,
+            style: TextStyle(
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
-        Spacer(),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              // 'Ivanov Ivan',
-              name,
-              style: TextStyle(
-                fontWeight: FontWeight.w400,
+        // Spacer(),
+        Container(
+          width: size.width * 0.6,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                name,
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                ),
               ),
-            ),
-            Text(
-              date,
-              // 'May 21, 17:00',
-              style: TextStyle(
-                fontWeight: FontWeight.w400,
+              Text(
+                date,
+                // 'May 21, 17:00',
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        Spacer(flex: 4),
-        Text(
-          sum,
-          // '2900₽',
-          style: TextStyle(
-            fontWeight: FontWeight.w400,
+        // Spacer(),
+        Container(
+          child: Text(
+            sum,
+            // '2900₽',
+            style: TextStyle(
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
       ],

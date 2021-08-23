@@ -4,9 +4,11 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class RatingsRow extends StatelessWidget {
+ final String ratings;
+
   const RatingsRow({
     Key? key,
-    required this.size,
+    required this.size, required this.ratings,
   }) : super(key: key);
 
   final Size size;
@@ -16,9 +18,9 @@ class RatingsRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        RatingStar(size: size),
+        RatingStar(size: size, ratings: ratings,),
         SizedBox(width: 10),
-        AutoSizeText('3'),
+        AutoSizeText('28'),
         SizedBox(width: 3),
         Icon(FontAwesomeIcons.solidUser, size: 10, color: Color(0xff858585)),
       ],
@@ -27,9 +29,11 @@ class RatingsRow extends StatelessWidget {
 }
 
 class RatingStar extends StatelessWidget {
+ final  String ratings;
+
   const RatingStar({
     Key? key,
-    required this.size,
+    required this.size, required this.ratings,
   }) : super(key: key);
 
   final Size size;
@@ -38,7 +42,7 @@ class RatingStar extends StatelessWidget {
   Widget build(BuildContext context) {
     return RatingBar(
       itemSize: size.width * 0.04,
-      initialRating: 4,
+      initialRating: double.parse(ratings),
       minRating: 1,
       direction: Axis.horizontal,
       allowHalfRating: true,

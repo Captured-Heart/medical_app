@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
 import 'package:medical_app/Patients/Screens/page5_7/worriesPage.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
@@ -15,12 +18,32 @@ class PersonalInformationPage extends StatefulWidget {
 
 class _PersonalInformationPageState extends State<PersonalInformationPage> {
   bool changePassword = true;
+  final ImagePicker picker = ImagePicker();
+  File? _imgFile;
+
+  Future _pickImage() async {
+    final selected = await picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 90,
+      maxHeight: 400,
+      preferredCameraDevice: CameraDevice.front,
+    );
+
+    setState(() {
+      if (selected != null) {
+        _imgFile = File(selected.path);
+        print(_imgFile!.lengthSync());
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         elevation: 0,
@@ -34,7 +57,11 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              ChangePhotoColumn(size: size),
+              ChangePhotoColumn(
+                size: size,
+                pickImage: _pickImage,
+                imgFile: _imgFile,
+              ),
               FormInputEmail(
                 size: size,
                 text: 'Name',

@@ -27,7 +27,7 @@ class LinkCardPage extends StatelessWidget {
               Container(
                 margin: EdgeInsets.symmetric(
                   horizontal: size.width * 0.06,
-                  vertical: size.height * 0.05,
+                  vertical: size.height * 0.04,
                 ),
                 child: Form(
                   child: Column(
@@ -42,7 +42,7 @@ class LinkCardPage extends StatelessWidget {
                       // SizedBox(height: size.height * 0.4,)
                       // Spacer(),
                       Container(
-                        height: size.height * 0.184,
+                        height: size.height * 0.17,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -55,14 +55,14 @@ class LinkCardPage extends StatelessWidget {
                             Expanded(
                               child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 4.0),
-                                child: Text(
+                                child: AutoSizeText(
                                   '''To validate an entry, we need to make sure that you will be able to pay for the lesson. To do this, we will write off from the card 1 ruble and we will immediately return it.
 
 Without confirmation, the recording will be canceled after 40 minutes.''',
                                   style: TextStyle(
                                       color: Theme.of(context).canvasColor),
                                   overflow: TextOverflow.ellipsis,
-                                  maxLines: 10,
+                                  maxLines: 8,
                                 ),
                               ),
                             ),
@@ -101,13 +101,15 @@ class BackIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.arrow_back_ios),
-      iconSize: 20.0,
-      onPressed: () {
+    return GestureDetector(
+      onTap: () {
         // _goBack(context);
         Navigator.pop(context);
       },
+      child: Icon(
+        Icons.arrow_back_ios,
+        size: 20.0,
+      ),
     );
   }
 }
@@ -205,6 +207,7 @@ class FormInputEmail extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(bottom: size.height * 0.04),
           child: TextFormField(
+            
             keyboardType: TextInputType.emailAddress,
             cursorColor: Theme.of(context).buttonColor,
             decoration: InputDecoration(

@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,15 +10,22 @@ class DoctorsProfileCard extends StatefulWidget {
   const DoctorsProfileCard({
     Key? key,
     required this.size,
-    required this.image,
-    required this.docName,
-    required this.docOccupation,
+    // required this.image,
+    required this.name,
+    required this.occupation,
+    required this.about,
+    required this.years,
+    required this.salary,
+    required this.time,
+    required this.ratings,
+    required this.imageUrl,
+    this.docId,
   }) : super(key: key);
 
   final Size size;
-  final Image image;
-  final String docName, docOccupation;
-
+  final String? docId;
+ 
+  final String name, occupation, years, about, imageUrl, salary, time, ratings;
   @override
   _DoctorsProfileCardState createState() => _DoctorsProfileCardState();
 }
@@ -26,13 +34,32 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
   bool iconPress = true;
 
   bool moreDetailsPress = true;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        //!YOU WILL PASS DATA FROM THIS CARD TO THE NEXT PAGE (imageUrl, docName, occupation,experienceYears, salary)
+        //!YOU WILL PASS DATA FROM THIS CARD TO THE NEXT PAGE (imageUrl, name, occupation,experienceYears, salary)
 
-        Navigator.pushReplacementNamed(context, DocProfile.routes);
+        // Navigator.pushReplacementNamed(context, DocProfile.routes);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DocProfile(
+              name: widget.name,
+              // size: widget.size,
+              occupation: widget.occupation,
+              
+              years: widget.years,
+              about: widget.about,
+              imageUrl: widget.imageUrl,
+              salary: widget.salary,
+              time: widget.time,
+              ratings: widget.ratings,
+              reviewsId: widget.docId,
+            ),
+          ),
+        );
       },
       child: Container(
         height: moreDetailsPress
@@ -49,9 +76,11 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
         child: Stack(
           alignment: Alignment.center,
           children: [
+            //?FAVORITES BUTTON
             LikeHeart(
               heartPress: () {
                 setState(() {
+                  print(widget.docId);
                   iconPress = !iconPress;
                 });
               },
@@ -66,6 +95,8 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                       size: 20,
                     ),
             ),
+
+            //?MORE DETAILS TEXTBUTTON
             MoreDetails(
               moreDetailsText:
                   moreDetailsPress ? 'More Details' : 'Less Details',
@@ -78,8 +109,22 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                 });
               },
             ),
+
+            // ?SIGN UP FOR CONSULTATION
             SignUpButton(size: widget.size),
-            FullDoctorProfile(widget: widget),
+
+            //!THIS FULL DOCTOR PROFILE IS COMPRISING OF EXTRA TEXT CONSITING FROM MORE DTEAILS
+            FullDoctorProfile(
+              size: widget.size,
+              about: widget.about,
+              imageUrl: widget.imageUrl,
+              occupation: widget.occupation,
+              years: widget.years,
+              salary: widget.salary,
+              time: widget.time,
+              ratings: widget.ratings,
+              name: widget.name,
+            ),
             !moreDetailsPress
                 ? Positioned(
                     top: widget.size.height * 0.18,
@@ -87,7 +132,9 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        //ABOUT MYSELF SECTION
+                        //?!ABOUT MYSELF SECTION
+
+                        // ?# ABOUT MYSELF TITLE WITH DIVIDER LINE
                         AboutMyself(
                           widget: widget,
                           text: 'About Myself',
@@ -96,14 +143,20 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                               color: Theme.of(context).canvasColor,
                               width: widget.size.width * 0.6),
                         ),
+
                         SizedBox(height: 5),
+
+                        //? ABOUT MYSELF DESCRIPTION
                         Container(
                           child: AutoSizeText(
-                              '''Doctor of doctoral sciences. Great fellow, grandson \n granny, mommy\'s son.'''),
+                            widget.about,
+                          ),
+                          // '''Doctor of doctoral sciences. Great fellow, grandson \n granny, mommy\'s son.'''),
                         ),
                         SizedBox(height: 10),
 
-                        //SPECIALIZATION SECTION
+                        //!
+                        //? SPECIALIZATION SECTION
                         AboutMyself(
                           widget: widget,
                           text: 'Specializations',
@@ -113,7 +166,7 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                               width: widget.size.width * 0.6),
                         ),
 
-                        //SPECIALIZATION OPTIONS
+                        //? SPECIALIZATION OPTIONS
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.baseline,
                           textBaseline: TextBaseline.ideographic,
@@ -134,6 +187,9 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                             )
                           ],
                         ),
+
+                        //!
+                        //? EDUCATION SECTION
                         AboutMyself(
                           widget: widget,
                           text: 'Education',
@@ -145,6 +201,9 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                         AutoSizeText('Teachers University College, Columbia'),
                         AutoSizeText('Languages: English, Russian, Spanish'),
                         SizedBox(height: 15),
+
+                        //!
+                        //? LIKE BUTTON
                         Row(
                           children: [
                             Container(
@@ -186,26 +245,44 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
 class FullDoctorProfile extends StatelessWidget {
   const FullDoctorProfile({
     Key? key,
-    required this.widget,
+    required this.name,
+    required this.occupation,
+    required this.years,
+    required this.about,
+    required this.imageUrl,
+    required this.salary,
+    required this.time,
+    required this.ratings,
+    required this.size,
   }) : super(key: key);
 
-  final DoctorsProfileCard widget;
-
+  final Size size;
+  final String name, occupation, years, about, imageUrl, salary, time, ratings;
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: 20,
+      top: 15,
       left: 10,
       right: 10,
       child: Container(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DoctorPicture(size: widget.size, image: widget.image),
+            DoctorPicture(
+              size: size,
+              imageUrl: imageUrl,
+            ),
             DoctorProfile(
-                docName: widget.docName,
-                docOccupation: widget.docOccupation,
-                size: widget.size)
+              name: name,
+              occupation: occupation,
+              size: size,
+              salary: salary,
+              years: years,
+              about: about,
+              time: time,
+              ratings: ratings,
+              // imageUrl: imageUrl,
+            )
           ],
         ),
       ),
@@ -316,65 +393,95 @@ class MoreDetails extends StatelessWidget {
 class DoctorProfile extends StatelessWidget {
   const DoctorProfile({
     Key? key,
-    required this.docName,
-    required this.docOccupation,
+    required this.name,
     required this.size,
+    required this.occupation,
+    required this.years,
+    required this.about,
+    // required this.imageUrl,
+    required this.salary,
+    required this.time,
+    required this.ratings,
   }) : super(key: key);
 
-  final String docName;
-  final String docOccupation;
   final Size size;
+  final String name, occupation, years, about, salary, time, ratings;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AutoSizeText(docName),
+        AutoSizeText(name),
         SizedBox(height: 5),
-        AutoSizeText(docOccupation),
+        AutoSizeText(occupation),
         SizedBox(height: 5),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            RatingBar.builder(
-              itemSize: size.width * 0.04,
-              initialRating: 4,
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              itemBuilder: (context, _) => Icon(
-                Icons.star,
-                color: Colors.amber,
+        Container(
+          margin: EdgeInsets.only(right: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Container(
+                // width: size.width * 0.2,
+                child: Row(
+                  children: [
+                    RatingBar.builder(
+                      itemSize: size.width * 0.03,
+                      initialRating: double.parse(ratings),
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      //INCASE IN NEEDS TO BE STORED ON THE FIRESTORE, WE USE THE UPDATE HERE
+                      onRatingUpdate: (rating) {
+                        print(rating);
+                      },
+                    ),
+                    SizedBox(width: 4),
+                    AutoSizeText('28'),
+                    SizedBox(width: 3),
+                    Icon(FontAwesomeIcons.solidUser,
+                        size: 10, color: Color(0xff858585)),
+                    // SizedBox(width: size.width * 0.009),
+                  ],
+                ),
               ),
-              //INCASE IN NEEDS TO BE STORED ON THE FIRESTORE, WE USE THE UPDATE HERE
-              onRatingUpdate: (rating) {
-                print(rating);
-              },
-            ),
-            SizedBox(width: 4),
-            AutoSizeText('28'),
-            SizedBox(width: 3),
-            Icon(FontAwesomeIcons.solidUser,
-                size: 10, color: Color(0xff858585)),
-            SizedBox(width: size.width * 0.009),
-            AutoSizeText(
-              '10 years of experience',
-              maxLines: 1,
-            )
-          ],
+              SizedBox(width: 10),
+              Container(
+                width: size.width * 0.34,
+                margin: EdgeInsets.only(right: 1),
+                child: AutoSizeText(
+                  '$years years of experience',
+                  maxLines: 1,
+                ),
+              )
+            ],
+          ),
         ),
         SizedBox(height: 5),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            AutoSizeText('Nearest appointment: 12:30'),
-            SizedBox(
-              width: 12,
-            ),
-            AutoSizeText('2900₽ / hour')
-          ],
+        Container(
+          // margin: EdgeInsets.only(right: 3),
+          width: size.width * 0.6,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: size.width * 0.3,
+                child: AutoSizeText(
+                  'Appointment: $time',
+                  maxLines: 1,
+                ),
+              ),
+              AutoSizeText(
+                '$salary₽ / hour',
+                maxLines: 1,
+              )
+            ],
+          ),
         ),
       ],
     );
@@ -385,11 +492,11 @@ class DoctorPicture extends StatelessWidget {
   const DoctorPicture({
     Key? key,
     required this.size,
-    required this.image,
+    required this.imageUrl,
   }) : super(key: key);
 
   final Size size;
-  final Image image;
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -397,9 +504,23 @@ class DoctorPicture extends StatelessWidget {
         height: size.height * 0.12,
         width: size.width * 0.17,
         margin: EdgeInsets.only(right: 10),
-        decoration:
-            BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(60))),
-        child: image);
+        // decoration: BoxDecoration(
+        //   borderRadius: BorderRadius.all(
+        //     Radius.circular(60),
+        //   ),
+        // ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: CachedNetworkImage(
+            imageUrl: imageUrl,
+            placeholder: (context, url) => Center(
+                child: CircularProgressIndicator(
+              color: Theme.of(context).buttonColor,
+            )),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+            fit: BoxFit.fill,
+          ),
+        ));
   }
 }
 

@@ -1,10 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:dash_chat/dash_chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:group_button/group_button.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
-import 'package:medical_app/Patients/Widgets/page1-4_Widgets/topHeader.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 
 class SettingsRecordTimes extends StatefulWidget {
@@ -59,8 +58,10 @@ class _SettingsRecordTimesState extends State<SettingsRecordTimes> {
                       ),
                     ),
                   )
-                : Text(''),
-            recordingTime ? CreateRecordingTime(size: size) : Container(height: 0),
+                : Container(height: 0),
+            recordingTime
+                ? CreateRecordingTime(size: size)
+                : Container(height: 0),
             !recordingTime
                 ? ScheduleOptions(
                     size: size,
@@ -143,51 +144,80 @@ class CreateRecordingTime extends StatelessWidget {
         children: [
           Container(
             height: 80,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SettingsRecordsDays(
-                  size: size,
-                  days: 'Mo',
-                  textColor: Theme.of(context).primaryColor,
-                  bGcolor: Theme.of(context).buttonColor,
-                ),
-                SettingsRecordsDays(
-                  size: size,
-                  days: 'Tu',
-                  textColor: Theme.of(context).primaryColor,
-                  bGcolor: Theme.of(context).buttonColor,
-                ),
-                SettingsRecordsDays(
-                  size: size,
-                  days: 'We',
-                  textColor: Theme.of(context).primaryColor,
-                  bGcolor: Theme.of(context).buttonColor,
-                ),
-                SettingsRecordsDays(
-                  size: size,
-                  days: 'Th',
-                  textColor: Theme.of(context).primaryColor,
-                  bGcolor: Theme.of(context).buttonColor,
-                ),
-                SettingsRecordsDays(
-                    size: size,
-                    days: 'Fr',
-                    textColor: Theme.of(context).highlightColor,
-                    bGcolor: Theme.of(context).primaryColor),
-                SettingsRecordsDays(
-                    size: size,
-                    days: 'Sa',
-                    textColor: Theme.of(context).highlightColor,
-                    bGcolor: Theme.of(context).primaryColor),
-                SettingsRecordsDays(
-                    size: size,
-                    days: 'Su',
-                    textColor: Theme.of(context).highlightColor,
-                    bGcolor: Theme.of(context).primaryColor),
-              ],
+            margin: EdgeInsets.symmetric(horizontal: 1),
+            child: GroupButton(
+              isRadio: false,
+              spacing: 6,
+              runSpacing: 10,
+              
+              mainGroupAlignment: MainGroupAlignment.start,
+              groupRunAlignment: GroupRunAlignment.center,
+              crossGroupAlignment: CrossGroupAlignment.start,
+              onSelected: (index, isSelected) =>
+                  print('$index button is selected'),
+              buttons: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+              unselectedTextStyle: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Theme.of(context).highlightColor,
+              ),
+              borderRadius: BorderRadius.circular(18),
+              // height: size.height * 0.087,
+              buttonWidth: size.width * 0.129,
+              buttonHeight: size.height * 0.08,
+              unselectedColor: Colors.transparent,
+              selectedColor: Theme.of(context).buttonColor,
+              // borderRadius: BorderRadius.circular(30),
+              unselectedBorderColor:
+                  Theme.of(context).canvasColor.withOpacity(0.2),
+              groupingType: GroupingType.wrap,
             ),
+
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     SettingsRecordsDays(
+            //       size: size,
+            //       days: 'Mo',
+            //       textColor: Theme.of(context).primaryColor,
+            //       bGcolor: Theme.of(context).buttonColor,
+            //     ),
+            //     SettingsRecordsDays(
+            //       size: size,
+            //       days: 'Tu',
+            //       textColor: Theme.of(context).primaryColor,
+            //       bGcolor: Theme.of(context).buttonColor,
+            //     ),
+            //     SettingsRecordsDays(
+            //       size: size,
+            //       days: 'We',
+            //       textColor: Theme.of(context).primaryColor,
+            //       bGcolor: Theme.of(context).buttonColor,
+            //     ),
+            //     SettingsRecordsDays(
+            //       size: size,
+            //       days: 'Th',
+            //       textColor: Theme.of(context).primaryColor,
+            //       bGcolor: Theme.of(context).buttonColor,
+            //     ),
+            // SettingsRecordsDays(
+            //         size: size,
+            //         days: 'Fr',
+            //         textColor: Theme.of(context).highlightColor,
+            //         bGcolor: Theme.of(context).primaryColor),
+            //     SettingsRecordsDays(
+            //         size: size,
+            //         days: 'Sa',
+            //         textColor: Theme.of(context).highlightColor,
+            //         bGcolor: Theme.of(context).primaryColor),
+            //     SettingsRecordsDays(
+            //         size: size,
+            //         days: 'Su',
+            //         textColor: Theme.of(context).highlightColor,
+            //         bGcolor: Theme.of(context).primaryColor),
+            //   ],
+            // ),
           ),
+          SizedBox(height: 10),
           Container(
             margin: EdgeInsets.symmetric(horizontal: size.width * 0.2),
             height: 110,
@@ -195,13 +225,14 @@ class CreateRecordingTime extends StatelessWidget {
               child: TextField(
                 keyboardType: TextInputType.numberWithOptions(),
                 textAlign: TextAlign.center,
-                maxLength: 4,
+                maxLength: 5,
                 style: TextStyle(
                   fontSize: 60,
                   color: Theme.of(context).buttonColor,
                   fontWeight: FontWeight.w600,
                 ),
                 decoration: InputDecoration(
+                  counterText: '',
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Theme.of(context).buttonColor,

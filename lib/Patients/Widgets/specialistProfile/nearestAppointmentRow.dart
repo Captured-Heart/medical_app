@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 class NearestAppointmentRow extends StatelessWidget {
   const NearestAppointmentRow({
     Key? key,
-    required this.size,
+    required this.size, required this.salary,required this.time,
   }) : super(key: key);
 
   final Size size;
-
+final String salary, time;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -16,8 +16,8 @@ class NearestAppointmentRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          AutoSizeText('Nearest appointment: 12:30'),
-          Text('2900₽ / hour')
+          AutoSizeText('Nearest appointment: $time'),
+          Text('$salary₽ / hour')
         ],
       ),
     );

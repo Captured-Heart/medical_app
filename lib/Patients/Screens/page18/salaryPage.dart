@@ -1,10 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:medical_app/Patients/Screens/page15/patientsProfile.dart';
-import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
+
 import 'package:medical_app/Patients/Widgets/page15/numberSessionSumRow.dart';
 import 'package:medical_app/Patients/Widgets/page15/paymentNumberSessionRow.dart';
 
 class SalaryPage extends StatelessWidget {
+  final db = FirebaseFirestore.instance;
+
+  Future<QuerySnapshot> getDoctorSalary() async => await db
+      .collection('doctors')
+      .doc('doctorsID')
+      .collection('Profiles')
+      .doc('kwJxtEME34ghgT72wEe0')
+      .collection('Payments')
+      .get();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -27,32 +36,55 @@ class SalaryPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FormInputEmail(
-              size: size,
-              text: 'Salary per hour',
+            Text(
+              'Salary per hour',
+              style: TextStyle(
+                color: Theme.of(context).canvasColor,
+              ),
             ),
+            SizedBox(height: 10),
+            Text(
+              '2900 ₽',
+            ),
+            SizedBox(height: 5),
+            Container(
+              height: 0.8,
+              color: Theme.of(context).canvasColor,
+              width: size.width * 0.85,
+            ),
+            SizedBox(height: size.height * 0.045),
             Align(
               child: Text('Payments'),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: size.height * 0.035),
+              padding: EdgeInsets.symmetric(vertical: size.height * 0.015),
               child: NumberSessionSumRow(),
             ),
-            PaymentNumberSessionRow(
-              leading: '345365',
-              name: 'Oleg',
-              date: 'May 21, 17:00',
-              sum: '2900₽',
-            ),
-            Padding(
-              padding:  EdgeInsets.symmetric(vertical: size.height * 0.027),
-              child: PaymentNumberSessionRow(
-                leading: '845365',
-                name: 'Николай',
-                date: 'May 19, 17:00',
-                sum: '2900₽',
-              ),
-            ),
+            FutureBuilder(
+                future: getDoctorSalary(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView(
+                      children: snapshot.data!.docs
+                          .map(
+                            (document) => Padding(
+                              padding: EdgeInsets.only(top: 15.0),
+                              child: PaymentNumberSessionRow(
+                                  leading: document['number'],
+                                  name: document['name'],
+                                  date: document['date'],
+                                  sum: '${document['price']}₽'),
+                            ),
+                          )
+                          .toList(),
+                      shrinkWrap: true,
+                    );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
           ],
         ),
       ),
