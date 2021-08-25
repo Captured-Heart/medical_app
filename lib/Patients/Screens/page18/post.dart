@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
 
 import 'package:table_calendar/table_calendar.dart';
 
@@ -23,6 +24,7 @@ class _PostPageState extends State<PostPage> {
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         elevation: 0,
+        leading: BackIcon(),
         actions: [
           Padding(
             padding: const EdgeInsets.all(13.0),
@@ -52,6 +54,7 @@ class _PostPageState extends State<PostPage> {
             Expanded(
               child: Container(
                 child: TableCalendar(
+                  rowHeight: 45,
                   focusedDay: DateTime.now(),
                   firstDay: DateTime.utc(2010, 3, 14),
                   lastDay: DateTime.utc(2030, 3, 14),

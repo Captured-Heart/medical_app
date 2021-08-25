@@ -13,25 +13,9 @@ import 'package:medical_app/themes/theme_switch.dart';
 
 class DocProfile extends StatefulWidget {
   static const String routes = 'docProfilePage';
-  final String? name,
-      imageUrl,
-      ratings,
-      time,
-      salary,
-      about,
-      occupation,
-      years,
-      reviewsId;
+  final String? reviewsId;
   const DocProfile({
     Key? key,
-    this.name,
-    this.imageUrl,
-    this.ratings,
-    this.time,
-    this.salary,
-    this.about,
-    this.occupation,
-    this.years,
     this.reviewsId,
   }) : super(key: key);
 
@@ -45,15 +29,13 @@ class _DocProfileState extends State<DocProfile> {
   dynamic data;
   dynamic docId;
 
-  Future<dynamic> getData(BuildContext context) async {
-    // final uid = await authMethods.getCurrentUID();
-
+  Future<DocumentSnapshot> getData(BuildContext context) async {
     final document = FirebaseFirestore.instance
         .collection('doctors')
         .doc('doctorsID')
         .collection('Profiles')
         .doc(widget.reviewsId);
-    
+    return document.get();
     // await document.then(
     //   (QuerySnapshot snapshot) async {
     //     setState(() {
@@ -95,36 +77,45 @@ class _DocProfileState extends State<DocProfile> {
               padding: EdgeInsets.symmetric(horizontal: size.width * 0.06),
               child: FutureBuilder(
                   future: getData(context),
-                  builder: (context, snapshot) {
+                  builder: (context, AsyncSnapshot snapshot) {
+                    if (!snapshot.hasData)
+                      return Center(child: CircularProgressIndicator());
+                    if (snapshot.connectionState == ConnectionState.none)
+                      return Center(
+                        child: Icon(
+                          Icons.error,
+                          size: 100,
+                        ),
+                      );
                     return Stack(
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ImageRatingsAndSignUpButton(
-                              ratings: widget.ratings!,
+                              ratings: snapshot.data!['rating'],
                               size: size,
-                              name: widget.name!,
-                              imageUrl: widget.imageUrl!,
+                              name: snapshot.data!['name'],
+                              imageUrl: snapshot.data!['imageUrl'],
                               buttonText: 'Sign up for a consultation',
                               press: () {
+                                // Navigator.pushReplacementNamed(
+                                //     context, AppointMentPage.routes);
+
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            PatientsProfile()));
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AppointMentPage(
+                                      reviewsId: widget.reviewsId,
+                                    ),
+                                  ),
+                                );
                               },
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                print(docId);
-                              },
-                              child: Text('fvshvhfv'),
                             ),
                             NearestAppointmentRow(
                               size: size,
-                              salary: widget.salary!,
-                              time: widget.time!,
+                              salary: snapshot.data!['salary'],
+                              time: snapshot.data!['time'],
                             ),
                             Divider(thickness: 1),
                             TabBar(
@@ -208,8 +199,10 @@ class _DocProfileState extends State<DocProfile> {
                               child: Container(
                                 child: DocProfileTabBarView(
                                   size: size,
-                                  about: widget.about!,
-                                  // reviewsId: ,
+                                  about: snapshot.data!['about'],
+                                  reviewsId: widget.reviewsId,
+                                  occupation: snapshot.data!['occupation'],
+                                  years: snapshot.data!['years'],
                                 ),
                               ),
                             ),
