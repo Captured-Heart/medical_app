@@ -1,11 +1,19 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:medical_app/Patients/Screens/page11-14/docProfileRegistered.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 
 class LinkCardPage extends StatelessWidget {
   static const String routes = 'linkCardPage';
+  final String? time, date, docId;
 
+  LinkCardPage({
+    Key? key,
+    this.time,
+    this.date,
+    this.docId,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -22,7 +30,36 @@ class LinkCardPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              LinkCardHeader(size: size),
+              Container(
+                width: double.infinity,
+                height: size.height * 0.22,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadiusDirectional.only(
+                    bottomEnd: Radius.circular(40),
+                    bottomStart: Radius.circular(40),
+                  ),
+                ),
+                child: FutureBuilder(
+                    future: getData(context),
+                    builder: (context, AsyncSnapshot snapshot) {
+                      if (!snapshot.hasData)
+                        return Center(child: CircularProgressIndicator());
+                      if (snapshot.connectionState == ConnectionState.none)
+                        return Center(
+                          child: Icon(
+                            Icons.error,
+                            size: 100,
+                          ),
+                        );
+                      return LinkCardHeader(
+                        size: size,
+                        name: date!,
+                        date: date!,
+                        time: time!,
+                      );
+                    }),
+              ),
               Spacer(),
               Container(
                 margin: EdgeInsets.symmetric(
@@ -91,6 +128,17 @@ Without confirmation, the recording will be canceled after 40 minutes.''',
         ),
       ),
     );
+  }
+
+  final db = FirebaseFirestore.instance;
+
+  Future<DocumentSnapshot> getData(BuildContext context) async {
+    final document = FirebaseFirestore.instance
+        .collection('doctors')
+        .doc('doctorsID')
+        .collection('Profiles')
+        .doc(docId);
+    return document.get();
   }
 }
 
@@ -207,7 +255,6 @@ class FormInputEmail extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(bottom: size.height * 0.04),
           child: TextFormField(
-            
             keyboardType: TextInputType.emailAddress,
             cursorColor: Theme.of(context).buttonColor,
             decoration: InputDecoration(
@@ -230,61 +277,57 @@ class LinkCardHeader extends StatelessWidget {
   const LinkCardHeader({
     Key? key,
     required this.size,
+    required this.name,
+    required this.date,
+    required this.time,
   }) : super(key: key);
 
   final Size size;
+  final String name, date, time;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: double.infinity,
-        height: size.height * 0.22,
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: BorderRadiusDirectional.only(
-            bottomEnd: Radius.circular(40),
-            bottomStart: Radius.circular(40),
+      margin: EdgeInsets.symmetric(horizontal: 25),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: size.height * 0.02),
+          Text(
+            'Your Specialist',
+            style: TextStyle(
+              color: Theme.of(context).buttonColor,
+            ),
           ),
-        ),
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 25),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: size.height * 0.02),
-              Text(
-                'Your Specialist',
-                style: TextStyle(
-                  color: Theme.of(context).buttonColor,
-                ),
-              ),
-              SizedBox(height: size.height * 0.007),
-              AutoSizeText(
-                'Ivanov Ivan Ivanovich',
-                style: TextStyle(
-                    color: Theme.of(context).highlightColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: size.height * 0.02),
-              Text(
-                'Reception will take place',
-                style: TextStyle(
-                  color: Theme.of(context).buttonColor,
-                ),
-              ),
-              SizedBox(height: size.height * 0.007),
-              AutoSizeText(
-                'May 26, 12:30',
-                style: TextStyle(
-                    color: Theme.of(context).highlightColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+          SizedBox(height: size.height * 0.007),
+          AutoSizeText(
+            name
+            // 'Ivanov Ivan Ivanovich'
+            ,
+            style: TextStyle(
+                color: Theme.of(context).highlightColor,
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: size.height * 0.02),
+          Text(
+            'Reception will take place',
+            style: TextStyle(
+              color: Theme.of(context).buttonColor,
+            ),
+          ),
+          SizedBox(height: size.height * 0.007),
+          AutoSizeText(
+            '$date, $time',
+            style: TextStyle(
+                color: Theme.of(context).highlightColor,
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
 
-                // style: TextStyle(color: Color(0xff3D3D3D)),
-              ),
-            ],
+            // style: TextStyle(color: Color(0xff3D3D3D)),
           ),
-        ));
+        ],
+      ),
+    );
   }
 }

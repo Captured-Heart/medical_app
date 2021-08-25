@@ -193,7 +193,7 @@ class _AllAndFavTabBarViewState extends State<AllAndFavTabBarView> {
       about: documents['about'],
       salary: documents['salary'],
       time: documents['time'],
-      ratings: documents['rating'],
+      ratings: documents['ratings'],
       // reviewsId: ,
     );
   }

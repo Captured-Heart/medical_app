@@ -8,7 +8,7 @@ import 'package:medical_app/main.dart';
 import 'package:medical_app/Patients/Widgets/page1-4_Widgets/topHeader.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
-class FilterOptions extends StatelessWidget {
+class FilterOptions extends StatefulWidget {
   const FilterOptions({
     Key? key,
     required this.size,
@@ -19,11 +19,21 @@ class FilterOptions extends StatelessWidget {
   final Size size;
   final bool advSettings;
   final press;
+
+  @override
+  _FilterOptionsState createState() => _FilterOptionsState();
+}
+
+class _FilterOptionsState extends State<FilterOptions> {
   @override
   Widget build(BuildContext context) {
+    SfRangeValues _values = SfRangeValues(1500, 17500);
+
     return Container(
-      width: size.width,
-      height: advSettings ? size.height * 0.55 : size.height * 0.85,
+      width: widget.size.width,
+      height: widget.advSettings
+          ? widget.size.height * 0.55
+          : widget.size.height * 0.85,
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
         borderRadius: BorderRadiusDirectional.only(
@@ -34,13 +44,13 @@ class FilterOptions extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          SizedBox(height: size.height * 0.03),
+          SizedBox(height: widget.size.height * 0.03),
           AutoSizeText('Who are you more comfortable working with?',
               style: TextStyle(
-                fontSize: size.width * 0.04,
+                fontSize: widget.size.width * 0.04,
                 color: Theme.of(context).highlightColor,
               )),
-          SizedBox(height: size.height * 0.03),
+          SizedBox(height: widget.size.height * 0.03),
 
           //?MAN, WOMAN ROWOPTIONS (THEY MAYBE CLICKABLE AND SENT TO THE FIRESTORE)
           GroupButton(
@@ -61,16 +71,19 @@ class FilterOptions extends StatelessWidget {
             groupingType: GroupingType.wrap,
           ),
 
-          SizedBox(height: size.height * 0.05),
+          SizedBox(height: widget.size.height * 0.03),
           Text(
             'What worries you?',
-            style: TextStyle(fontSize: size.width * 0.04),
+            style: TextStyle(
+              fontSize: widget.size.width * 0.04,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-          SizedBox(height: size.height * 0.03),
+          SizedBox(height: widget.size.height * 0.02),
 
           //?ADD, PANIC ATTACKS (THEY MAYBE CLICKABLE AND SENT TO THE FIRESTORE)
           AddPanicAttacksRowOptions(),
-          SizedBox(height: size.height * 0.02),
+          SizedBox(height: widget.size.height * 0.02),
 
           //?SLEEP PROBLEMS RowOptions (THEY MAYBE CLICKABLE AND SENT TO THE FIRESTORE)
           SleepProblemsRowOptions(),
@@ -78,18 +91,19 @@ class FilterOptions extends StatelessWidget {
 
           //?ADVANCED SETTINGS BUTTON
           AdvancedSettingsRow(
-            size: size,
-            iconWidget: advSettings
+            size: widget.size,
+            iconWidget: widget.advSettings
                 ? Icon(Icons.arrow_drop_down)
                 : Icon(Icons.arrow_drop_up),
-            press: press,
+            press: widget.press,
           ),
 
           //?ADD 2 SLIDERS
-          !advSettings
+          !widget.advSettings
               ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Specialist experience 3-12 years '),
+                    Center(child: Text('Specialist experience 3-12 years ')),
                     SfRangeSlider(
                       values: SfRangeValues(4.0, 28.0),
                       onChanged: (onChanged) {},
@@ -99,40 +113,51 @@ class FilterOptions extends StatelessWidget {
                       max: 25,
                       // thumbShape: Shape,
                       showLabels: true,
-                      showTicks: true,
+                      // showTicks: true,
                     ),
-                    Text('Price 1 500 - 17 500 ₽/hour'),
-                     SfRangeSlider(
-                      values: SfRangeValues(4.0, 28.0),
-                      onChanged: (onChanged) {},
-                      inactiveColor: Colors.red,
-                      activeColor: Theme.of(context).buttonColor,
-                      min: 1500,
-                      max: 20000,
-                      // thumbShape: Shape,
-                      showLabels: true,
-                      showTicks: true,
+                    Center(child: Text('Price 1 500 - 17 500 ₽/hour')),
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: widget.size.width * 0.06),
+                      child: SfRangeSlider(
+                        values: _values,
+                        onChanged: (SfRangeValues onChanged) {
+                          setState(() {
+                            _values = onChanged;
+                          });
+                        },
+                        inactiveColor:
+                            Theme.of(context).buttonColor.withOpacity(0.5),
+                        activeColor: Theme.of(context).buttonColor,
+                        min: 1500,
+                        max: 20000,
+                        enableIntervalSelection: true,
+                        enableTooltip: true,
+                        // interval: 20,
+                        // thumbShape: Shape,
+                        showLabels: true,
+                        // showTicks: true,
+                      ),
                     ),
-                     
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: size.width * 0.05, vertical: 5),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: widget.size.width * 0.05, vertical: 10),
                       child: LanguageFormInput(
-                        size: size,
+                        size: widget.size,
                         text: 'Language',
                       ),
                     ),
                   ],
                 )
               : Container(height: 0),
-          SizedBox(height: size.height * 0.00005),
+          SizedBox(height: widget.size.height * 0.00005),
           //? TRY TO SEE IF YOU CAN EDIT TEXTBUTTON THEME IN THE THEME
           Spacer(
             flex: 5,
           ),
 
           ApplyButton(
-            size: size,
+            size: widget.size,
             text: 'Apply',
             horizontal: 0.25,
             press: () {

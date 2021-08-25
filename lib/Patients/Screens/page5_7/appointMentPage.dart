@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/main.dart';
-import 'package:medical_app/Patients/Widgets/page1-4_Widgets/topHeader.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 
 import 'linkCard.dart';
 
 class AppointMentPage extends StatefulWidget {
   static const String routes = 'appointmentPage';
+  final String? reviewsId;
+
+  const AppointMentPage({Key? key, this.reviewsId}) : super(key: key);
 
   @override
   _AppointMentPageState createState() => _AppointMentPageState();
@@ -18,6 +21,27 @@ class _AppointMentPageState extends State<AppointMentPage> {
   DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
+  List<String> timeOfReceipt = [
+    '12:30',
+    '14:00',
+    '15:30',
+    '17:00',
+  ];
+  String? dateFormatted2(DateTime now) {
+    var formatter = DateFormat(" MMM d");
+    String formatted = formatter.format(now);
+
+    return formatted;
+  }
+
+  String? timeChosen;
+  @override
+  void initState() {
+    super.initState();
+    print(widget.reviewsId);
+    _selectedDay = _focusedDay;
+    timeChosen = timeOfReceipt[2];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +66,7 @@ class _AppointMentPageState extends State<AppointMentPage> {
               child: TableCalendar(
                 focusedDay: DateTime.now(),
                 rowHeight: 50,
+                // availableCalendarFormats: ,
                 firstDay: DateTime.utc(2010, 3, 14),
                 lastDay: DateTime.utc(2030, 3, 14),
                 headerStyle: HeaderStyle(
@@ -56,7 +81,6 @@ class _AppointMentPageState extends State<AppointMentPage> {
                     _selectedDay = selectedDay;
                     _focusedDay =
                         focusedDay; // update `_focusedDay` here as well
-                    print(selectedDay.toString());
                   });
                 },
                 onFormatChanged: (format) {
@@ -97,20 +121,21 @@ class _AppointMentPageState extends State<AppointMentPage> {
                       vertical: size.width * 0.04,
                     ),
                     child: GroupButton(
-                      isRadio: false,
+                      // isRadio: false,
+
                       spacing: 10,
                       runSpacing: 10,
                       mainGroupAlignment: MainGroupAlignment.start,
                       groupRunAlignment: GroupRunAlignment.center,
                       crossGroupAlignment: CrossGroupAlignment.start,
-                      onSelected: (index, isSelected) =>
-                          print('$index button is selected'),
-                      buttons: [
-                        '12:30',
-                        '14:00',
-                        '15:30',
-                        '17:00',
-                      ],
+                      onSelected: (index, isSelected) {
+                        setState(() {
+                          timeChosen = timeOfReceipt[index];
+                        });
+                      },
+                      selectedButton: 2,
+                      buttons: timeOfReceipt,
+
                       unselectedTextStyle: TextStyle(
                         fontWeight: FontWeight.normal,
                         color: Theme.of(context).highlightColor,
@@ -123,25 +148,6 @@ class _AppointMentPageState extends State<AppointMentPage> {
                           Theme.of(context).canvasColor.withOpacity(0.2),
                       groupingType: GroupingType.wrap,
                     ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //   children: [
-                    //     ManButton(
-                    //       text: '12:30',
-                    //       bGcolor: Theme.of(context).buttonColor,
-                    //       textColor: Theme.of(context).primaryColor,
-                    //     ),
-                    //     ManButton(
-                    //       text: '14:00',
-                    //     ),
-                    //     ManButton(
-                    //       text: '15:30',
-                    //     ),
-                    //     ManButton(
-                    //       text: '17:00',
-                    //     ),
-                    //   ],
-                    // ),
                   )
                 ],
               ),
@@ -149,10 +155,19 @@ class _AppointMentPageState extends State<AppointMentPage> {
             // Spacer(),
             ApplyButton(
               size: size,
-              text: 'Sign up for May 26 12:30',
+              text: 'Sign up for${dateFormatted2(_selectedDay!)}, $timeChosen',
               horizontal: 0.1,
               press: () {
-                Navigator.pushNamed(context, LinkCardPage.routes);
+                print(timeChosen);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LinkCardPage(
+                    time: timeChosen!,
+                    date: dateFormatted2(_selectedDay!)!,
+                    docId: widget.reviewsId!,
+                  )),
+                );
+                // Navigator.pushNamed(context, LinkCardPage.routes);/
               },
             ),
             // Spacer(),

@@ -24,7 +24,7 @@ class DoctorsProfileCard extends StatefulWidget {
 
   final Size size;
   final String? docId;
- 
+
   final String name, occupation, years, about, imageUrl, salary, time, ratings;
   @override
   _DoctorsProfileCardState createState() => _DoctorsProfileCardState();
@@ -46,16 +46,6 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
           context,
           MaterialPageRoute(
             builder: (context) => DocProfile(
-              name: widget.name,
-              // size: widget.size,
-              occupation: widget.occupation,
-              
-              years: widget.years,
-              about: widget.about,
-              imageUrl: widget.imageUrl,
-              salary: widget.salary,
-              time: widget.time,
-              ratings: widget.ratings,
               reviewsId: widget.docId,
             ),
           ),

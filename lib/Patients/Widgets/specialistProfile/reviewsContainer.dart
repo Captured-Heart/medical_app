@@ -4,9 +4,11 @@ import 'package:medical_app/Patients/Widgets/specialistProfile/ratings.dart';
 class ReviewsContainer extends StatelessWidget {
   final String? ratings;
 
+  final String reviewText;
+
   const ReviewsContainer({
     Key? key,
-    required this.size,  this.ratings,
+    required this.size,  this.ratings, required this.reviewText,
   }) : super(key: key);
 
   final Size size;
@@ -21,7 +23,7 @@ class ReviewsContainer extends StatelessWidget {
           RatingStar(size: size, ratings: ratings!,),
           SizedBox(height: 5),
           Text(
-              'Good specialist. A friend advised. Helped to understand some of the things I\'ve puzzled over.')
+              reviewText)
         ],
       ),
     );
