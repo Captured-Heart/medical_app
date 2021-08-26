@@ -101,17 +101,18 @@ class RegImageRatingsAndSignUpButton extends StatelessWidget {
                       child: Container(
               height: size.height * 0.17,
               width: size.width * 0.27,
-              child: Image.asset(imageUrl, scale: 0.8,),
+              child: 
+              // Image.asset(imageUrl, scale: 0.8,),
               
-              // CachedNetworkImage(
-              //   imageUrl: imageUrl,
-              //   placeholder: (context, url) => Center(
-              //       child: CircularProgressIndicator(
-              //     color: Theme.of(context).buttonColor,
-              //   )),
-              //   errorWidget: (context, url, error) => Icon(Icons.error),
-              //   fit: BoxFit.fill,
-              // ),
+              CachedNetworkImage(
+                imageUrl: imageUrl,
+                placeholder: (context, url) => Center(
+                    child: CircularProgressIndicator(
+                  color: Theme.of(context).buttonColor,
+                )),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+                fit: BoxFit.fill,
+              ),
             ),
           ),
         ),

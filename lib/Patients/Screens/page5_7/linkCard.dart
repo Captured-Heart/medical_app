@@ -54,7 +54,7 @@ class LinkCardPage extends StatelessWidget {
                         );
                       return LinkCardHeader(
                         size: size,
-                        name: date!,
+                        name: snapshot.data!['name'],
                         date: date!,
                         time: time!,
                       );
@@ -114,7 +114,11 @@ Without confirmation, the recording will be canceled after 40 minutes.''',
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => RegDocProfile(),
+                              builder: (context) => RegDocProfile(
+                                docID: docId,
+                                date: date,
+                                time: time,
+                              ),
                             ),
                           );
                         },

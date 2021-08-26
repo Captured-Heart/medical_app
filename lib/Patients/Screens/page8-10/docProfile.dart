@@ -99,9 +99,6 @@ class _DocProfileState extends State<DocProfile> {
                               imageUrl: snapshot.data!['imageUrl'],
                               buttonText: 'Sign up for a consultation',
                               press: () {
-                                // Navigator.pushReplacementNamed(
-                                //     context, AppointMentPage.routes);
-
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

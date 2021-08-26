@@ -101,7 +101,19 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
             ),
 
             // ?SIGN UP FOR CONSULTATION
-            SignUpButton(size: widget.size),
+            SignUpButton(
+                size: widget.size,
+                signUpPress: () {
+                  print(widget.docId);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AppointMentPage(
+                        reviewsId: widget.docId,
+                      ),
+                    ),
+                  );
+                }),
 
             //!THIS FULL DOCTOR PROFILE IS COMPRISING OF EXTRA TEXT CONSITING FROM MORE DTEAILS
             FullDoctorProfile(
@@ -518,19 +530,18 @@ class SignUpButton extends StatelessWidget {
   const SignUpButton({
     Key? key,
     required this.size,
+    required this.signUpPress,
   }) : super(key: key);
 
   final Size size;
-
+  final signUpPress;
   @override
   Widget build(BuildContext context) {
     return Positioned(
       bottom: 0,
       right: 0,
       child: GestureDetector(
-        onTap: () {
-          Navigator.pushReplacementNamed(context, AppointMentPage.routes);
-        },
+        onTap: signUpPress,
         child: Container(
           height: size.height * 0.057,
           width: size.width * 0.55,

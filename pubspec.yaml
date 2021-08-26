@@ -46,6 +46,7 @@ dependencies:
   syncfusion_flutter_sliders: ^19.2.55
   cached_network_image: ^3.1.0
   group_button: ^3.1.0
+  bubble: ^1.2.1
 
 
   #FIREBASE packages
