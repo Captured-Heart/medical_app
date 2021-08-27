@@ -37,17 +37,15 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       }
     });
   }
- 
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       resizeToAvoidBottomInset: false,
-      
       extendBody: true,
       appBar: AppBar(
-        
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
         title: ChangeThemeButtonWidget(),
@@ -55,7 +53,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       ),
       body: Container(
         height: size.height,
-        width: double.infinity,
+        width: size.width,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: size.width * 0.06),
           child: Column(

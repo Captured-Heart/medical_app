@@ -175,9 +175,10 @@ class _AllAndFavTabBarViewState extends State<AllAndFavTabBarView> {
   DoctorsProfileCard buildDoctorsFavProfileCard(
       BuildContext context, DocumentSnapshot documents) {
     Future getData2(context) async {
+      final uuid = await authMethods.getCurrentUID();
       final docss = FirebaseFirestore.instance
           .collection('patients')
-          .doc('patientsID')
+          .doc(uuid)
           .collection('favourites')
           .doc(documents.id);
       return await docss.get();
@@ -224,9 +225,13 @@ class _AllAndFavTabBarViewState extends State<AllAndFavTabBarView> {
       .collection('Profiles')
       .get();
 
-  Future<QuerySnapshot> getFavouritesStreams() async => await db
-      .collection('patients')
-      .doc('patientsID')
-      .collection('favourites')
-      .get();
+  Future<QuerySnapshot> getFavouritesStreams() async {
+    final uuid = await authMethods.getCurrentUID();
+
+    return await db
+        .collection('patients')
+        .doc(uuid)
+        .collection('favourites')
+        .get();
+  }
 }

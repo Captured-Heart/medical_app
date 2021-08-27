@@ -1,11 +1,14 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:medical_app/Patients/Screens/page5_7/appointMentPage.dart';
 import 'package:medical_app/Patients/Widgets/page1-4_Widgets/allAndFavTabBarView.dart';
 import 'package:medical_app/Patients/Widgets/page1-4_Widgets/allAndFavourites.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/specialistHeader.dart';
 import 'package:medical_app/Patients/Widgets/page1-4_Widgets/accToRatingRow.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:medical_app/start.dart';
 import 'package:medical_app/themes/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -43,7 +46,7 @@ class MyApp extends StatelessWidget {
           themeMode: themeProvider.themeMode,
           theme: MyTheme.lightTheme,
           darkTheme: MyTheme.darkTheme,
-          home: MyHomePage(),
+          home: StartPage(),
           routes: {
             MyHomePage.routes: (context) => MyHomePage(),
             DocFilters.routes: (context) => DocFilters(),
@@ -72,6 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+       
         body: SafeArea(
           child: SingleChildScrollView(
             child: Container(
@@ -80,7 +84,6 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  
                   DiscountContainer(),
                   SpecialistContainer(),
                   Expanded(
@@ -90,7 +93,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           AccToRatingRow(size: size),
                           AllAndFavouritesRow(size: size),
-                          
                           AllAndFavTabBarView(size: size),
                         ],
                       ),

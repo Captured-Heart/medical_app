@@ -22,10 +22,10 @@ class AuthMethods {
   }
 
 //SIGN IN WITH EMAIL AND PASSWORD
-  Future signInWithEmailAndPassword(String email, String password) async {
+  Future signInWithEmailAndPassword(String ?email, String password) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+          email: email!, password: password);
       User? firebaseUser = result.user;
       if (firebaseUser!.emailVerified) return firebaseUser.uid;
 

@@ -6,6 +6,7 @@ import 'package:medical_app/Patients/Widgets/docFiltersPage/advSettings.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/main.dart';
 import 'package:medical_app/Patients/Widgets/page1-4_Widgets/topHeader.dart';
+import 'package:medical_app/start.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class FilterOptions extends StatefulWidget {
@@ -28,6 +29,8 @@ class _FilterOptionsState extends State<FilterOptions> {
   @override
   Widget build(BuildContext context) {
     SfRangeValues _values = SfRangeValues(1500, 17500);
+    SfRangeValues _values1 = SfRangeValues(10, 15);
+
 
     return Container(
       width: widget.size.width,
@@ -105,10 +108,17 @@ class _FilterOptionsState extends State<FilterOptions> {
                   children: [
                     Center(child: Text('Specialist experience 3-12 years ')),
                     SfRangeSlider(
-                      values: SfRangeValues(4.0, 28.0),
-                      onChanged: (onChanged) {},
-                      inactiveColor: Colors.red,
+                      values: _values1,
+                      onChanged: (SfRangeValues onChanged) {
+                          setState(() {
+                            _values = onChanged;
+                          });
+                        },
+                      inactiveColor:
+                          Theme.of(context).buttonColor.withOpacity(0.5),
                       activeColor: Theme.of(context).buttonColor,
+                      enableIntervalSelection: true,
+                      enableTooltip: true,
                       min: 0,
                       max: 25,
                       // thumbShape: Shape,
@@ -161,7 +171,10 @@ class _FilterOptionsState extends State<FilterOptions> {
             text: 'Apply',
             horizontal: 0.25,
             press: () {
-              Navigator.pushReplacementNamed(context, MyHomePage.routes);
+              //TODO:Just for testing oooo, changing it back to navigate to MYHomePage.routes
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MyHomePage()));
+              // Navigator.pushReplacementNamed(context, MyHomePage.routes);
             },
           ),
           Spacer(flex: 4),

@@ -1,8 +1,14 @@
 import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
 
 class ChatPage extends StatefulWidget {
+  final String? imageUrl, name;
+  ChatPage({
+    this.imageUrl,
+    this.name,
+  });
   @override
   _ChatPageState createState() => _ChatPageState();
 }
@@ -29,6 +35,7 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 2,
+        leading: BackIcon(),
         toolbarHeight: size.height * 0.1,
         shadowColor: Theme.of(context).buttonColor,
         shape: RoundedRectangleBorder(
@@ -42,16 +49,24 @@ class _ChatPageState extends State<ChatPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(60)),
-                child: Image.asset(
-                  'assets/images/ivan.png',
-                  scale: 1.4,
+              Container(
+                width: 80,
+                height: size.height * 0.07,
+                
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      widget.imageUrl!,
+                    ),
+                    fit: BoxFit.contain,
+                  ),
+                  shape: BoxShape.circle,
                 ),
+                // child: Image.network(widget.imageUrl!),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                child: Text('Ivanov Ivan'),
+                padding: EdgeInsets.symmetric(horizontal: size.width * 0.0005),
+                child: Text(widget.name!),
               )
             ],
           ),

@@ -1,10 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medical_app/Patients/Screens/page5_7/appointMentPage.dart';
 import 'package:medical_app/Patients/Screens/page8-10/docProfile.dart';
+import 'package:medical_app/firebase_Utils/authMethods.dart';
+import 'package:medical_app/firebase_Utils/database.dart';
 
 class DoctorsProfileCard extends StatefulWidget {
   const DoctorsProfileCard({
@@ -34,6 +37,11 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
   bool iconPress = true;
 
   bool moreDetailsPress = true;
+  DataBaseService dataBaseService = DataBaseService();
+  AuthMethods authMethods = AuthMethods();
+  dynamic name, occupation, years, about, imageUrl, salary, time, ratings;
+
+//? TRY TO GET THE SNAPSHOT OF A PARTICULAR dOCID
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +78,23 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
             LikeHeart(
               heartPress: () {
                 setState(() {
+                  Map<String, String> favouritesMap = {
+                    'about': widget.about,
+                    'imageUrl': widget.imageUrl,
+                    'name': widget.name,
+                    'occupation': widget.occupation,
+                    'ratings': widget.ratings,
+                    'time': widget.time,
+                    'years': widget.years,
+                    'salary': widget.salary,
+                    'docId': widget.docId!,
+                    // 'uid': uid
+                  };
+
+                  //! TRY TO PUT A FUNCTION THAT CHECKS IF DOC ALREADY EXIST, THEN DELETE ON PRESSING HEARTS AGAIN
+                  dataBaseService.setPatientsFavourites(favouritesMap);
                   print(widget.docId);
+
                   iconPress = !iconPress;
                 });
               },

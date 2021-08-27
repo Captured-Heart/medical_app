@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TodaySessionOption extends StatelessWidget {
-  final String subtitle2, subtitle1, title, imageString;
+  final String subtitle2, subtitle1, title;
 
   final Color subtitle2Color;
 
@@ -14,12 +14,11 @@ class TodaySessionOption extends StatelessWidget {
     required this.subtitle1,
     required this.title,
     required this.subtitle2Color,
-    required this.imageString,
-    this.beginButton,
+    this.beginButton,  this.image,
   }) : super(key: key);
 
   final Size size;
-
+final Widget ? image;
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -29,7 +28,7 @@ class TodaySessionOption extends StatelessWidget {
         // height: size.height * 0.092,
         child: ListTile(
           leading: ClipRRect(
-            child: Image.asset(imageString),
+            child: image,
             borderRadius: BorderRadius.circular(15),
           ),
           title: Text(

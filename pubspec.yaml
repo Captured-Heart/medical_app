@@ -47,6 +47,8 @@ dependencies:
   cached_network_image: ^3.1.0
   group_button: ^3.1.0
   bubble: ^1.2.1
+  dependencies:
+  google_nav_bar: ^5.0.5
 
 
   #FIREBASE packages

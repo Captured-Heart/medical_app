@@ -69,6 +69,8 @@ class SpecialistOffice extends StatelessWidget {
                     // setState(() {
                     //   recordsExpand = !recordsExpand;
                     // });
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => PostPage()));
                   },
                   leadingWidget: Container(
                     padding: EdgeInsets.all(10),
@@ -198,14 +200,14 @@ class SpecialistOffice extends StatelessWidget {
                   subtitle1: '17:00 | In',
                   subtitle2: ' 00:05',
                   subtitle2Color: Colors.green,
-                  imageString: 'assets/images/oleg.jpg',
+                  image: Image.asset('assets/images/oleg.jpg'),
                   beginButton: ApplyButton(
                     size: size,
                     text: 'To begin',
                     horizontal: size.width * 0.0002,
                     press: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => PostPage()));
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) => PostPage()));
                     },
                   ),
                 ),
@@ -217,7 +219,7 @@ class SpecialistOffice extends StatelessWidget {
                     subtitle1: '17:00 | In',
                     subtitle2: ' 00:05',
                     subtitle2Color: Colors.green,
-                    imageString: 'assets/images/another.png',
+                    image: Image.asset('assets/images/another.png'),
                     beginButton: ApplyButton(
                       size: size,
                       text: 'To begin',

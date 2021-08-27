@@ -20,34 +20,140 @@ class DataBaseService {
       this.uid});
   AuthMethods authMethods = AuthMethods();
 
-  final CollectionReference userSchedule =
-      FirebaseFirestore.instance.collection('Schedule');
+  // final CollectionReference userSchedule =
+  //     FirebaseFirestore.instance.collection('Schedule');
 
-      //  final CollectionReference doctorsUsers =
-      // FirebaseFirestore.instance.collection('doctors');
-
-//! CREATE DATABASE FOR DOCTORS DETAILS/PROFILE
-  Future setDoctorDetails(userMap) async {
+//! CREATE DATABASE FOR PATIENTS APPOINTMENT
+  Future setPatientsAppointment(appointmentMap) async {
     final uuid = await authMethods.getCurrentUID();
     final DocumentReference userDetails = FirebaseFirestore.instance
-        .collection('doctors')
+        .collection('patients')
         .doc(uuid)
-        .collection('Profile')
+        .collection('Appointments')
         .doc();
-    return await userDetails.set(userMap);
+    return await userDetails.set(appointmentMap);
   }
 
-  //! CREATE PATIENTS DETAILS/PROFILE
-  Future setPatientDetails(userMap) async {
+//! CREATE DATABASE FOR PATIENTS CHAT
+  Future setPatientsChat(chatMap) async {
+    final uuid = await authMethods.getCurrentUID();
+    final DocumentReference userDetails = FirebaseFirestore.instance
+        .collection('patients')
+        .doc(uuid)
+        .collection('Chat')
+        .doc();
+    return await userDetails.set(chatMap);
+  }
+
+  //! CREATE DATABASE FOR PATIENTS PAYMENT
+   Future setPatientsPayment(paymentMap) async {
+    final uuid = await authMethods.getCurrentUID();
+    final DocumentReference userDetails = FirebaseFirestore.instance
+        .collection('patients')
+        .doc(uuid)
+        .collection('Payments')
+        .doc();
+    return await userDetails.set(paymentMap);
+  }
+
+//! CREATE DATABASE FOR PATIENTS PROFILE
+  Future setPatientsProfile(profileMap) async {
     final uuid = await authMethods.getCurrentUID();
     final DocumentReference userDetails = FirebaseFirestore.instance
         .collection('patients')
         .doc(uuid)
         .collection('Profile')
         .doc();
-    return await userDetails.set(userMap);
+    return await userDetails.set(profileMap);
   }
 
+  //! CREATE DATABASE FOR PATIENTS PROFILE
+  Future setPatientsRecords(recordMap) async {
+    final uuid = await authMethods.getCurrentUID();
+    final DocumentReference userDetails = FirebaseFirestore.instance
+        .collection('patients')
+        .doc(uuid)
+        .collection('Records')
+        .doc();
+    return await userDetails.set(recordMap);
+  }
+
+   Future setPatientsFavourites(favouritesMap) async {
+    final uuid = await authMethods.getCurrentUID();
+    final DocumentReference userDetails = FirebaseFirestore.instance
+        .collection('patients')
+        .doc(uuid)
+        .collection('favourites')
+        .doc();
+    return await userDetails.set(favouritesMap);
+  }
+
+
+//?PATIENTS ENDS ABOVE
+
+
+
+
+  //! CREATE ALL DOCTORS PROFILE
+  Future setAllDocProfile(docProfileMap) async {
+    // final uuid = await authMethods.getCurrentUID();
+    final DocumentReference userDetails = FirebaseFirestore.instance
+        .collection('doctors')
+        .doc('doctorsID')
+        .collection('Profiles')
+        .doc();
+    return await userDetails.set(docProfileMap);
+  }
+
+  //! CREATE INDIVIDUAL DOCTOR PROFILE
+  Future setDocProfile(docProfileMap) async {
+    final uuid = await authMethods.getCurrentUID();
+    final DocumentReference userDetails = FirebaseFirestore.instance
+        .collection('doctors')
+        .doc(uuid)
+        .collection('Profile')
+        .doc();
+    return await userDetails.set(docProfileMap);
+  }
+
+  //! CREATE INDIVIDUAL DOCTOR CHAT
+  Future setDocChat(docChatMap) async {
+    final uuid = await authMethods.getCurrentUID();
+    final DocumentReference userDetails = FirebaseFirestore.instance
+        .collection('doctors')
+        .doc(uuid)
+        .collection('Chat')
+        .doc();
+    return await userDetails.set(docChatMap);
+  }
+
+  //! CREATE INDIVIDUAL DOCTOR CHAT
+  Future setDocReviews(docChatMap) async {
+    final uuid = await authMethods.getCurrentUID();
+    final DocumentReference userDetails = FirebaseFirestore.instance
+        .collection('doctors')
+        .doc(uuid)
+        .collection('Reviews')
+        .doc();
+    return await userDetails.set(docChatMap);
+  }
+
+// //!? CREATE INDIVIDUAL DOCTOR CORRESPONDENCE, PAYMENTS
+//   Future setDocReviews(docChatMap) async {
+//     final uuid = await authMethods.getCurrentUID();
+//     final DocumentReference userDetails = FirebaseFirestore.instance
+//         .collection('doctors')
+//         .doc(uuid)
+//         .collection('Reviews')
+//         .doc();
+//     return await userDetails.set(docChatMap);
+//   }
+// //!? CREATE INDIVIDUAL DOCTOR CORRESPONDENCE, PAYMENTS
+
+
+
+
+//? UPDATES FOR DOCTOR AND PATIENTS BELOW, NOT SET YET!!!!!!!!!!!!!!!!!
 //! CREATE UPDATE FOR DOCTORS DETAILS
   Future updateDoctorsDetails(userMap, String path) async {
     final uuid = await authMethods.getCurrentUID();
@@ -83,13 +189,13 @@ class DataBaseService {
     return await userDetails.set(userMap);
   }
 
-//CREATE DATABASE FOR SCHEDULE
-  Future updateUserSchedule(scheduleMap) async {
-    return await userSchedule.add(scheduleMap);
-  }
+// //CREATE DATABASE FOR SCHEDULE
+//   Future updateUserSchedule(scheduleMap) async {
+//     return await userSchedule.add(scheduleMap);
+//   }
 
-//TRYING TO RETURN SAVED SCHEDULE FILES FROM DATABASE
-  Future returnScheduleDetails(sMap) async {
-    return await userSchedule.get();
-  }
+// //TRYING TO RETURN SAVED SCHEDULE FILES FROM DATABASE
+//   Future returnScheduleDetails(sMap) async {
+//     return await userSchedule.get();
+//   }
 }

@@ -43,19 +43,20 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      // resizeToAvoidBottomInset: true,
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         elevation: 0,
+        leading: BackIcon(),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: size.height * 1.53,
-          width: double.infinity,
-          margin: EdgeInsets.symmetric(horizontal: 30),
+      body: Container(
+        height: size.height,
+        width: double.infinity,
+        margin: EdgeInsets.symmetric(horizontal: 30),
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ChangePhotoColumn(
                 size: size,
@@ -152,7 +153,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
               Center(
                   child: ApplyButton(
                       size: size, text: 'Save changes', horizontal: 0.2)),
-              Spacer()
+              SizedBox(height: 25)
             ],
           ),
         ),

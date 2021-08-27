@@ -111,6 +111,7 @@ Without confirmation, the recording will be canceled after 40 minutes.''',
                         text: 'Link card',
                         horizontal: 0.25,
                         press: () {
+                          print(docId);
                           Navigator.push(
                             context,
                             MaterialPageRoute(

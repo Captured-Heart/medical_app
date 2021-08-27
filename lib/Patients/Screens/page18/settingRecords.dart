@@ -331,6 +331,7 @@ class RecordingTimesOptions extends StatelessWidget {
         style: TextStyle(
           fontWeight: FontWeight.w300,
           fontSize: 16,
+          color: Colors.grey
         ),
       ),
       trailing: GestureDetector(

@@ -16,9 +16,12 @@ class RegDocProfile extends StatefulWidget {
   static const String routes = 'RegdocProfilePage';
   final String? docID, date, time;
 
-  const RegDocProfile(
-      {Key? key, this.docID, required this.date, required this.time,})
-      : super(key: key);
+  const RegDocProfile({
+    Key? key,
+    this.docID,
+     this.date,
+     this.time,
+  }) : super(key: key);
 
   @override
   _RegDocProfileState createState() => _RegDocProfileState();
@@ -98,7 +101,10 @@ class _RegDocProfileState extends State<RegDocProfile> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ChatPage()));
+                                    builder: (context) => ChatPage(
+                                          name: snapshot.data!['name'],
+                                          imageUrl: snapshot.data!['imageUrl'],
+                                        )));
                           },
                         ),
                         Padding(
@@ -205,6 +211,7 @@ class _RegDocProfileState extends State<RegDocProfile> {
                           child: Container(
                             child: RegDocProfileTabBarView(
                               size: size,
+                              docId: widget.docID,
                               press: () {
                                 Navigator.pop(context);
                                 _showDialogFlash(

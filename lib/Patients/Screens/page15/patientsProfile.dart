@@ -350,18 +350,21 @@ class _PatientsProfileState extends State<PatientsProfile> {
                 ),
                 TodaySessionOption(
                   size: size,
+                  image: GestureDetector(
+                    onTap: () {},
+                    child: Image.asset('assets/images/ivan.png'),
+                  ),
                   title: 'Ivanov Ivan',
                   subtitle1: '17:00 | In',
                   subtitle2: ' 00:05',
                   subtitle2Color: Colors.green,
-                  imageString: 'assets/images/ivan.png',
                   beginButton: ApplyButton(
                     size: size,
                     text: 'To begin',
                     horizontal: size.width * 0.0002,
                     press: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => ChatPage()));
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) => ChatPage()));
                     },
                   ),
                 ),
@@ -370,11 +373,11 @@ class _PatientsProfileState extends State<PatientsProfile> {
                   padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
                   child: TodaySessionOption(
                     size: size,
+                    image: Image.asset('assets/images/peter.png'),
                     title: 'Vetrov Peter',
                     subtitle1: '18:30 | In ',
                     subtitle2: ' 01:45',
                     subtitle2Color: Colors.blue,
-                    imageString: 'assets/images/peter.png',
                   ),
                 )
               ],
