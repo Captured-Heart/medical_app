@@ -121,8 +121,6 @@ class _AppointMentPageState extends State<AppointMentPage> {
                       vertical: size.width * 0.04,
                     ),
                     child: GroupButton(
-                      // isRadio: false,
-
                       spacing: 10,
                       runSpacing: 10,
                       mainGroupAlignment: MainGroupAlignment.start,
@@ -135,7 +133,6 @@ class _AppointMentPageState extends State<AppointMentPage> {
                       },
                       selectedButton: 2,
                       buttons: timeOfReceipt,
-
                       unselectedTextStyle: TextStyle(
                         fontWeight: FontWeight.normal,
                         color: Theme.of(context).highlightColor,
@@ -161,11 +158,12 @@ class _AppointMentPageState extends State<AppointMentPage> {
                 print(timeChosen);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LinkCardPage(
-                    time: timeChosen!,
-                    date: dateFormatted2(_selectedDay!)!,
-                    docId: widget.reviewsId!,
-                  )),
+                  MaterialPageRoute(
+                      builder: (context) => LinkCardPage(
+                            time: timeChosen!,
+                            date: dateFormatted2(_selectedDay!)!,
+                            docId: widget.reviewsId!,
+                          )),
                 );
                 // Navigator.pushNamed(context, LinkCardPage.routes);/
               },

@@ -198,7 +198,7 @@ class MessageTile extends StatelessWidget {
       stick: true,
       radius: Radius.circular(20),
       nip: sendByMe! ? BubbleNip.rightBottom : BubbleNip.leftBottom,
-      color: Colors.lime,
+      color: Theme.of(context).primaryColor,
       nipWidth: 5,
       nipHeight: 20,
       alignment: sendByMe! ? Alignment.centerRight : Alignment.centerLeft,
@@ -208,7 +208,7 @@ class MessageTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            width: size.width * 0.51,
+            width: size.width * 0.49,
             margin: EdgeInsets.symmetric(
               horizontal: 10,
               vertical: 7,

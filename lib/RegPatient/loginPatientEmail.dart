@@ -88,6 +88,7 @@ class _LoginPatientEmailState extends State<LoginPatientEmail> {
           child: Container(
             height: size.height,
             width: size.width,
+            margin: EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -217,6 +218,7 @@ class _LoginPatientEmailState extends State<LoginPatientEmail> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15.0),
                         child: TextFormField(
+                          obscureText: true,
                           textAlign: TextAlign.start,
                           controller: emailController,
                           textInputAction: TextInputAction.next,

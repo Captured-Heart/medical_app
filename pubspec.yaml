@@ -49,6 +49,7 @@ dependencies:
   bubble: ^1.2.1
   dependencies:
   google_nav_bar: ^5.0.5
+  day_night_switcher: ^0.2.0+1
 
 
   #FIREBASE packages

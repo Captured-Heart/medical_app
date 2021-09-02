@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medical_app/Patients/Screens/page18/profileSettings.dart';
@@ -15,7 +16,9 @@ import 'package:medical_app/Patients/Widgets/page15/profileOptions.dart';
 import 'package:medical_app/Patients/Widgets/page15/profilePicAndName.dart';
 import 'package:medical_app/Patients/Widgets/page15/recordssubSection.dart';
 import 'package:medical_app/Patients/Widgets/page15/todaySessionOption.dart';
+import 'package:medical_app/themes/theme.dart';
 import 'package:medical_app/themes/theme_switch.dart';
+import 'package:provider/provider.dart';
 
 import 'chatPage.dart';
 
@@ -29,19 +32,23 @@ class PatientsProfile extends StatefulWidget {
 bool recordsExpand = false;
 bool correspondenceExpand = false;
 bool paymentExpand = false;
+bool switchTheme = true;
 
 class _PatientsProfileState extends State<PatientsProfile> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    var switchOn = themeProvider.isDarkMode;
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      appBar: AppBar(
-        elevation: 0,
-        leading: BackIcon(),
-        title: ChangeThemeButtonWidget(),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
+      // appBar: AppBar(
+      //   elevation: 0,
+      //   leading: BackIcon(),
+      //   title: ChangeThemeButtonWidget(),
+      //   backgroundColor: Theme.of(context).primaryColor,
+      // ),
+      
       body: SafeArea(
         child: Container(
           height: size.height,
@@ -50,36 +57,80 @@ class _PatientsProfileState extends State<PatientsProfile> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProfileSettings()));
-                  },
-                  child: FutureBuilder(
-                      future: getRecords(),
-                      builder:
-                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                        if (snapshot.hasData) {
-                          return Row(
-                              children: snapshot.data!.docs
-                                  .map(
-                                    (document) => ProfPicAndName(
-                                      size: size,
-                                      imageUrl: document['imageUrl'],
-                                      // 'assets/images/oleg.jpg',
-                                      name: document['name'],
-                                    ),
-                                  )
-                                  .toList());
-                        } else {
-                          return Text('');
-                        }
-                      }),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 15.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProfileSettings()));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        FutureBuilder(
+                            future: getRecords(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              }
+                              if (snapshot.hasData) {
+                                return Row(
+                                    children: snapshot.data!.docs
+                                        .map(
+                                          (document) => ProfPicAndName(
+                                            size: size,
+                                            imageUrl: document['imageUrl'],
+                                            // 'assets/images/oleg.jpg',
+                                            name: document['name'],
+                                          ),
+                                        )
+                                        .toList());
+                              } else {
+                                return Text('');
+                              }
+                            }),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: DayNightSwitcherIcon(
+                            isDarkModeEnabled: switchOn,
+                            nightBackgroundColor: Theme.of(context).primaryColor,
+                            dayBackgroundColor: Theme.of(context).primaryColor,
+                            moonColor: Theme.of(context).buttonColor,
+                            cratersColor: Theme.of(context).buttonColor,
+                            // sunColor: Colors.amber,
+                            cloudsColor:Theme.of(context).buttonColor ,
+                            onStateChanged: (switchOn) {
+                              final provider = Provider.of<ThemeProvider>(
+                                  context,
+                                  listen: false);
+                              provider.toggleTheme(switchOn);
+                              // setState(() {
+                              //   switchTheme = !switchTheme;
+                              // });
+                            },
+                          ),
+                          // GestureDetector(
+                          //   onTap: () {
+                          //     final provider = Provider.of<ThemeProvider>(
+                          //         context,
+                          //         listen: false);
+                          //     provider.toggleTheme(switchOn);
+                          //     setState(() {
+                          //       switchTheme = !switchTheme;
+                          //     });
+                          //   },
+                          //   child: switchTheme
+                          //       ? Icon(Icons.dangerous)
+                          //       : Icon(Icons.access_alarm),
+                          // ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 SizedBox(height: size.height * 0.01),
                 Divider(

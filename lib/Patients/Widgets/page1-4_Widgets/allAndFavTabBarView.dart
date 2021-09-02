@@ -52,7 +52,7 @@ class _AllAndFavTabBarViewState extends State<AllAndFavTabBarView> {
     return Column(
       children: [
         Container(
-            height: widget.size.height / 1.45,
+            height: widget.size.height / 1.62,
             child: TabBarView(
               // controller: TabController,
               children: [
@@ -77,26 +77,6 @@ class _AllAndFavTabBarViewState extends State<AllAndFavTabBarView> {
                           );
                         },
                       );
-                      //  ListView(
-                      //   children: snapshot.data!.docs
-                      //       .map(
-                      //         (document) =>
-                      //             //?ALL DOCTORS
-                      //             DoctorsProfileCard(
-                      //           size: widget.size,
-                      //           name: document['name'],
-                      //           imageUrl: document['imageUrl'],
-                      //           occupation: document['occupation'],
-                      //           years: document['years'],
-                      //           about: document['about'],
-                      //           salary: document['salary'],
-                      //           time: document['time'],
-                      //           ratings: document['rating'],
-                      //           // reviewsId: ,
-                      //         ),
-                      //       )
-                      //       .toList(),
-                      // );
                     }),
 
                 //? FAVOURITES TABVIEW
@@ -121,23 +101,6 @@ class _AllAndFavTabBarViewState extends State<AllAndFavTabBarView> {
                           );
                         },
                       );
-
-                      // ListView(
-                      //   children: snapshot.data!.docs.map((documents) {
-                      //     return DoctorsProfileCard(
-                      //       size: widget.size,
-                      //       name: 'Petrov Peter',
-                      //       imageUrl: documents['imageUrl'],
-                      //       occupation: 'Psychotherapist',
-                      //       years: '10',
-                      //       about: 'ndkcdjvkds',
-                      //       salary: '2900',
-                      //       time: '38',
-                      //       ratings: '4',
-                      //       // reviewsId: ,
-                      //     );
-                      //   }).toList(),
-                      // );
                     }),
               ],
             )),

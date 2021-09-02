@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:medical_app/Patients/Screens/page5_7/worriesPage.dart';
 
 class SpecialistContainer extends StatefulWidget {
   const SpecialistContainer({
@@ -26,22 +26,35 @@ class _SpecialistContainerState extends State<SpecialistContainer> {
             bottomStart: Radius.circular(40),
           ),
         ),
-        child: Center(
-          child: RichText(
-            text: TextSpan(
-              text: '213',
-              style: TextStyle(color: Theme.of(context).buttonColor),
-              children: [
-                TextSpan(
-                  //TODO: set default TextColor acc to the mode(light or dark)
+        child: FutureBuilder(
+            future: getDoctorsStreams(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (!snapshot.hasData)
+                return Center(child: CircularProgressIndicator());
+              if (snapshot.connectionState == ConnectionState.none)
+                return Center(
+                  child: Icon(
+                    Icons.error,
+                    size: 100,
+                  ),
+                );
+              return Center(
+                child: RichText(
+                  text: TextSpan(
+                    text: snapshot.data!.docs.length.toString(),
+                    style: TextStyle(color: Theme.of(context).buttonColor),
+                    children: [
+                      TextSpan(
+                        //TODO: set default TextColor acc to the mode(light or dark)
 
-                  text: ' specialists ready to receive you',
-                  style: buildTextStyleColor(context),
-                )
-              ],
-            ),
-          ),
-        ));
+                        text: ' specialists ready to receive you',
+                        style: buildTextStyleColor(context),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }));
   }
 
   TextStyle buildTextStyleColor(BuildContext context) {
@@ -61,102 +74,196 @@ class _SpecialistContainerState extends State<SpecialistContainer> {
 //!
 
 //!
+var db = FirebaseFirestore.instance;
 
-class SleepProblemsRowOptions extends StatelessWidget {
-  const SleepProblemsRowOptions({
-    Key? key,
-  }) : super(key: key);
+Future<QuerySnapshot> getDoctorsStreams() async => await db
+    .collection('doctors')
+    .doc('doctorsID')
+    .collection('Profiles')
+    .get();
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
-      children: [
-        AddButton(
-          text: 'Sleep Problems',
-          icon: FontAwesomeIcons.times,
-        ),
-        AddButton(
-          text: 'Depression',
-          icon: FontAwesomeIcons.times,
-        ),
-        AddButton(
-          text: 'Violence',
-          icon: FontAwesomeIcons.times,
-        ),
-      ],
-    );
-  }
-}
+//
 
-class AddPanicAttacksRowOptions extends StatelessWidget {
+class AddPanicAttacksRowOptions extends StatefulWidget {
+  final String ? option, option1, option2, option3, option4;
   const AddPanicAttacksRowOptions({
     Key? key,
+    required this.option1,
+    required this.option2,
+    required this.option3,
+    required this.option4,
+    required this.option,
   }) : super(key: key);
 
   @override
+  _AddPanicAttacksRowOptionsState createState() =>
+      _AddPanicAttacksRowOptionsState();
+}
+
+class _AddPanicAttacksRowOptionsState extends State<AddPanicAttacksRowOptions> {
+  bool delWhatWorriesYouButton = true;
+  bool delWhatWorriesYouButton1 = true;
+  bool delWhatWorriesYouButton2 = true;
+  bool delWhatWorriesYouButton3 = true;
+  bool delWhatWorriesYouButton4 = true;
+
+  @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
+    return Wrap(
+      alignment: WrapAlignment.start,
+      spacing: 15,
+      runSpacing: 5,
       children: [
-        InkWell(
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => WorriesPage()));
-          },
-          child: AutoSizeText(
-            'Add',
-            style: TextStyle(color: Theme.of(context).buttonColor),
-          ),
-        ),
-        AddButton(
-          text: 'Panic attacks',
-          icon: FontAwesomeIcons.times,
-        ),
-        AddButton(
-          text: 'Stress',
-          icon: FontAwesomeIcons.times,
-        ),
+        SizedBox(width: 10),
+        delWhatWorriesYouButton
+            ? AddButton(
+                text: widget.option!,
+                icon: FontAwesomeIcons.times,
+                delWhatWorriesYou: () {
+                  setState(() {
+                    delWhatWorriesYouButton = !delWhatWorriesYouButton;
+                  });
+                },
+              )
+            : Text(''),
+        delWhatWorriesYouButton1
+            ? AddButton(
+                text: widget.option1!,
+                icon: FontAwesomeIcons.times,
+                delWhatWorriesYou: () {
+                  setState(() {
+                    delWhatWorriesYouButton1 = !delWhatWorriesYouButton1;
+                  });
+                },
+              )
+            : Text(''),
+        delWhatWorriesYouButton2
+            ? AddButton(
+                text: widget.option2!,
+                icon: FontAwesomeIcons.times,
+                delWhatWorriesYou: () {
+                  setState(() {
+                    delWhatWorriesYouButton2 = !delWhatWorriesYouButton2;
+                  });
+                },
+              )
+            : Text(''),
+        delWhatWorriesYouButton3
+            ? AddButton(
+                text: widget.option3!,
+                icon: FontAwesomeIcons.times,
+                delWhatWorriesYou: () {
+                  setState(() {
+                    delWhatWorriesYouButton3 = !delWhatWorriesYouButton3;
+                  });
+                },
+              )
+            : Text(''),
+        delWhatWorriesYouButton4
+            ? AddButton(
+                text: widget.option4!,
+                icon: FontAwesomeIcons.times,
+                delWhatWorriesYou: () {
+                  setState(() {
+                    delWhatWorriesYouButton4 = !delWhatWorriesYouButton4;
+                  });
+                },
+              )
+            : Text(''),
       ],
     );
   }
 }
 
-class ManWomanRowOptions extends StatelessWidget {
-  const ManWomanRowOptions({
+class AddPanicAttacksRowOptions2 extends StatefulWidget {
+  const AddPanicAttacksRowOptions2({
     Key? key,
-    required this.text,
-    required this.text2,
-    required this.text3,
+    
   }) : super(key: key);
-  final String text, text2, text3;
+
+  @override
+  _AddPanicAttacksRowOptionsState2 createState() =>
+      _AddPanicAttacksRowOptionsState2();
+}
+
+class _AddPanicAttacksRowOptionsState2
+    extends State<AddPanicAttacksRowOptions2> {
+  bool delWhatWorriesYouButton = false;
+  bool delWhatWorriesYouButton1 = false;
+  bool delWhatWorriesYouButton2 = false;
+  bool delWhatWorriesYouButton3 = false;
+  bool delWhatWorriesYouButton4 = false;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Wrap(
+      alignment: WrapAlignment.center,
+      // verticalDirection: VerticalDirection.up,
+      spacing: 15,
+      runSpacing: 5,
       children: [
-        ManButton(
-          bGcolor: Theme.of(context).buttonColor,
-          text: text,
-          textColor: Theme.of(context).primaryColor,
-        ),
-        ManButton(
-          bGcolor: Colors.transparent,
-          text: text2,
-        ),
-        ManButton(
-          bGcolor: Colors.transparent,
-          text: text3,
-        ),
+        SizedBox(width: 10),
+        !delWhatWorriesYouButton
+            ? AddButton(
+                text: 'stress',
+                icon: FontAwesomeIcons.times,
+                delWhatWorriesYou: () {
+                  setState(() {
+                    delWhatWorriesYouButton = !delWhatWorriesYouButton;
+                  });
+                },
+              )
+            : Text(''),
+        !delWhatWorriesYouButton1
+            ? AddButton(
+                text: 'Panic Attacks',
+                icon: FontAwesomeIcons.times,
+                delWhatWorriesYou: () {
+                  setState(() {
+                    delWhatWorriesYouButton1 = !delWhatWorriesYouButton1;
+                  });
+                },
+              )
+            : Text(''),
+        !delWhatWorriesYouButton2
+            ? AddButton(
+                text: 'Stress',
+                icon: FontAwesomeIcons.times,
+                delWhatWorriesYou: () {
+                  setState(() {
+                    delWhatWorriesYouButton2 = !delWhatWorriesYouButton2;
+                  });
+                },
+              )
+            : Text(''),
+        delWhatWorriesYouButton3
+            ? AddButton(
+                text: 'Sleep',
+                icon: FontAwesomeIcons.times,
+                delWhatWorriesYou: () {
+                  setState(() {
+                    delWhatWorriesYouButton3 = !delWhatWorriesYouButton3;
+                  });
+                },
+              )
+            : Text(''),
+        delWhatWorriesYouButton4
+            ? AddButton(
+                text: 'Depression',
+                icon: FontAwesomeIcons.times,
+                delWhatWorriesYou: () {
+                  setState(() {
+                    delWhatWorriesYouButton4 = !delWhatWorriesYouButton4;
+                  });
+                },
+              )
+            : Text(''),
       ],
     );
   }
 }
+
+//
 
 class ManButton extends StatelessWidget {
   const ManButton({
@@ -190,18 +297,23 @@ class ManButton extends StatelessWidget {
 }
 
 class AddButton extends StatelessWidget {
+  final delWhatWorriesYou;
+
   const AddButton({
     Key? key,
     required this.text,
     this.textColor,
     this.icon,
+    this.delWhatWorriesYou,
   }) : super(key: key);
   final Color? textColor;
   final String text;
   final IconData? icon;
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Container(
+      width: size.width * 0.25,
       // margin: EdgeInsets.only(top: 10, bottom: 34),
       padding: EdgeInsets.symmetric(vertical: 3, horizontal: 10),
       decoration: BoxDecoration(
@@ -213,14 +325,20 @@ class AddButton extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+            Container(
+              width: size.width * 0.16,
               child: AutoSizeText(
                 text,
+                maxLines: 1,
+                // textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: textColor),
               ),
             ),
-            Icon(icon, size: 11)
+            GestureDetector(
+              onTap: delWhatWorriesYou,
+              child: Expanded(child: Icon(icon, size: 11)),
+            )
           ],
         ),
       ),

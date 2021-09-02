@@ -1,7 +1,10 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medical_app/RegDoctor/loginDoc.dart';
 import 'package:medical_app/RegPatient/loginPatientEmail.dart';
+import 'package:medical_app/main.dart';
+import 'package:medical_app/main2.dart';
 
 class LoginPagePatients extends StatefulWidget {
   @override
@@ -42,6 +45,12 @@ class _LoginPagePatientsState extends State<LoginPagePatients> {
                       textColor: Theme.of(context).primaryColor,
                       icon: FontAwesomeIcons.facebook,
                       iconcolor: Theme.of(context).primaryColor,
+                      press: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MyHomePage()),
+                        );
+                      },
                     ),
                     FaceBookLoginButton(
                       size: size,
@@ -50,6 +59,12 @@ class _LoginPagePatientsState extends State<LoginPagePatients> {
                       textColor: Theme.of(context).primaryColor,
                       icon: FontAwesomeIcons.medium,
                       iconcolor: Theme.of(context).primaryColor,
+                      press: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MyHomePage()),
+                        );
+                      },
                     ),
                     FaceBookLoginButton(
                       size: size,
@@ -152,16 +167,18 @@ class FaceBookLoginButton extends StatelessWidget {
       child: Container(
         width: size.width * 0.7,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Icon(
               icon,
               color: iconcolor,
               size: 30,
             ),
-            Text(
+            SizedBox(width: 15),
+            AutoSizeText(
               text,
-              style: TextStyle(color: textColor, fontSize: 22),
+              style: TextStyle(color: textColor, fontSize: 18),
+              maxLines: 1,
             ),
           ],
         ),

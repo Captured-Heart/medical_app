@@ -209,6 +209,7 @@ class _LoginDocEmailState extends State<LoginDocEmail> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15.0),
                         child: TextFormField(
+                          obscureText: true,
                           textAlign: TextAlign.start,
                           controller: emailController,
                           textInputAction: TextInputAction.next,

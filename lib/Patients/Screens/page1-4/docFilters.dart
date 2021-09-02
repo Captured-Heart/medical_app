@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/filterOptions.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/specialistHeader.dart';
 
-
 class DocFilters extends StatefulWidget {
   static const String routes = 'filterPage';
 
@@ -27,7 +26,7 @@ class _DocFiltersState extends State<DocFilters> {
               DiscountContainer(),
               Positioned(
                 top: size.height * 0.039,
-                child: FilterOptions(
+                child: FilterOptions2(
                   size: size,
                   advSettings: advSettings,
                   press: () {
@@ -44,4 +43,3 @@ class _DocFiltersState extends State<DocFilters> {
     );
   }
 }
-

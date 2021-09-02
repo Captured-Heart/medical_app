@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -45,224 +44,209 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        //!YOU WILL PASS DATA FROM THIS CARD TO THE NEXT PAGE (imageUrl, name, occupation,experienceYears, salary)
-
-        // Navigator.pushReplacementNamed(context, DocProfile.routes);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DocProfile(
-              reviewsId: widget.docId,
-            ),
-          ),
-        );
-      },
-      child: Container(
-        height: moreDetailsPress
-            ? widget.size.height * 0.24
-            : widget.size.height * 0.62,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: BorderRadius.all(
-            Radius.circular(15),
-          ),
+    return Container(
+      height: moreDetailsPress
+          ? widget.size.height * 0.24
+          : widget.size.height * 0.62,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+        borderRadius: BorderRadius.all(
+          Radius.circular(15),
         ),
-        margin: EdgeInsets.only(top: widget.size.height * 0.03),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            //?FAVORITES BUTTON
-            LikeHeart(
-              heartPress: () {
-                setState(() {
-                  Map<String, String> favouritesMap = {
-                    'about': widget.about,
-                    'imageUrl': widget.imageUrl,
-                    'name': widget.name,
-                    'occupation': widget.occupation,
-                    'ratings': widget.ratings,
-                    'time': widget.time,
-                    'years': widget.years,
-                    'salary': widget.salary,
-                    'docId': widget.docId!,
-                    // 'uid': uid
-                  };
+      ),
+      margin: EdgeInsets.only(top: widget.size.height * 0.03),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          //?FAVORITES BUTTON
+          LikeHeart(
+            heartPress: () {
+              setState(() {
+                Map<String, String> favouritesMap = {
+                  'about': widget.about,
+                  'imageUrl': widget.imageUrl,
+                  'name': widget.name,
+                  'occupation': widget.occupation,
+                  'ratings': widget.ratings,
+                  'time': widget.time,
+                  'years': widget.years,
+                  'salary': widget.salary,
+                  'docId': widget.docId!,
+                  // 'uid': uid
+                };
 
-                  //! TRY TO PUT A FUNCTION THAT CHECKS IF DOC ALREADY EXIST, THEN DELETE ON PRESSING HEARTS AGAIN
-                  dataBaseService.setPatientsFavourites(favouritesMap);
-                  print(widget.docId);
+                //! TRY TO PUT A FUNCTION THAT CHECKS IF DOC ALREADY EXIST, THEN DELETE ON PRESSING HEARTS AGAIN
+                dataBaseService.setPatientsFavourites(favouritesMap);
+                print(widget.docId);
 
-                  iconPress = !iconPress;
-                });
-              },
-              heartIcon: iconPress
-                  ? Icon(
-                      FontAwesomeIcons.solidHeart,
-                      size: 20,
-                    )
-                  : Icon(
-                      FontAwesomeIcons.solidHeart,
-                      color: Color(0xff3D414E),
-                      size: 20,
-                    ),
-            ),
-
-            //?MORE DETAILS TEXTBUTTON
-            MoreDetails(
-              moreDetailsText:
-                  moreDetailsPress ? 'More Details' : 'Less Details',
-              moreDetailsIcon: moreDetailsPress
-                  ? Icons.arrow_drop_down
-                  : Icons.arrow_drop_up,
-              moreDetailsPress: () {
-                setState(() {
-                  moreDetailsPress = !moreDetailsPress;
-                });
-              },
-            ),
-
-            // ?SIGN UP FOR CONSULTATION
-            SignUpButton(
-                size: widget.size,
-                signUpPress: () {
-                  print(widget.docId);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AppointMentPage(
-                        reviewsId: widget.docId,
-                      ),
-                    ),
-                  );
-                }),
-
-            //!THIS FULL DOCTOR PROFILE IS COMPRISING OF EXTRA TEXT CONSITING FROM MORE DTEAILS
-            FullDoctorProfile(
-              size: widget.size,
-              about: widget.about,
-              imageUrl: widget.imageUrl,
-              occupation: widget.occupation,
-              years: widget.years,
-              salary: widget.salary,
-              time: widget.time,
-              ratings: widget.ratings,
-              name: widget.name,
-            ),
-            !moreDetailsPress
-                ? Positioned(
-                    top: widget.size.height * 0.18,
-                    left: 15,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //?!ABOUT MYSELF SECTION
-
-                        // ?# ABOUT MYSELF TITLE WITH DIVIDER LINE
-                        AboutMyself(
-                          widget: widget,
-                          text: 'About Myself',
-                          divider: Container(
-                              height: 0.3,
-                              color: Theme.of(context).canvasColor,
-                              width: widget.size.width * 0.6),
-                        ),
-
-                        SizedBox(height: 5),
-
-                        //? ABOUT MYSELF DESCRIPTION
-                        Container(
-                          child: AutoSizeText(
-                            widget.about,
-                          ),
-                          // '''Doctor of doctoral sciences. Great fellow, grandson \n granny, mommy\'s son.'''),
-                        ),
-                        SizedBox(height: 10),
-
-                        //!
-                        //? SPECIALIZATION SECTION
-                        AboutMyself(
-                          widget: widget,
-                          text: 'Specializations',
-                          divider: Container(
-                              height: 0.2,
-                              color: Theme.of(context).canvasColor,
-                              width: widget.size.width * 0.6),
-                        ),
-
-                        //? SPECIALIZATION OPTIONS
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          textBaseline: TextBaseline.ideographic,
-                          children: [
-                            SpecializationOptions(text: 'Violence'),
-                            SizedBox(width: 10),
-                            SpecializationOptions(text: 'Incest'),
-                            SizedBox(width: 10),
-                            SpecializationOptions(text: 'LGBTQ'),
-                            SizedBox(width: 15),
-                            AutoSizeText(
-                              'View all (42)',
-                              style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                color: Theme.of(context).buttonColor,
-                                // letterSpacing: 1
-                              ),
-                            )
-                          ],
-                        ),
-
-                        //!
-                        //? EDUCATION SECTION
-                        AboutMyself(
-                          widget: widget,
-                          text: 'Education',
-                          divider: Container(
-                              height: 0.5,
-                              color: Theme.of(context).canvasColor,
-                              width: widget.size.width * 0.6),
-                        ),
-                        AutoSizeText('Teachers University College, Columbia'),
-                        AutoSizeText('Languages: English, Russian, Spanish'),
-                        SizedBox(height: 15),
-
-                        //!
-                        //? LIKE BUTTON
-                        Row(
-                          children: [
-                            Container(
-                              height: 30,
-                              width: 30,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Theme.of(context)
-                                    .canvasColor
-                                    .withOpacity(0.2),
-                              ),
-                              child: Icon(
-                                FontAwesomeIcons.solidThumbsUp,
-                                size: 12,
-                              ),
-                            ),
-                            SizedBox(width: 6),
-                            AutoSizeText(
-                              '28 reviews',
-                              style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                color: Theme.of(context).buttonColor,
-                                // letterSpacing: 1
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
+                iconPress = !iconPress;
+              });
+            },
+            heartIcon: iconPress
+                ? Icon(
+                    FontAwesomeIcons.solidHeart,
+                    size: 20,
                   )
-                : Text('')
-          ],
-        ),
+                : Icon(
+                    FontAwesomeIcons.solidHeart,
+                    color: Color(0xff3D414E),
+                    size: 20,
+                  ),
+          ),
+
+          //?MORE DETAILS TEXTBUTTON
+          MoreDetails(
+            moreDetailsText:
+                moreDetailsPress ? 'More Details' : 'Less Details',
+            moreDetailsIcon: moreDetailsPress
+                ? Icons.arrow_drop_down
+                : Icons.arrow_drop_up,
+            moreDetailsPress: () {
+              setState(() {
+                moreDetailsPress = !moreDetailsPress;
+              });
+            },
+          ),
+
+          // ?SIGN UP FOR CONSULTATION
+          SignUpButton(
+              size: widget.size,
+              signUpPress: () {
+                print(widget.docId);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AppointMentPage(
+                      reviewsId: widget.docId,
+                    ),
+                  ),
+                );
+              }),
+
+          //!THIS FULL DOCTOR PROFILE IS COMPRISING OF EXTRA TEXT CONSITING FROM MORE DTEAILS
+          FullDoctorProfile(
+            size: widget.size,
+            about: widget.about,
+            imageUrl: widget.imageUrl,
+            occupation: widget.occupation,
+            years: widget.years,
+            salary: widget.salary,
+            time: widget.time,
+            ratings: widget.ratings,
+            name: widget.name,
+          ),
+          !moreDetailsPress
+              ? Positioned(
+                  top: widget.size.height * 0.18,
+                  left: 15,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //?!ABOUT MYSELF SECTION
+
+                      // ?# ABOUT MYSELF TITLE WITH DIVIDER LINE
+                      AboutMyself(
+                        widget: widget,
+                        text: 'About Myself',
+                        divider: Container(
+                            height: 0.3,
+                            color: Theme.of(context).canvasColor,
+                            width: widget.size.width * 0.6),
+                      ),
+
+                      SizedBox(height: 5),
+
+                      //? ABOUT MYSELF DESCRIPTION
+                      Container(
+                        child: AutoSizeText(
+                          widget.about,
+                        ),
+                        // '''Doctor of doctoral sciences. Great fellow, grandson \n granny, mommy\'s son.'''),
+                      ),
+                      SizedBox(height: 10),
+
+                      //!
+                      //? SPECIALIZATION SECTION
+                      AboutMyself(
+                        widget: widget,
+                        text: 'Specializations',
+                        divider: Container(
+                            height: 0.2,
+                            color: Theme.of(context).canvasColor,
+                            width: widget.size.width * 0.6),
+                      ),
+
+                      //? SPECIALIZATION OPTIONS
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.ideographic,
+                        children: [
+                          SpecializationOptions(text: 'Violence'),
+                          SizedBox(width: 10),
+                          SpecializationOptions(text: 'Incest'),
+                          SizedBox(width: 10),
+                          SpecializationOptions(text: 'LGBTQ'),
+                          SizedBox(width: 15),
+                          AutoSizeText(
+                            'View all (42)',
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Theme.of(context).buttonColor,
+                              // letterSpacing: 1
+                            ),
+                          )
+                        ],
+                      ),
+
+                      //!
+                      //? EDUCATION SECTION
+                      AboutMyself(
+                        widget: widget,
+                        text: 'Education',
+                        divider: Container(
+                            height: 0.5,
+                            color: Theme.of(context).canvasColor,
+                            width: widget.size.width * 0.6),
+                      ),
+                      AutoSizeText('Teachers University College, Columbia'),
+                      AutoSizeText('Languages: English, Russian, Spanish'),
+                      SizedBox(height: 15),
+
+                      //!
+                      //? LIKE BUTTON
+                      Row(
+                        children: [
+                          Container(
+                            height: 30,
+                            width: 30,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Theme.of(context)
+                                  .canvasColor
+                                  .withOpacity(0.2),
+                            ),
+                            child: Icon(
+                              FontAwesomeIcons.solidThumbsUp,
+                              size: 12,
+                            ),
+                          ),
+                          SizedBox(width: 6),
+                          AutoSizeText(
+                            '28 reviews',
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Theme.of(context).buttonColor,
+                              // letterSpacing: 1
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                )
+              : Text('')
+        ],
       ),
     );
   }

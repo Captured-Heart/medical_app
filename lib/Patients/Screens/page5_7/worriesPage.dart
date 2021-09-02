@@ -3,10 +3,69 @@ import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
+import 'package:medical_app/Patients/Widgets/docFiltersPage/filterOptions.dart';
 import 'package:medical_app/Patients/Widgets/page1-4_Widgets/doctorProfileCard.dart';
 import 'package:medical_app/Patients/Widgets/page1-4_Widgets/topHeader.dart';
 
-class WorriesPage extends StatelessWidget {
+class WorriesPage extends StatefulWidget {
+  @override
+  _WorriesPageState createState() => _WorriesPageState();
+}
+
+class _WorriesPageState extends State<WorriesPage> {
+  final List<String> workList = [
+    'Panic Attacks',
+    'Stress',
+    'Sleep Problems',
+    'Depression',
+    'Accepting Yourself'
+  ];
+
+  final List<String> familyList1 = [
+    'Panic Attacks',
+    'Stress',
+    ' Sleep Problems',
+    'Depression',
+    'Accepting Yourself'
+  ];
+
+  final List<String> familyList2 = [
+    'Panic Attacks',
+    'Stress',
+    ' Sleep Problems',
+    'Depression',
+    'Accepting Yourself',
+    'Panic Attacks',
+    'Stress',
+    'Sleep Problems',
+    'Depression',
+    'Accepting Yourself'
+  ];
+
+  final List<String> familyList3 = [
+    'Panic Attacks',
+    'Stress',
+    ' Sleep Problems',
+    'Depression',
+    'Accepting Yourself',
+  ];
+  final List<String> familyList4 = [
+    'Panic Attacks',
+    'Stress',
+    ' Sleep Problems',
+    'Depression',
+    'Accepting Yourself'
+  ];
+
+  String? workListOption;
+
+  String? familyList1Option;
+
+  String? familyList2Option;
+
+  String? familyList3Option;
+  String? familyList4Option;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -45,39 +104,21 @@ class WorriesPage extends StatelessWidget {
                   width: size.width / 1.45,
                 ),
               ),
-              // Container(
-              //   margin: EdgeInsets.symmetric(vertical: 11),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       ManButton(text: 'Panic attacks'),
-              //       ManButton(
-              //         text: 'Stress',
-              //         bGcolor: Theme.of(context).buttonColor,
-              //         textColor: Theme.of(context).primaryColor,
-              //       ),
-              //       ManButton(text: 'Sleep Problems'),
-              //     ],
-              //   ),
-              // ),
+
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.0),
                 child: GroupButton(
-                  isRadio: false,
                   spacing: 10,
                   runSpacing: 10,
                   mainGroupAlignment: MainGroupAlignment.start,
                   groupRunAlignment: GroupRunAlignment.center,
                   crossGroupAlignment: CrossGroupAlignment.start,
-                  onSelected: (index, isSelected) =>
-                      print('$index button is selected'),
-                  buttons: [
-                    'Panic Attacks',
-                    'Stress',
-                    'Sleep Problems',
-                    'Depression',
-                    'Accepting Yourself'
-                  ],
+                  onSelected: (index, isSelected) {
+                    setState(() {
+                      workListOption = workList[index];
+                    });
+                  },
+                  buttons: workList,
                   unselectedTextStyle: TextStyle(
                     fontWeight: FontWeight.normal,
                     color: Theme.of(context).highlightColor,
@@ -102,38 +143,21 @@ class WorriesPage extends StatelessWidget {
               ),
 
               //?Family Chapter
-              // Container(
-              //   margin: EdgeInsets.symmetric(vertical: 11),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //     children: [
-              //       ManButton(
-              //         text: 'Panic attacks',
-              //         bGcolor: Theme.of(context).buttonColor,
-              //         textColor: Theme.of(context).primaryColor,
-              //       ),
-              //       ManButton(text: 'Stress'),
-              //       ManButton(text: 'Sleep Problems')
-              //     ],
-              //   ),
-              // ),
+//! 2
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.0),
                 child: GroupButton(
-                  isRadio: false,
+                  // isRadio: false,
                   spacing: 10,
                   runSpacing: 10,
                   groupRunAlignment: GroupRunAlignment.start,
                   mainGroupAlignment: MainGroupAlignment.start,
-                  onSelected: (index, isSelected) =>
-                      print('$index button is selected'),
-                  buttons: [
-                    'Panic Attacks',
-                    'Stress',
-                    ' Sleep Problems',
-                    'Depression',
-                    'Accepting Yourself'
-                  ],
+                  onSelected: (index, isSelected) {
+                    setState(() {
+                      familyList1Option = familyList1[index];
+                    });
+                  },
+                  buttons: familyList1,
                   unselectedTextStyle: TextStyle(
                     fontWeight: FontWeight.normal,
                     color: Theme.of(context).highlightColor,
@@ -149,24 +173,6 @@ class WorriesPage extends StatelessWidget {
                 ),
               ),
 
-              //?DEPRESSION SUBSECTION
-              // Container(
-              //   margin: EdgeInsets.only(bottom: 17),
-              //   child: Row(
-              //     children: [
-              //       ManButton(
-              //         text: 'Depression',
-              //         bGcolor: Theme.of(context).buttonColor,
-              //         textColor: Theme.of(context).primaryColor,
-              //       ),
-              //       SizedBox(
-              //         width: size.width * 0.04,
-              //       ),
-              //       ManButton(text: 'Accepting yourself'),
-              //     ],
-              //   ),
-              // ),
-
               //?2ND CHAPTER OF FAMILY
               AboutMyself(
                 text: 'Family',
@@ -176,28 +182,22 @@ class WorriesPage extends StatelessWidget {
                   width: size.width / 1.45,
                 ),
               ),
+
+              //! 3
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.0),
                 child: GroupButton(
-                  isRadio: false,
+                  // isRadio: false,
                   spacing: 10,
                   runSpacing: 10,
                   groupRunAlignment: GroupRunAlignment.start,
                   mainGroupAlignment: MainGroupAlignment.start,
-                  onSelected: (index, isSelected) =>
-                      print('$index button is selected'),
-                  buttons: [
-                    'Panic Attacks',
-                    'Stress',
-                    ' Sleep Problems',
-                    'Accepting Yourself',
-                    'Accepting Yourself',
-                    'Panic Attacks',
-                    'Stress',
-                    ' Sleep Problems',
-                    'Depression',
-                    'Accepting Yourself'
-                  ],
+                  onSelected: (index, isSelected) {
+                    setState(() {
+                      familyList2Option = familyList2[index];
+                    });
+                  },
+                  buttons: familyList2,
                   unselectedTextStyle: TextStyle(
                     fontWeight: FontWeight.normal,
                     color: Theme.of(context).highlightColor,
@@ -225,28 +225,22 @@ class WorriesPage extends StatelessWidget {
                   ),
                 ),
               ),
+
+              //! 4
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.0),
                 child: GroupButton(
-                  isRadio: false,
+                  // isRadio: false,
                   spacing: 10,
                   runSpacing: 10,
                   groupRunAlignment: GroupRunAlignment.start,
                   mainGroupAlignment: MainGroupAlignment.start,
-                  onSelected: (index, isSelected) =>
-                      print('$index button is selected'),
-                  buttons: [
-                    'Panic Attacks',
-                    'Stress',
-                    ' Sleep Problems',
-                    'Accepting Yourself',
-                    'Accepting Yourself',
-                    'Panic Attacks',
-                    'Stress',
-                    ' Sleep Problems',
-                    'Depression',
-                    'Accepting Yourself'
-                  ],
+                  onSelected: (index, isSelected) {
+                    setState(() {
+                      familyList3Option = familyList3[index];
+                    });
+                  },
+                  buttons: familyList3,
                   unselectedTextStyle: TextStyle(
                     fontWeight: FontWeight.normal,
                     color: Theme.of(context).highlightColor,
@@ -265,16 +259,38 @@ class WorriesPage extends StatelessWidget {
                 ),
               ),
 
-              // SleepProblemsRow(
-              //   bGcolor: Theme.of(context).buttonColor,
-              //   textColor: Theme.of(context).primaryColor,
-              // ),
-              // DepressionAcceptingRow(size: size),
-              // SleepProblemsRow(
-              //   bGcolor: Theme.of(context).buttonColor,
-              //   textColor: Theme.of(context).primaryColor,
-              // ),
-              // DepressionAcceptingRow(size: size),
+              //!  5
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 1.0),
+                child: GroupButton(
+                  // isRadio: false,
+                  spacing: 10,
+                  runSpacing: 10,
+                  groupRunAlignment: GroupRunAlignment.start,
+                  mainGroupAlignment: MainGroupAlignment.start,
+                  onSelected: (index, isSelected) {
+                    setState(() {
+                      familyList4Option = familyList4[index];
+                    });
+                  },
+                  buttons: familyList4,
+                  unselectedTextStyle: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Theme.of(context).highlightColor,
+                  ),
+                  selectedTextStyle: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    // color: Theme.of(context).highlightColor,
+                  ),
+                  buttonHeight: size.height * 0.035,
+                  unselectedColor: Colors.transparent,
+                  selectedColor: Theme.of(context).buttonColor,
+                  borderRadius: BorderRadius.circular(30),
+                  unselectedBorderColor:
+                      Theme.of(context).canvasColor.withOpacity(0.2),
+                  groupingType: GroupingType.wrap,
+                ),
+              ),
 
               // //?APPLY BUTTON
               Center(
@@ -285,7 +301,28 @@ class WorriesPage extends StatelessWidget {
                     text: 'Apply',
                     horizontal: 0.25,
                     press: () {
-                      Navigator.pop(context);
+                      print(workListOption!.toString());
+
+                      print(familyList1Option!.toString());
+                      print(familyList2Option!.toString());
+                      print(familyList3Option!.toString());
+                      print(familyList4Option!.toString());
+
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FilterOptions(
+                                    size: size,
+                                    // workListOption: workListOption!.toString(),
+                                    // familyList1Option:
+                                    //     familyList1Option!.toString(),
+                                    // familyList2Option:
+                                    //     familyList2Option!.toString(),
+                                    // familyList3Option:
+                                    //     familyList3Option!.toString(),
+                                    // familyList4Option:
+                                    //     familyList4Option!.toString(),
+                                  )));
                     },
                   ),
                 ),

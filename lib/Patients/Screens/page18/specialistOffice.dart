@@ -282,7 +282,7 @@ class SpecialistProfileOptions extends StatelessWidget {
         ),
         title: text,
         contentPadding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-        dense: true,
+        // dense: true,
       ),
     );
   }

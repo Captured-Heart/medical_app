@@ -8,6 +8,7 @@ import 'package:medical_app/Patients/Widgets/page1-4_Widgets/allAndFavourites.da
 import 'package:medical_app/Patients/Widgets/docFiltersPage/specialistHeader.dart';
 import 'package:medical_app/Patients/Widgets/page1-4_Widgets/accToRatingRow.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:medical_app/main2.dart';
 import 'package:medical_app/start.dart';
 import 'package:medical_app/themes/theme.dart';
 import 'package:provider/provider.dart';
@@ -71,11 +72,25 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
+    return Main2();
+    // MainHomePage(size: size);
+  }
+}
+
+class MainHomePage extends StatelessWidget {
+  const MainHomePage({
+    Key? key,
+    required this.size,
+  }) : super(key: key);
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-       
         body: SafeArea(
           child: SingleChildScrollView(
             child: Container(

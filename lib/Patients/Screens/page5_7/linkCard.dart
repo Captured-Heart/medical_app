@@ -27,12 +27,12 @@ class LinkCardPage extends StatelessWidget {
           height: size.height,
           width: double.infinity,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
                 width: double.infinity,
-                height: size.height * 0.22,
+                height: size.height * 0.30,
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadiusDirectional.only(
@@ -57,8 +57,41 @@ class LinkCardPage extends StatelessWidget {
                         name: snapshot.data!['name'],
                         date: date!,
                         time: time!,
+                        price: snapshot.data!['salary'],
                       );
                     }),
+              ),
+              Container(
+                height: size.height * 0.17,
+                 margin: EdgeInsets.symmetric(
+                  horizontal: size.width * 0.06,
+                  vertical: size.height * 0.04,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    VerticalDivider(
+                      width: 1,
+                      thickness: 2,
+                      color: Theme.of(context).buttonColor,
+                    ),
+                    SizedBox(width: 15),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4.0),
+                        child: AutoSizeText(
+                          '''To validate an entry, we need to make sure that you will be able to pay for the lesson. To do this, we will write off from the card 1 ruble and we will immediately return it.
+
+Without confirmation, the recording will be canceled after 40 minutes.''',
+                          style:
+                              TextStyle(color: Theme.of(context).canvasColor),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 8,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Spacer(),
               Container(
@@ -69,43 +102,16 @@ class LinkCardPage extends StatelessWidget {
                 child: Form(
                   child: Column(
                     children: [
-                      FormInputEmail(
-                        size: size,
-                        text: 'E-mail',
-                      ),
-                      FormInputPassword(size: size, text: 'Password'),
-                      FormInputPassword(
-                          size: size, text: 'Repeat the Password'),
-                      // SizedBox(height: size.height * 0.4,)
-                      // Spacer(),
-                      Container(
-                        height: size.height * 0.17,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            VerticalDivider(
-                              width: 1,
-                              thickness: 2,
-                              color: Theme.of(context).buttonColor,
-                            ),
-                            SizedBox(width: 15),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 4.0),
-                                child: AutoSizeText(
-                                  '''To validate an entry, we need to make sure that you will be able to pay for the lesson. To do this, we will write off from the card 1 ruble and we will immediately return it.
+                      // FormInputEmail(
+                      //   size: size,
+                      //   text: 'E-mail',
+                      // ),
+                      // FormInputPassword(size: size, text: 'Password'),
+                      // FormInputPassword(
+                      //     size: size, text: 'Repeat the Password'),
+                      // // SizedBox(height: size.height * 0.4,)
+                      // // Spacer(),
 
-Without confirmation, the recording will be canceled after 40 minutes.''',
-                                  style: TextStyle(
-                                      color: Theme.of(context).canvasColor),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 8,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                       ApplyButton(
                         size: size,
                         text: 'Link card',
@@ -284,11 +290,11 @@ class LinkCardHeader extends StatelessWidget {
     required this.size,
     required this.name,
     required this.date,
-    required this.time,
+    required this.time, required this.price
   }) : super(key: key);
 
   final Size size;
-  final String name, date, time;
+  final String name, date, time, price;
 
   @override
   Widget build(BuildContext context) {
@@ -324,6 +330,23 @@ class LinkCardHeader extends StatelessWidget {
           SizedBox(height: size.height * 0.007),
           AutoSizeText(
             '$date, $time',
+            style: TextStyle(
+                color: Theme.of(context).highlightColor,
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
+
+            // style: TextStyle(color: Color(0xff3D3D3D)),
+          ),
+          SizedBox(height: size.height * 0.02),
+          Text(
+            'Sum',
+            style: TextStyle(
+              color: Theme.of(context).buttonColor,
+            ),
+          ),
+            SizedBox(height: size.height * 0.007),
+          AutoSizeText(
+            '$price₽ ',
             style: TextStyle(
                 color: Theme.of(context).highlightColor,
                 fontSize: 20,

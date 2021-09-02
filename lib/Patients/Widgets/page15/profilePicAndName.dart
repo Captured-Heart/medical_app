@@ -49,15 +49,15 @@ class ProfPicAndName extends StatelessWidget {
                   
                 ),
               ),
-              SizedBox(height: 5),
-               Text(
-                name,
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
+              // SizedBox(height: 5),
+              //  Text(
+              //   name,
+              //   style: TextStyle(
+              //     fontWeight: FontWeight.w600,
+              //     fontSize: 20,
                   
-                ),
-              ),
+              //   ),
+              // ),
             ],
           )
         ],

@@ -66,7 +66,6 @@ class _RegDocProfileState extends State<RegDocProfile> {
         appBar: AppBar(
           elevation: 0,
           leading: BackIcon(),
-          title: ChangeThemeButtonWidget(),
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: SafeArea(

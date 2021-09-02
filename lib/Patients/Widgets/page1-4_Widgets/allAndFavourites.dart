@@ -13,7 +13,7 @@ class AllAndFavouritesRow extends StatelessWidget {
     return Container(
       height: size.height * 0.075,
       width: double.infinity,
-      margin: EdgeInsets.symmetric(vertical: size.height *0.015,),
+      margin: EdgeInsets.symmetric(vertical: size.height *0.010,),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         color: Theme.of(context).primaryColor,
