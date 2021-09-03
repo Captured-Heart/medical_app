@@ -22,11 +22,12 @@ class DoctorsProfileCard extends StatefulWidget {
     required this.ratings,
     required this.imageUrl,
     this.docId,
+    required this.specLength,
   }) : super(key: key);
 
   final Size size;
   final String? docId;
-
+  final dynamic specLength;
   final String name, occupation, years, about, imageUrl, salary, time, ratings;
   @override
   _DoctorsProfileCardState createState() => _DoctorsProfileCardState();
@@ -97,11 +98,9 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
 
           //?MORE DETAILS TEXTBUTTON
           MoreDetails(
-            moreDetailsText:
-                moreDetailsPress ? 'More Details' : 'Less Details',
-            moreDetailsIcon: moreDetailsPress
-                ? Icons.arrow_drop_down
-                : Icons.arrow_drop_up,
+            moreDetailsText: moreDetailsPress ? 'More Details' : 'Less Details',
+            moreDetailsIcon:
+                moreDetailsPress ? Icons.arrow_drop_down : Icons.arrow_drop_up,
             moreDetailsPress: () {
               setState(() {
                 moreDetailsPress = !moreDetailsPress;
@@ -119,6 +118,8 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                   MaterialPageRoute(
                     builder: (context) => AppointMentPage(
                       reviewsId: widget.docId,
+                      docName: widget.name,
+                      imageUrl: widget.imageUrl,
                     ),
                   ),
                 );
@@ -135,6 +136,18 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
             time: widget.time,
             ratings: widget.ratings,
             name: widget.name,
+            navigateToRegDoc: () {
+              //!YOU WILL PASS DATA FROM THIS CARD TO THE NEXT PAGE (imageUrl, name, occupation,experienceYears, salary)
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DocProfile(
+                    reviewsId: widget.docId,
+                  ),
+                ),
+              );
+            },
           ),
           !moreDetailsPress
               ? Positioned(
@@ -188,12 +201,24 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                           SizedBox(width: 10),
                           SpecializationOptions(text: 'LGBTQ'),
                           SizedBox(width: 15),
-                          AutoSizeText(
-                            'View all (42)',
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Theme.of(context).buttonColor,
-                              // letterSpacing: 1
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DocProfile(
+                                    reviewsId: widget.docId,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: AutoSizeText(
+                              'View all (${widget.specLength.length})',
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Theme.of(context).buttonColor,
+                                // letterSpacing: 1
+                              ),
                             ),
                           )
                         ],
@@ -232,12 +257,24 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                             ),
                           ),
                           SizedBox(width: 6),
-                          AutoSizeText(
-                            '28 reviews',
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Theme.of(context).buttonColor,
-                              // letterSpacing: 1
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DocProfile(
+                                    reviewsId: widget.docId,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: AutoSizeText(
+                              '28 reviews',
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Theme.of(context).buttonColor,
+                                // letterSpacing: 1
+                              ),
                             ),
                           )
                         ],
@@ -253,6 +290,8 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
 }
 
 class FullDoctorProfile extends StatelessWidget {
+  final navigateToRegDoc;
+
   const FullDoctorProfile({
     Key? key,
     required this.name,
@@ -264,6 +303,7 @@ class FullDoctorProfile extends StatelessWidget {
     required this.time,
     required this.ratings,
     required this.size,
+    required this.navigateToRegDoc,
   }) : super(key: key);
 
   final Size size;
@@ -278,9 +318,12 @@ class FullDoctorProfile extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DoctorPicture(
-              size: size,
-              imageUrl: imageUrl,
+            GestureDetector(
+              onTap: navigateToRegDoc,
+              child: DoctorPicture(
+                size: size,
+                imageUrl: imageUrl,
+              ),
             ),
             DoctorProfile(
               name: name,

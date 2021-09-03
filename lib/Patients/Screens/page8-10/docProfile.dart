@@ -66,7 +66,6 @@ class _DocProfileState extends State<DocProfile> {
         appBar: AppBar(
           elevation: 0,
           leading: BackIconToHomePage(),
-          title: ChangeThemeButtonWidget(),
           backgroundColor: Theme.of(context).primaryColor,
         ),
         body: SafeArea(

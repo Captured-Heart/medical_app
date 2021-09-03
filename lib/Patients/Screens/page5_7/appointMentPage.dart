@@ -9,9 +9,9 @@ import 'linkCard.dart';
 
 class AppointMentPage extends StatefulWidget {
   static const String routes = 'appointmentPage';
-  final String? reviewsId;
+  final String? reviewsId, docName, imageUrl;
 
-  const AppointMentPage({Key? key, this.reviewsId}) : super(key: key);
+  const AppointMentPage({Key? key, this.reviewsId, this.docName, this.imageUrl}) : super(key: key);
 
   @override
   _AppointMentPageState createState() => _AppointMentPageState();
@@ -80,7 +80,7 @@ class _AppointMentPageState extends State<AppointMentPage> {
                   setState(() {
                     _selectedDay = selectedDay;
                     _focusedDay =
-                        focusedDay; // update `_focusedDay` here as well
+                        focusedDay; 
                   });
                 },
                 onFormatChanged: (format) {
@@ -163,6 +163,8 @@ class _AppointMentPageState extends State<AppointMentPage> {
                             time: timeChosen!,
                             date: dateFormatted2(_selectedDay!)!,
                             docId: widget.reviewsId!,
+                            docName: widget.docName,
+                            imageUrl: widget.imageUrl,
                           )),
                 );
                 // Navigator.pushNamed(context, LinkCardPage.routes);/

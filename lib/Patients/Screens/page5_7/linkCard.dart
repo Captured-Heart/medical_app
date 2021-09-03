@@ -3,17 +3,51 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:medical_app/Patients/Screens/page11-14/docProfileRegistered.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
+import 'package:flash/flash.dart';
+import 'package:medical_app/firebase_Utils/database.dart';
 
-class LinkCardPage extends StatelessWidget {
+class LinkCardPage extends StatefulWidget {
   static const String routes = 'linkCardPage';
-  final String? time, date, docId;
+  final String? time, date, docId, imageUrl, docName;
 
   LinkCardPage({
     Key? key,
     this.time,
     this.date,
     this.docId,
+    this.imageUrl,
+    this.docName,
   }) : super(key: key);
+
+  @override
+  _LinkCardPageState createState() => _LinkCardPageState();
+}
+
+class _LinkCardPageState extends State<LinkCardPage> {
+  void _showDialogFlash({
+    bool persistent = true,
+    double vertical = 22,
+    double horizontal = 20,
+  }) {
+    context.showFlashDialog(
+      persistent: persistent,
+      backgroundColor: Theme.of(context).primaryColor,
+      borderRadius: BorderRadius.circular(5),
+      content: Padding(
+        padding:
+            EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
+        child: Center(
+          child: Text(
+            'There will be a card binding and payment for the session!',
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  }
+
+  DataBaseService dataBaseService = DataBaseService();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -55,15 +89,15 @@ class LinkCardPage extends StatelessWidget {
                       return LinkCardHeader(
                         size: size,
                         name: snapshot.data!['name'],
-                        date: date!,
-                        time: time!,
+                        date: widget.date!,
+                        time: widget.time!,
                         price: snapshot.data!['salary'],
                       );
                     }),
               ),
               Container(
                 height: size.height * 0.17,
-                 margin: EdgeInsets.symmetric(
+                margin: EdgeInsets.symmetric(
                   horizontal: size.width * 0.06,
                   vertical: size.height * 0.04,
                 ),
@@ -83,8 +117,11 @@ class LinkCardPage extends StatelessWidget {
                           '''To validate an entry, we need to make sure that you will be able to pay for the lesson. To do this, we will write off from the card 1 ruble and we will immediately return it.
 
 Without confirmation, the recording will be canceled after 40 minutes.''',
-                          style:
-                              TextStyle(color: Theme.of(context).canvasColor),
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).canvasColor.withOpacity(0.5),
+                            fontStyle: FontStyle.italic,
+                          ),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 8,
                         ),
@@ -99,39 +136,48 @@ Without confirmation, the recording will be canceled after 40 minutes.''',
                   horizontal: size.width * 0.06,
                   vertical: size.height * 0.04,
                 ),
-                child: Form(
-                  child: Column(
-                    children: [
-                      // FormInputEmail(
-                      //   size: size,
-                      //   text: 'E-mail',
-                      // ),
-                      // FormInputPassword(size: size, text: 'Password'),
-                      // FormInputPassword(
-                      //     size: size, text: 'Repeat the Password'),
-                      // // SizedBox(height: size.height * 0.4,)
-                      // // Spacer(),
+                child: Column(
+                  children: [
+                    // FormInputEmail(
+                    //   size: size,
+                    //   text: 'E-mail',
+                    // ),
+                    // FormInputPassword(size: size, text: 'Password'),
+                    // FormInputPassword(
+                    //     size: size, text: 'Repeat the Password'),
+                    // // SizedBox(height: size.height * 0.4,)
+                    // // Spacer(),
 
-                      ApplyButton(
-                        size: size,
-                        text: 'Link card',
-                        horizontal: 0.25,
-                        press: () {
-                          print(docId);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => RegDocProfile(
-                                docID: docId,
-                                date: date,
-                                time: time,
-                              ),
+                    ApplyButton(
+                      size: size,
+                      text: 'Link card',
+                      horizontal: 0.25,
+                      press: () {
+                        setState(() {
+                          _showDialogFlash();
+                        });
+                        Map<String, String> userInfoMap = {
+                          'docName': widget.docName!,
+                          'date': widget.date!,
+                          'time': widget.time!,
+                          'docId': widget.docId!,
+                          'imageUrl': widget.imageUrl!,
+                        };
+
+                        dataBaseService.setPatientsAppointment(userInfoMap);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegDocProfile(
+                              docID: widget.docId,
+                              date: widget.date,
+                              time: widget.time,
                             ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               )
             ],
@@ -148,7 +194,7 @@ Without confirmation, the recording will be canceled after 40 minutes.''',
         .collection('doctors')
         .doc('doctorsID')
         .collection('Profiles')
-        .doc(docId);
+        .doc(widget.docId);
     return document.get();
   }
 }
@@ -285,13 +331,14 @@ class FormInputEmail extends StatelessWidget {
 }
 
 class LinkCardHeader extends StatelessWidget {
-  const LinkCardHeader({
-    Key? key,
-    required this.size,
-    required this.name,
-    required this.date,
-    required this.time, required this.price
-  }) : super(key: key);
+  const LinkCardHeader(
+      {Key? key,
+      required this.size,
+      required this.name,
+      required this.date,
+      required this.time,
+      required this.price})
+      : super(key: key);
 
   final Size size;
   final String name, date, time, price;
@@ -344,7 +391,7 @@ class LinkCardHeader extends StatelessWidget {
               color: Theme.of(context).buttonColor,
             ),
           ),
-            SizedBox(height: size.height * 0.007),
+          SizedBox(height: size.height * 0.007),
           AutoSizeText(
             '$price₽ ',
             style: TextStyle(

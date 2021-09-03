@@ -30,8 +30,8 @@ class ImageRatingsAndSignUpButton extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
                       child: Container(
-              height: size.height * 0.17,
-              width: size.width * 0.27,
+              height: size.height * 0.13,
+              width: size.width * 0.22,
               child: CachedNetworkImage(
                 imageUrl: imageUrl,
                 placeholder: (context, url) => Center(

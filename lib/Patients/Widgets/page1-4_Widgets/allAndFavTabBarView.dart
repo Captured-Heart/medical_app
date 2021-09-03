@@ -131,6 +131,7 @@ class _AllAndFavTabBarViewState extends State<AllAndFavTabBarView> {
       time: document['time'],
       ratings: document['rating'],
       docId: document.id,
+      specLength: document['spec'],
       // reviewsId: ,
     );
   }
@@ -158,12 +159,14 @@ class _AllAndFavTabBarViewState extends State<AllAndFavTabBarView> {
       salary: documents['salary'],
       time: documents['time'],
       ratings: documents['ratings'],
+      specLength: documents['spec'],
+
       // reviewsId: ,
     );
   }
 
   // Stream<QuerySnapshot> getDoctorsStreams(BuildContext context) async* {
-  //   // final uid = await authMethods.getCurrentUID();
+    // final uid = await authMethods.getCurrentUID();
 
   //   yield* db
   //       .collection('doctors')

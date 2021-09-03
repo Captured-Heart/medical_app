@@ -1,7 +1,5 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:medical_app/Patients/Screens/page5_7/appointMentPage.dart';
 import 'package:medical_app/Patients/Widgets/page1-4_Widgets/allAndFavTabBarView.dart';
 import 'package:medical_app/Patients/Widgets/page1-4_Widgets/allAndFavourites.dart';
