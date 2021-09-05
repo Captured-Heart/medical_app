@@ -68,7 +68,7 @@ class DataBaseService {
     return await userDetails.set(profileMap);
   }
 
-  //! CREATE DATABASE FOR PATIENTS PROFILE
+  //! CREATE DATABASE FOR PATIENTS RECORD
   Future setPatientsRecords(recordMap) async {
     final uuid = await authMethods.getCurrentUID();
     final DocumentReference userDetails = FirebaseFirestore.instance
@@ -78,7 +78,7 @@ class DataBaseService {
         .doc();
     return await userDetails.set(recordMap);
   }
-
+//!CREATE DATABASE FOR PATIENTS FAVOURITES
   Future setPatientsFavourites(favouritesMap) async {
     final uuid = await authMethods.getCurrentUID();
     final DocumentReference userDetails = FirebaseFirestore.instance
@@ -88,6 +88,18 @@ class DataBaseService {
         .doc();
     return await userDetails.set(favouritesMap);
   }
+//!CREATE DATABSE FOR PATIENTS REVIEWS
+ Future setPatientsReviews(reviewsMap, String docId) async {
+    // final uuid = await authMethods.getCurrentUID();
+    final DocumentReference userDetails = FirebaseFirestore.instance
+        .collection('doctors')
+        .doc('doctorsID')
+        .collection('Profiles')
+        .doc(docId).collection('Reviews').doc();
+    return await userDetails.set(reviewsMap);
+  }
+  
+
 
   Future changePassword(String currentPassword, String newPassword) async {
     final user = FirebaseAuth.instance.currentUser;

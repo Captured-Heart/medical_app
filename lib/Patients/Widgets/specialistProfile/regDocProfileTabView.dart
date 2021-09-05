@@ -164,6 +164,7 @@ class _RegDocProfileTabBarViewState extends State<RegDocProfileTabBarView> {
               AddAnnonymousReview(
                 size: widget.size,
                 // press: 
+                docId: widget.docId,
                 // widget.press,
                 ratings: '3',
               ),
