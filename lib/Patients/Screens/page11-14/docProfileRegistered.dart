@@ -28,27 +28,27 @@ class RegDocProfile extends StatefulWidget {
 }
 
 class _RegDocProfileState extends State<RegDocProfile> {
-  void _showDialogFlash({
-    bool persistent = true,
-    double vertical = 22,
-    double horizontal = 20,
-  }) {
-    context.showFlashDialog(
-      persistent: persistent,
-      backgroundColor: Theme.of(context).primaryColor,
-      borderRadius: BorderRadius.circular(25),
-      content: Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
-        child: Center(
-          child: Text(
-            'Review will be published during the week!',
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
-    );
-  }
+  // void _showDialogFlash({
+  //   bool persistent = true,
+  //   double vertical = 22,
+  //   double horizontal = 20,
+  // }) {
+  //   context.showFlashDialog(
+  //     persistent: persistent,
+  //     backgroundColor: Theme.of(context).primaryColor,
+  //     borderRadius: BorderRadius.circular(25),
+  //     content: Padding(
+  //       padding:
+  //           EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
+  //       child: Center(
+  //         child: Text(
+  //           'Review will be published during the week!',
+  //           textAlign: TextAlign.center,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   void initState() {
@@ -63,6 +63,8 @@ class _RegDocProfileState extends State<RegDocProfile> {
       length: 4,
       child: Scaffold(
         backgroundColor: Theme.of(context).primaryColor,
+        // resizeToAvoidBottomInset: true,
+        // extendBody: true,
         appBar: AppBar(
           elevation: 0,
           leading: BackIcon(),
@@ -211,13 +213,13 @@ class _RegDocProfileState extends State<RegDocProfile> {
                             child: RegDocProfileTabBarView(
                               size: size,
                               docId: widget.docID,
-                              press: () {
-                                Navigator.pop(context);
-                                _showDialogFlash(
-                                  vertical: size.height * 0.04,
-                                  horizontal: size.width * 0.09,
-                                );
-                              },
+                              // press: () {
+                              //   Navigator.pop(context);
+                              //   _showDialogFlash(
+                              //     vertical: size.height * 0.04,
+                              //     horizontal: size.width * 0.09,
+                              //   );
+                              // },
                               about: snapshot.data!['about'],
                               years: snapshot.data!['years'],
                               occupation: snapshot.data!['occupation'],

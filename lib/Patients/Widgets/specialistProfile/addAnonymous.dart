@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:medical_app/Patients/Screens/page18/personalInfo.dart';
@@ -10,12 +11,12 @@ class AddAnnonymousReview extends StatefulWidget {
   // final press;
 
   final String ratings;
-
+final String ? docId;
   const AddAnnonymousReview({
     Key? key,
     required this.size,
     // required this.press,
-    required this.ratings,
+    required this.ratings, this.docId,
   }) : super(key: key);
 
   final Size size;
@@ -49,7 +50,9 @@ class _AddAnnonymousReviewState extends State<AddAnnonymousReview> {
   }
 
   @override
+  
   Widget build(BuildContext context) {
+    
     return GestureDetector(
       onTap: () {
         showModalBottomSheet(
@@ -148,6 +151,7 @@ class _AddAnnonymousReviewState extends State<AddAnnonymousReview> {
                         horizontal: 0.22,
                         press: () {
                           print(reviewTextController.text.toString());
+                          //! SAVE REVIEWS TO DOC 
                           Navigator.pop(context);
 
                           _showDialogFlash(
@@ -174,4 +178,5 @@ class _AddAnnonymousReviewState extends State<AddAnnonymousReview> {
       ),
     );
   }
+  
 }
