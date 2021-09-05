@@ -8,7 +8,9 @@ class ReviewsContainer extends StatelessWidget {
 
   const ReviewsContainer({
     Key? key,
-    required this.size,  this.ratings, required this.reviewText,
+    required this.size,
+    this.ratings,
+    required this.reviewText,
   }) : super(key: key);
 
   final Size size;
@@ -20,25 +22,27 @@ class ReviewsContainer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          RatingStar(size: size, ratings: ratings!,),
+          RatingStar(
+            size: size,
+            ratings: ratings!,
+          ),
           SizedBox(height: 5),
-          Text(
-              reviewText)
+          Text(reviewText)
         ],
       ),
     );
   }
 }
 
-
 class RegReviewsContainer extends StatelessWidget {
-
   const RegReviewsContainer({
     Key? key,
-    required this.size,  
+    required this.size,
+    required this.reviewText, required this.ratings,
   }) : super(key: key);
 
   final Size size;
+  final String reviewText, ratings;
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +51,16 @@ class RegReviewsContainer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          RatingStar(size: size, ratings: '4',),
+          
+          RatingStar(
+            size: size,
+            ratings: ratings,
+          ),
           SizedBox(height: 5),
           Text(
-              'Good specialist. A friend advised. Helped to understand some of the things I\'ve puzzled over.')
+            reviewText,
+            // 'Good specialist. A friend advised. Helped to understand some of the things I\'ve puzzled over.',
+          )
         ],
       ),
     );

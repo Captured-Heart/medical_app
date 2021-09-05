@@ -1,5 +1,6 @@
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medical_app/Patients/Screens/page15/patientsProfile.dart';
@@ -7,6 +8,8 @@ import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/Patients/Widgets/page15/profilePicAndName.dart';
 import 'package:medical_app/Patients/Widgets/page15/todaySessionOption.dart';
+import 'package:medical_app/themes/theme.dart';
+import 'package:provider/provider.dart';
 
 import 'correspondence.dart';
 import 'personalInfo.dart';
@@ -17,13 +20,16 @@ class SpecialistOffice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+    var switchOn = themeProvider.isDarkMode;
 
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      appBar: AppBar(
-        elevation: 0,
-        leading: BackIcon(),
-      ),
+      // appBar: AppBar(
+      //   elevation: 0,
+      //   leading: BackIcon(),
+      // ),
       body: SafeArea(
         child: Container(
           height: size.height,
@@ -32,28 +38,55 @@ class SpecialistOffice extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FutureBuilder(
-                    future: getRecords(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (!snapshot.hasData) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      if (snapshot.hasData) {
-                        return Row(
-                            children: snapshot.data!.docs
-                                .map(
-                                  (document) => ProfPicAndName(
-                                    size: size,
-                                    imageUrl: document['imageUrl'],
-                                    // 'assets/images/oleg.jpg',
-                                    name: document['name'],
-                                  ),
-                                )
-                                .toList());
-                      } else {
-                        return Text('');
-                      }
-                    }),
+                SizedBox(height: size.height * 0.03),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FutureBuilder(
+                        future: getRecords(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                          if (snapshot.hasData) {
+                            return Row(
+                                children: snapshot.data!.docs
+                                    .map(
+                                      (document) => ProfPicAndName(
+                                        size: size,
+                                        imageUrl: document['imageUrl'],
+                                        // 'assets/images/oleg.jpg',
+                                        name: document['name'],
+                                      ),
+                                    )
+                                    .toList());
+                          } else {
+                            return Text('');
+                          }
+                        }),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: DayNightSwitcherIcon(
+                        isDarkModeEnabled: switchOn,
+                        nightBackgroundColor: Theme.of(context).primaryColor,
+                        dayBackgroundColor: Theme.of(context).primaryColor,
+                        moonColor: Theme.of(context).buttonColor,
+                        cratersColor: Theme.of(context).buttonColor,
+                        sunColor: Theme.of(context).buttonColor,
+                        cloudsColor: Colors.amber,
+                        onStateChanged: (switchOn) {
+                          final provider = Provider.of<ThemeProvider>(context,
+                              listen: false);
+                          provider.toggleTheme(switchOn);
+                          // setState(() {
+                          //   switchTheme = !switchTheme;
+                          // });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
                 SizedBox(height: size.height * 0.03),
                 Divider(
                   thickness: 1,

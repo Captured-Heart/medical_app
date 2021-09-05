@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
 
@@ -123,73 +124,89 @@ class _PostPageState extends State<PostPage> {
                     ],
                   ),
                   SizedBox(height: size.height * 0.015),
-                  Expanded(
-                    child: Container(
-                      child: ListView(
-                        children: [
-                          RecordingsOptions(
-                            title: 'Oleg',
-                            subtitle: '14:00',
-                            imageUrl: 'assets/images/oleg.jpg',
-                            trailing: !editOption
-                                ? Text(
-                                    'Move',
-                                    style: TextStyle(
-                                        color: Theme.of(context).buttonColor,
-                                        fontWeight: FontWeight.w600),
-                                  )
-                                : Text(''),
-                          ),
-                          Container(
-                            height: size.height * 0.07,
-                            margin: EdgeInsets.only(bottom: 10),
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                borderRadius: BorderRadius.circular(30)),
-                            child: Row(
+                  FutureBuilder(
+                      future: getCorrespondence(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (!snapshot.hasData)
+                          return Center(child: CircularProgressIndicator());
+                        if (snapshot.connectionState == ConnectionState.none)
+                          return Center(
+                            child: Icon(
+                              Icons.error,
+                              size: 100,
+                            ),
+                          );
+                        return Expanded(
+                          child: Container(
+                            child: ListView(
                               children: [
-                                Spacer(flex: 3),
-                                Text(
-                                  '15:30 no record',
-                                  style: TextStyle(
-                                    color: Theme.of(context).accentColor,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                RecordingsOptions(
+                                  title: 'Oleg',
+                                  subtitle: '14:00',
+                                  imageUrl: 'assets/images/oleg.jpg',
+                                  trailing: !editOption
+                                      ? Text(
+                                          'Move',
+                                          style: TextStyle(
+                                              color:
+                                                  Theme.of(context).buttonColor,
+                                              fontWeight: FontWeight.w600),
+                                        )
+                                      : Text(''),
                                 ),
-                                Spacer(flex: 6),
-                                !editOption
-                                    ? Text(
-                                        'Delete',
-                                        style: TextStyle(
-                                          color: Color(0xffF47E7E),
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      )
-                                    : Text(''),
-                                Spacer(),
+                                // Container(
+                                //   height: size.height * 0.07,
+                                //   margin: EdgeInsets.only(bottom: 10),
+                                //   width: double.infinity,
+                                //   decoration: BoxDecoration(
+                                //       color: Theme.of(context)
+                                //           .scaffoldBackgroundColor,
+                                //       borderRadius: BorderRadius.circular(30)),
+                                //   child: Row(
+                                //     children: [
+                                //       Spacer(flex: 3),
+                                //       Text(
+                                //         '15:30 no record',
+                                //         style: TextStyle(
+                                //           color: Theme.of(context).accentColor,
+                                //           fontWeight: FontWeight.w600,
+                                //         ),
+                                //       ),
+                                //       Spacer(flex: 6),
+                                //       !editOption
+                                //           ? Text(
+                                //               'Delete',
+                                //               style: TextStyle(
+                                //                 color: Color(0xffF47E7E),
+                                //                 fontWeight: FontWeight.w600,
+                                //               ),
+                                //             )
+                                //           : Text(''),
+                                //       Spacer(),
+                                //     ],
+                                //   ),
+                                // ),
+                                RecordingsOptions(
+                                  title: 'Николай',
+                                  subtitle: '17:00',
+                                  imageUrl: 'assets/images/peter.png',
+                                  trailing: !editOption
+                                      ? Text(
+                                          'Move',
+                                          style: TextStyle(
+                                            color:
+                                                Theme.of(context).buttonColor,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        )
+                                      : Text(''),
+                                ),
                               ],
                             ),
                           ),
-                          RecordingsOptions(
-                            title: 'Николай',
-                            subtitle: '17:00',
-                            imageUrl: 'assets/images/peter.png',
-                            trailing: !editOption
-                                ? Text(
-                                    'Move',
-                                    style: TextStyle(
-                                      color: Theme.of(context).buttonColor,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  )
-                                : Text(''),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                        );
+                      }),
                 ],
               ),
             ),
@@ -198,6 +215,16 @@ class _PostPageState extends State<PostPage> {
       ),
     );
   }
+
+  var db = FirebaseFirestore.instance;
+//TODO: ADD CURRENT UUID TO THE DOC, CHANGING DOCTORSID
+  Future<QuerySnapshot> getCorrespondence() async => await db
+      .collection('patients')
+      .doc('doctorsID')
+      .collection('Profiles')
+      .doc('kwJxtEME34ghgT72wEe0')
+      .collection('Correspondence')
+      .get();
 }
 
 class RecordingsOptions extends StatelessWidget {

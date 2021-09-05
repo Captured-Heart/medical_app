@@ -39,7 +39,7 @@ class _AppointMentPageState extends State<AppointMentPage> {
   void initState() {
     super.initState();
     print(widget.reviewsId);
-    _selectedDay = _focusedDay;
+    _selectedDay = DateTime.now();
     timeChosen = timeOfReceipt[2];
   }
 
@@ -64,7 +64,7 @@ class _AppointMentPageState extends State<AppointMentPage> {
                 horizontal: size.width * 0.06,
               ),
               child: TableCalendar(
-                focusedDay: DateTime.now(),
+                focusedDay: _focusedDay,
                 rowHeight: 50,
                 // availableCalendarFormats: ,
                 firstDay: DateTime.utc(2010, 3, 14),
@@ -85,7 +85,6 @@ class _AppointMentPageState extends State<AppointMentPage> {
                 },
                 onFormatChanged: (format) {
                   if (_calendarFormat != format) {
-                    // Call `setState()` when updating calendar format
                     setState(() {
                       _calendarFormat = format;
                     });

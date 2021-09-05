@@ -1,17 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:medical_app/Patients/Screens/page18/personalInfo.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
+import 'package:medical_app/Patients/Widgets/specialistProfile/ratings.dart';
+import 'package:medical_app/Patients/Widgets/specialistProfile/reviewsContainer.dart';
+import 'package:flash/flash.dart';
 
-class AddAnnonymousReview extends StatelessWidget {
-  final press;
+class AddAnnonymousReview extends StatefulWidget {
+  // final press;
+
+  final String ratings;
 
   const AddAnnonymousReview({
     Key? key,
     required this.size,
-    required this.press,
+    // required this.press,
+    required this.ratings,
   }) : super(key: key);
 
   final Size size;
+
+  @override
+  _AddAnnonymousReviewState createState() => _AddAnnonymousReviewState();
+}
+
+class _AddAnnonymousReviewState extends State<AddAnnonymousReview> {
+  TextEditingController reviewTextController = TextEditingController();
+  void _showDialogFlash({
+    bool persistent = true,
+    double vertical = 22,
+    double horizontal = 20,
+  }) {
+    context.showFlashDialog(
+      persistent: persistent,
+      backgroundColor: Theme.of(context).primaryColor,
+      borderRadius: BorderRadius.circular(25),
+      content: Padding(
+        padding:
+            EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
+        child: Center(
+          child: Text(
+            'Review will be published during the week!',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,17 +63,17 @@ class AddAnnonymousReview extends StatelessWidget {
             backgroundColor: Theme.of(context).primaryColor,
             builder: (BuildContext context) {
               return Container(
-                height: size.height / 2.6,
+                height: widget.size.height / 2.6,
                 margin: EdgeInsets.symmetric(
-                  horizontal: size.width * 0.07,
-                  vertical: size.height * 0.06,
+                  horizontal: widget.size.width * 0.07,
+                  vertical: widget.size.height * 0.06,
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: size.height * 0.055,
+                      height: widget.size.height * 0.055,
                       child: Row(
                         children: [
                           VerticalDivider(
@@ -65,19 +100,61 @@ class AddAnnonymousReview extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: size.height * 0.04,
+                      padding: EdgeInsets.only(
+                        top: widget.size.height * 0.03,
+                      ),
+                      child: RatingBar(
+                        itemSize: widget.size.width * 0.048,
+                        initialRating: double.parse(widget.ratings),
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        ratingWidget: RatingWidget(
+                          empty: Icon(
+                            Icons.star,
+                            color: Colors.grey,
+                          ),
+                          half: Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          full: Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                        ),
+
+                        //!INCASE IN NEEDS TO BE STORED ON THE FIRESTORE, WE USE THE UPDATE HERE
+                        onRatingUpdate: (rating) {
+                          print(rating);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        bottom: widget.size.height * 0.03,
                       ),
                       child: CommentBox(
                         minLength: 4,
+                        controller: reviewTextController,
                       ),
                     ),
+                    // Spacer(),
                     Center(
                       child: ApplyButton(
-                        size: size,
+                        size: widget.size,
                         text: 'Add a review',
                         horizontal: 0.22,
-                        press: press,
+                        press: () {
+                          print(reviewTextController.text.toString());
+                          Navigator.pop(context);
+
+                          _showDialogFlash(
+                            vertical: widget.size.height * 0.04,
+                            horizontal: widget.size.width * 0.09,
+                          );
+                        },
                       ),
                     ),
                     Spacer()

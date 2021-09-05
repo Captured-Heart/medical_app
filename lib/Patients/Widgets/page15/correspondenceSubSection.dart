@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class CorrespondenceSubSection extends StatelessWidget {
   final String title;
-  final Widget trailingWidget, leadingWidget;
+  final Widget trailingWidget;
+  final ImageProvider leadingWidget;
 
   const CorrespondenceSubSection({
     Key? key,
@@ -19,9 +20,15 @@ class CorrespondenceSubSection extends StatelessWidget {
       margin: EdgeInsets.only(left: size.width * 0.03, right: size.width * 0.1),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(50)),
-            child: leadingWidget,
+          Container(
+            height: 105,
+            width: 55,
+            // borderRadius: BorderRadius.all(Radius.circular(50)),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(image: leadingWidget)
+            ),
+            // child: leadingWidget,
           ),
           Expanded(
               child: Padding(

@@ -223,11 +223,12 @@ class FormInputPassword extends StatefulWidget {
   const FormInputPassword({
     Key? key,
     required this.size,
-    required this.text,
+    required this.text, this.passwordController,
   }) : super(key: key);
 
   final Size size;
   final String text;
+  final TextEditingController? passwordController;
 
   @override
   _FormInputPasswordState createState() => _FormInputPasswordState();
@@ -254,6 +255,7 @@ class _FormInputPasswordState extends State<FormInputPassword> {
           padding: EdgeInsets.only(bottom: widget.size.height * 0.04),
           child: TextFormField(
             keyboardType: TextInputType.emailAddress,
+            controller: widget.passwordController,
             cursorColor: Theme.of(context).buttonColor,
             obscureText: _obscureText,
             decoration: InputDecoration(
@@ -291,10 +293,12 @@ class FormInputEmail extends StatelessWidget {
   const FormInputEmail({
     Key? key,
     required this.size,
-    required this.text,
+    required this.text, this.controller,
   }) : super(key: key);
   final Size size;
   final String text;
+  final TextEditingController? controller;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -313,6 +317,7 @@ class FormInputEmail extends StatelessWidget {
           padding: EdgeInsets.only(bottom: size.height * 0.04),
           child: TextFormField(
             keyboardType: TextInputType.emailAddress,
+            controller: controller,
             cursorColor: Theme.of(context).buttonColor,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.all(0),

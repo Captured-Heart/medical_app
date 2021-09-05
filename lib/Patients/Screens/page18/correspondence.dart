@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
@@ -33,6 +34,9 @@ class CorrespondencePage extends StatelessWidget {
               StreamBuilder(
                   stream: getCorrespondenceStreams(context),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(child: CircularProgressIndicator());
+                    }
                     if (snapshot.hasData) {
                       return ListView(
                         children: snapshot.data!.docs
@@ -40,7 +44,7 @@ class CorrespondencePage extends StatelessWidget {
                               (document) => CorrespondenceOptions(
                                 size: size,
                                 imageUrl: document['imageUrl'],
-                                name: 'Oleg',
+                                name: document['name'],
                                 showBadge: true,
                                 badgeNumber: document['badge'],
                               ),
@@ -49,7 +53,7 @@ class CorrespondencePage extends StatelessWidget {
                         shrinkWrap: true,
                       );
                     } else {
-                      return Center(child: CircularProgressIndicator());
+                      return Text('');
                     }
                   }),
             ],
@@ -96,12 +100,19 @@ class CorrespondenceOptions extends StatelessWidget {
       padding: EdgeInsets.only(top: size.height * 0.009),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-              imageUrl,
-              width: 60,
-            ),
+          Container(
+            height: 37,
+            width: 65,
+
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: CachedNetworkImageProvider(
+                    imageUrl,
+                    maxHeight: 105,
+                  ),
+                )),
+            // child: leadingWidget,
           ),
           SizedBox(width: 10),
           Badge(

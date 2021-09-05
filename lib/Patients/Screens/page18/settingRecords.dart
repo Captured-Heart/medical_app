@@ -147,7 +147,7 @@ class CreateRecordingTime extends StatelessWidget {
             margin: EdgeInsets.symmetric(horizontal: 1),
             child: GroupButton(
               isRadio: false,
-              spacing: 6,
+              spacing: 8,
               runSpacing: 10,
               
               mainGroupAlignment: MainGroupAlignment.start,
@@ -159,10 +159,12 @@ class CreateRecordingTime extends StatelessWidget {
               unselectedTextStyle: TextStyle(
                 fontWeight: FontWeight.normal,
                 color: Theme.of(context).highlightColor,
+                // fontSize: 7
               ),
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(14),
+              
               // height: size.height * 0.087,
-              buttonWidth: size.width * 0.129,
+              buttonWidth: size.width * 0.109,
               buttonHeight: size.height * 0.08,
               unselectedColor: Colors.transparent,
               selectedColor: Theme.of(context).buttonColor,

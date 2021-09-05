@@ -22,13 +22,14 @@ class DoctorsProfileCard extends StatefulWidget {
     required this.ratings,
     required this.imageUrl,
     this.docId,
-    required this.specLength,
+    required this.education,
+    required this.spec,
   }) : super(key: key);
 
   final Size size;
   final String? docId;
-  final dynamic specLength;
   final String name, occupation, years, about, imageUrl, salary, time, ratings;
+  final List<dynamic> education, spec;
   @override
   _DoctorsProfileCardState createState() => _DoctorsProfileCardState();
 }
@@ -64,7 +65,7 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
           LikeHeart(
             heartPress: () {
               setState(() {
-                Map<String, String> favouritesMap = {
+                Map<String, dynamic> favouritesMap = {
                   'about': widget.about,
                   'imageUrl': widget.imageUrl,
                   'name': widget.name,
@@ -74,12 +75,14 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                   'years': widget.years,
                   'salary': widget.salary,
                   'docId': widget.docId!,
+                  'education': widget.education,
+                  'spec': widget.spec
                   // 'uid': uid
                 };
 
                 //! TRY TO PUT A FUNCTION THAT CHECKS IF DOC ALREADY EXIST, THEN DELETE ON PRESSING HEARTS AGAIN
                 dataBaseService.setPatientsFavourites(favouritesMap);
-                print(widget.docId);
+                // print(widget.docId);
 
                 iconPress = !iconPress;
               });
@@ -195,11 +198,11 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                         crossAxisAlignment: CrossAxisAlignment.baseline,
                         textBaseline: TextBaseline.ideographic,
                         children: [
-                          SpecializationOptions(text: 'Violence'),
+                          SpecializationOptions(text: widget.spec[0]),
                           SizedBox(width: 10),
-                          SpecializationOptions(text: 'Incest'),
+                          SpecializationOptions(text: widget.spec[1]),
                           SizedBox(width: 10),
-                          SpecializationOptions(text: 'LGBTQ'),
+                          SpecializationOptions(text: widget.spec[2]),
                           SizedBox(width: 15),
                           GestureDetector(
                             onTap: () {
@@ -213,7 +216,7 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                               );
                             },
                             child: AutoSizeText(
-                              'View all (${widget.specLength.length})',
+                              'View all (${widget.spec.length})',
                               style: TextStyle(
                                 decoration: TextDecoration.underline,
                                 color: Theme.of(context).buttonColor,
@@ -234,8 +237,37 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                             color: Theme.of(context).canvasColor,
                             width: widget.size.width * 0.6),
                       ),
-                      AutoSizeText('Teachers University College, Columbia'),
-                      AutoSizeText('Languages: English, Russian, Spanish'),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 5.0),
+                        child: AutoSizeText(widget.education[0]),
+                      ),
+                      Row(
+                        children: [
+                          AutoSizeText(
+                            widget.education[1],
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DocProfile(
+                                    reviewsId: widget.docId,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: AutoSizeText(
+                              'View all (${widget.education.length})',
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Theme.of(context).buttonColor,
+                                // letterSpacing: 1
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                       SizedBox(height: 15),
 
                       //!

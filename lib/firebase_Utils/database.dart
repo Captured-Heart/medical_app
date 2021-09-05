@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:medical_app/firebase_Utils/authMethods.dart';
 
 class DataBaseService {
@@ -46,7 +47,7 @@ class DataBaseService {
   }
 
   //! CREATE DATABASE FOR PATIENTS PAYMENT
-   Future setPatientsPayment(paymentMap) async {
+  Future setPatientsPayment(paymentMap) async {
     final uuid = await authMethods.getCurrentUID();
     final DocumentReference userDetails = FirebaseFirestore.instance
         .collection('patients')
@@ -78,7 +79,7 @@ class DataBaseService {
     return await userDetails.set(recordMap);
   }
 
-   Future setPatientsFavourites(favouritesMap) async {
+  Future setPatientsFavourites(favouritesMap) async {
     final uuid = await authMethods.getCurrentUID();
     final DocumentReference userDetails = FirebaseFirestore.instance
         .collection('patients')
@@ -88,11 +89,21 @@ class DataBaseService {
     return await userDetails.set(favouritesMap);
   }
 
-
+  Future changePassword(String currentPassword, String newPassword) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final cred = EmailAuthProvider.credential(
+        email: user!.email!, password: currentPassword);
+        
+    user.reauthenticateWithCredential(cred).then((value) {
+      user.updatePassword(newPassword).then((_) {
+        //Success, do something
+      }).catchError((error) {
+        //Error, show something
+      });
+    }).catchError((err) {});
+// user.reauthenticateWithCredential(cred).then((value) {}).catchError(onError)
+  }
 //?PATIENTS ENDS ABOVE
-
-
-
 
   //! CREATE ALL DOCTORS PROFILE
   Future setAllDocProfile(docProfileMap) async {
@@ -149,9 +160,6 @@ class DataBaseService {
 //     return await userDetails.set(docChatMap);
 //   }
 // //!? CREATE INDIVIDUAL DOCTOR CORRESPONDENCE, PAYMENTS
-
-
-
 
 //? UPDATES FOR DOCTOR AND PATIENTS BELOW, NOT SET YET!!!!!!!!!!!!!!!!!
 //! CREATE UPDATE FOR DOCTORS DETAILS

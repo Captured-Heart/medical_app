@@ -5,12 +5,12 @@ import 'package:group_button/group_button.dart';
 import 'package:medical_app/Patients/Screens/page5_7/worriesPage.dart';
 import 'package:medical_app/Patients/Widgets/specialistProfile/addAnonymous.dart';
 import 'package:medical_app/Patients/Widgets/specialistProfile/reviewsContainer.dart';
-
+import 'package:flash/flash.dart';
 class RegDocProfileTabBarView extends StatefulWidget {
   const RegDocProfileTabBarView({
     Key? key,
     required this.size,
-    this.press,
+    // this.press,
     required this.about,
     required this.occupation,
     required this.years,
@@ -21,20 +21,20 @@ class RegDocProfileTabBarView extends StatefulWidget {
   final String about, occupation, years;
   final String? docId;
 
-  final press;
+  // final press;
 
   @override
-  _RegDocProfileTabBarViewState createState() => _RegDocProfileTabBarViewState();
+  _RegDocProfileTabBarViewState createState() =>
+      _RegDocProfileTabBarViewState();
 }
 
 class _RegDocProfileTabBarViewState extends State<RegDocProfileTabBarView> {
-
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getData(context);
   }
+   
   @override
   Widget build(BuildContext context) {
     return TabBarView(
@@ -44,7 +44,7 @@ class _RegDocProfileTabBarViewState extends State<RegDocProfileTabBarView> {
           children: [
             ListTile(
               title: Text(
-               widget.about,
+                widget.about,
                 // '''Doctor of doctoral sciences. Great fellow, grandson granny, mommy's son. As my grandfather said - "I am your grandfather"''',
                 style: TextStyle(fontSize: 15),
               ),
@@ -75,7 +75,7 @@ class _RegDocProfileTabBarViewState extends State<RegDocProfileTabBarView> {
         ),
 
         //?Education
-         FutureBuilder(
+        FutureBuilder(
             future: getData(context),
             builder: (context, AsyncSnapshot snapshot) {
               if (!snapshot.hasData)
@@ -106,7 +106,7 @@ class _RegDocProfileTabBarViewState extends State<RegDocProfileTabBarView> {
             }),
 
         //?Specialization
-      FutureBuilder(
+        FutureBuilder(
             future: getData(context),
             builder: (context, AsyncSnapshot snapshot) {
               if (!snapshot.hasData)
@@ -152,26 +152,74 @@ class _RegDocProfileTabBarViewState extends State<RegDocProfileTabBarView> {
             }),
 
         //?Reviews
-        ListView(
-          children: [
-            AddAnnonymousReview(
-              size: widget.size,
-              press: widget.press,
-            ),
-            RegReviewsContainer(size: widget.size),
-            RegReviewsContainer(size: widget.size),
-            RegReviewsContainer(size: widget.size),
-          ],
+        // AddAnnonymousReview(
+        //   size: widget.size,
+        //   press: widget.press,
+        // ),
+        Container(
+          height: 40,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AddAnnonymousReview(
+                size: widget.size,
+                // press: 
+                // widget.press,
+                ratings: '3',
+              ),
+              buildReviewsWidget(context, getDocreviews(context)),
+            ],
+          ),
         ),
       ],
     );
   }
-    Future<DocumentSnapshot> getData(BuildContext context) async {
+
+  FutureBuilder<QuerySnapshot<Object?>> buildReviewsWidget(
+      BuildContext context, future) {
+    return FutureBuilder(
+        future: future,
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasData) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: snapshot.data!.docs
+                  .map(
+                    (document) => RegReviewsContainer(
+                      size: widget.size,
+                      reviewText: document['reviews'],
+                      ratings: document['ratings'],
+                    ),
+                  )
+                  .toList(),
+            );
+          } else {
+            return Text('');
+          }
+          // return
+        });
+  }
+
+  Future<DocumentSnapshot> getData(BuildContext context) async {
     final document = FirebaseFirestore.instance
         .collection('doctors')
         .doc('doctorsID')
         .collection('Profiles')
         .doc(widget.docId);
+    return document.get();
+  }
+
+  Future<QuerySnapshot> getDocreviews(BuildContext context) async {
+    final document = FirebaseFirestore.instance
+        .collection('doctors')
+        .doc('doctorsID')
+        .collection('Profiles')
+        .doc(widget.docId)
+        .collection('Reviews');
+
     return document.get();
   }
 }

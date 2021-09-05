@@ -57,18 +57,12 @@ class _PatientsProfileState extends State<PatientsProfile> {
         child: Container(
           height: size.height,
           width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 15.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProfileSettings()));
-                  },
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 15.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -132,227 +126,255 @@ class _PatientsProfileState extends State<PatientsProfile> {
                     ],
                   ),
                 ),
-              ),
-              SizedBox(height: size.height * 0.01),
-              Divider(
-                thickness: 1,
-                // height: 50,
-              ),
+                SizedBox(height: size.height * 0.01),
+                Divider(
+                  thickness: 1,
+                  // height: 50,
+                ),
 
-              //? RECORDS
-              RecordsProfileOptions(
-                size: size,
-                title: 'Records',
-                icon: FontAwesomeIcons.list,
-                press: () {
-                  setState(() {
-                    recordsExpand = !recordsExpand;
-                  });
-                },
-              ),
-              recordsExpand
-                  ? Container(
-                      // height: recordsExpand ? size.height * size.height : 0,
-                      color: Theme.of(context).primaryColor,
-                      margin:
-                          EdgeInsets.symmetric(vertical: size.height * 0.012),
-                      child: FutureBuilder(
-                          future: getProfile(),
-                          builder:
-                              (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                            if (!snapshot.hasData) {
-                              return Center(child: CircularProgressIndicator());
-                            }
-                            if (snapshot.hasData) {
-                              return Column(
+                //? RECORDS
+                RecordsProfileOptions(
+                  size: size,
+                  title: 'Records',
+                  icon: FontAwesomeIcons.list,
+                  press: () {
+                    setState(() {
+                      recordsExpand = !recordsExpand;
+                    });
+                  },
+                ),
+                recordsExpand
+                    ? Container(
+                        // height: recordsExpand ? size.height * size.height : 0,
+                        color: Theme.of(context).primaryColor,
+                        margin:
+                            EdgeInsets.symmetric(vertical: size.height * 0.012),
+                        child: FutureBuilder(
+                            future: getProfile(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (!snapshot.hasData) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              }
+                              if (snapshot.hasData) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ListView(
+                                      children: snapshot.data!.docs
+                                          .map(
+                                            (document) => Padding(
+                                              padding: EdgeInsets.only(
+                                                top: 3.0,
+                                              ),
+                                              child: RecordsSubSection(
+                                                size: size,
+                                                title: 'May 23, 17:00',
+                                                trailingWidget:
+                                                    Text(document['name']),
+                                                leadingWidget: VerticalDivider(
+                                                  thickness: 2,
+                                                  color: Color(0xff58A4EB),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                      shrinkWrap: true,
+                                    ),
+                                    SizedBox(height: 8),
+                                  ],
+                                );
+                              } else {
+                                return Center(
+                                    child: Text(
+                                        'Please Check your Network Connection'));
+                              }
+                            }),
+                      )
+                    : Container(),
+
+                //?CORRESPONDENCE
+                CorrespondenceProfileOptions(
+                  size: size,
+                  press: () {
+                    setState(() {
+                      correspondenceExpand = !correspondenceExpand;
+                    });
+                  },
+                ),
+                correspondenceExpand
+                    ? FutureBuilder(
+                        future: getCorrespondence(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            return Container(
+                              color: Theme.of(context).primaryColor,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: size.height * 0.012),
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Container(
+                                    child: ListView(
+                                      children: snapshot.data!.docs
+                                          .map(
+                                            (document) => Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 5.0,
+                                              ),
+                                              child: CorrespondenceSubSection(
+                                                  size: size,
+                                                  title: document['name'],
+                                                  trailingWidget: Text(
+                                                    'Look',
+                                                    style: TextStyle(
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      color: Colors.blue,
+                                                    ),
+                                                  ),
+                                                  leadingWidget:
+                                                      CachedNetworkImageProvider(
+                                                          document['imageUrl'],
+                                                          maxHeight: 105)
+                                                  //  NetworkImage(
+                                                  //   document['imageUrl'],
+                                                  //   // scale: 1.6
+                                                  // ),
+
+                                                  //     CachedNetworkImage(
+                                                  //   imageUrl:
+                                                  //       document['imageUrl'],
+                                                  //   placeholder: (context, url) =>
+                                                  //       Center(
+                                                  //           child:
+                                                  //               CircularProgressIndicator(
+                                                  //     color: Theme.of(context)
+                                                  //         .buttonColor,
+                                                  //   )),
+                                                  //   errorWidget:
+                                                  //       (context, url, error) =>
+                                                  //           Icon(Icons.error),
+                                                  //   fit: BoxFit.fill,
+                                                  // ),
+                                                  ),
+                                            ),
+                                          )
+                                          .toList(),
+                                      shrinkWrap: true,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                ],
+                              ),
+                            );
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        })
+                    : Container(),
+
+                //?PAYMENT OPTIONS
+                PaymentProfileOptions(
+                  size: size,
+                  press: () {
+                    setState(() {
+                      paymentExpand = !paymentExpand;
+                    });
+                  },
+                ),
+                paymentExpand
+                    ? FutureBuilder(
+                        future: getPayments(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            return Container(
+                              color: Theme.of(context).primaryColor,
+                              margin: EdgeInsets.symmetric(
+                                vertical: size.height * 0.012,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: size.width * 0.047,
+                                      right: size.width * 0.047,
+                                      top: size.height * 0.03,
+                                    ),
+                                    child: NumberSessionSumRow(),
+                                  ),
+
+                                  //?PAYMENT_OPTION_ROW
                                   ListView(
                                     children: snapshot.data!.docs
                                         .map(
                                           (document) => Padding(
                                             padding: EdgeInsets.only(
-                                              top: 3.0,
+                                              left: size.width * 0.047,
+                                              right: size.width * 0.047,
+                                              top: size.height * 0.01,
                                             ),
-                                            child: RecordsSubSection(
-                                              size: size,
-                                              title: 'May 23, 17:00',
-                                              trailingWidget:
-                                                  Text(document['name']),
-                                              leadingWidget: VerticalDivider(
-                                                thickness: 2,
-                                                color: Color(0xff58A4EB),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                    shrinkWrap: true,
-                                  ),
-                                  SizedBox(height: 8),
-                                ],
-                              );
-                            } else {
-                              return Center(
-                                  child: Text(
-                                      'Please Check your Network Connection'));
-                            }
-                          }),
-                    )
-                  : Container(),
-
-              //?CORRESPONDENCE
-              CorrespondenceProfileOptions(
-                size: size,
-                press: () {
-                  setState(() {
-                    correspondenceExpand = !correspondenceExpand;
-                  });
-                },
-              ),
-              correspondenceExpand
-                  ? FutureBuilder(
-                      future: getCorrespondence(),
-                      builder:
-                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasData) {
-                          return Container(
-                            color: Theme.of(context).primaryColor,
-                            margin: EdgeInsets.symmetric(
-                                vertical: size.height * 0.012),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  child: ListView(
-                                    children: snapshot.data!.docs
-                                        .map(
-                                          (document) => Padding(
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: 5.0,
-                                            ),
-                                            child: CorrespondenceSubSection(
-                                              size: size,
-                                              title: document['name'],
-                                              trailingWidget: Text(
-                                                'Look',
-                                                style: TextStyle(
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                  color: Colors.blue,
+                                            child: PaymentNumberSessionRow(
+                                                leading: document['number'],
+                                                // '345365',
+                                                name: document['name'],
+                                                // 'Ivanov Ivan',
+                                                date: document['date'],
+                                                //  'May 21, 17:00',
+                                                sum: '${document['price']}₽'
+                                                // '2900₽',
                                                 ),
-                                              ),
-                                              leadingWidget: CachedNetworkImage(
-                                                imageUrl: document['imageUrl'],
-                                                placeholder: (context, url) =>
-                                                    Center(
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                  color: Theme.of(context)
-                                                      .buttonColor,
-                                                )),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Icon(Icons.error),
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
                                           ),
                                         )
                                         .toList(),
                                     shrinkWrap: true,
                                   ),
-                                ),
-                                SizedBox(height: 10),
-                              ],
-                            ),
-                          );
-                        } else {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      })
-                  : Container(),
+                                ],
+                              ),
+                            );
+                          } else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        })
+                    : Container(),
 
-//?PAYMENT OPTIONS
-              PaymentProfileOptions(
-                size: size,
-                press: () {
-                  setState(() {
-                    paymentExpand = !paymentExpand;
-                  });
-                },
-              ),
-              paymentExpand
-                  ? FutureBuilder(
-                      future: getPayments(),
-                      builder:
-                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasData) {
-                          return Container(
-                            color: Theme.of(context).primaryColor,
-                            margin: EdgeInsets.symmetric(
-                              vertical: size.height * 0.012,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: size.width * 0.047,
-                                    right: size.width * 0.047,
-                                    top: size.height * 0.03,
-                                  ),
-                                  child: NumberSessionSumRow(),
-                                ),
-
-                                //?PAYMENT_OPTION_ROW
-                                ListView(
-                                  children: snapshot.data!.docs
-                                      .map(
-                                        (document) => Padding(
-                                          padding: EdgeInsets.only(
-                                            left: size.width * 0.047,
-                                            right: size.width * 0.047,
-                                            top: size.height * 0.01,
-                                          ),
-                                          child: PaymentNumberSessionRow(
-                                              leading: document['number'],
-                                              // '345365',
-                                              name: document['name'],
-                                              // 'Ivanov Ivan',
-                                              date: document['date'],
-                                              //  'May 21, 17:00',
-                                              sum: '${document['price']}₽'
-                                              // '2900₽',
-                                              ),
-                                        ),
-                                      )
-                                      .toList(),
-                                  shrinkWrap: true,
-                                ),
-                              ],
-                            ),
-                          );
-                        } else {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      })
-                  : Container(),
-
-              Divider(
-                thickness: 1,
-                // height: 50,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProfileSettings()));
-                },
-                child: ProfileOptions(
-                  text: 'personal information',
-                  icon: FontAwesomeIcons.solidUser,
+                Divider(
+                  thickness: 1,
+                  // height: 50,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ProfileSettings()));
+                  },
+                  child: ProfileOptions(
+                    text: 'personal information',
+                    icon: FontAwesomeIcons.solidUser,
+                    size: size,
+                    leadingWidget: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                      ),
+                      child: Icon(
+                        FontAwesomeIcons.solidUser,
+                        color: Theme.of(context).highlightColor,
+                        size: size.height * 0.027,
+                      ),
+                    ),
+                  ),
+                ),
+                ProfileOptions(
+                  text: 'Rate app',
+                  icon: FontAwesomeIcons.solidStar,
                   size: size,
                   leadingWidget: Container(
                     padding: EdgeInsets.all(10),
@@ -361,125 +383,98 @@ class _PatientsProfileState extends State<PatientsProfile> {
                       color: Theme.of(context).scaffoldBackgroundColor,
                     ),
                     child: Icon(
-                      FontAwesomeIcons.solidUser,
+                      FontAwesomeIcons.solidStar,
                       color: Theme.of(context).highlightColor,
                       size: size.height * 0.027,
                     ),
                   ),
                 ),
-              ),
-              ProfileOptions(
-                text: 'Rate app',
-                icon: FontAwesomeIcons.solidStar,
-                size: size,
-                leadingWidget: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                  ),
-                  child: Icon(
-                    FontAwesomeIcons.solidStar,
-                    color: Theme.of(context).highlightColor,
-                    size: size.height * 0.027,
+                Divider(
+                  thickness: 1,
+                  // height: 50,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
+                  child: Center(
+                    child: Text(
+                      'Today\'s sessions',
+                    ),
                   ),
                 ),
-              ),
-              Divider(
-                thickness: 1,
-                // height: 50,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
-                child: Center(
-                  child: Text(
-                    'Today\'s sessions',
-                  ),
-                ),
-              ),
-              FutureBuilder(
-                  future: getAppointment(),
-                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (!snapshot.hasData)
-                      return Center(child: CircularProgressIndicator());
-                    if (snapshot.connectionState == ConnectionState.none)
-                      return Center(
-                        child: Icon(
-                          Icons.error,
-                          size: 100,
-                        ),
-                      );
-                    return Container(
-                      height: size.height * 0.23,
-                      width: size.width * 0.99,
-                      margin: EdgeInsets.symmetric(horizontal: 10),
-                      child: ListView(
-                        children: snapshot.data!.docs
-                            .map(
-                              (document) => Padding(
-                                padding:
-                                    EdgeInsets.only(bottom: size.height * 0.02),
-                                child: TodaySessionOption(
-                                  size: size,
-                                  image: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => RegDocProfile(
-                                            docID:document['docId'],
-                                            date: document['date'],
-                                            time: document['time'],
+                FutureBuilder(
+                    future: getAppointment(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (!snapshot.hasData)
+                        return Center(child: CircularProgressIndicator());
+                      if (snapshot.connectionState == ConnectionState.none)
+                        return Center(
+                          child: Icon(
+                            Icons.error,
+                            size: 100,
+                          ),
+                        );
+                      return Container(
+                        height: size.height * 0.23,
+                        width: size.width * 0.99,
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        child: ListView(
+                          children: snapshot.data!.docs
+                              .map(
+                                (document) => Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: size.height * 0.02),
+                                  child: TodaySessionOption(
+                                    size: size,
+                                    image: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => RegDocProfile(
+                                              docID: document['docId'],
+                                              date: document['date'],
+                                              time: document['time'],
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                    child: CachedNetworkImage(
-                                      width: size.width * 0.12,
-                                      height: size.height * 0.1,
-                                      imageUrl: document['imageUrl'],
-                                      placeholder: (context, url) => Center(
-                                          child: CircularProgressIndicator(
-                                        color: Theme.of(context).buttonColor,
-                                      )),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
-                                      fit: BoxFit.fill,
+                                        );
+                                      },
+                                      child: CachedNetworkImage(
+                                        width: size.width * 0.12,
+                                        height: size.height * 0.1,
+                                        imageUrl: document['imageUrl'],
+                                        placeholder: (context, url) => Center(
+                                            child: CircularProgressIndicator(
+                                          color: Theme.of(context).buttonColor,
+                                        )),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                    title: document['docName'],
+                                    subtitle1: '${document['time']} | In',
+                                    subtitle2: ' 00:05',
+                                    subtitle2Color: Colors.green,
+                                    beginButton: ApplyButton(
+                                      size: size,
+                                      text: 'To begin',
+                                      horizontal: size.width * 0.0002,
+                                      press: () {
+                                        // Navigator.push(context,
+                                        //     MaterialPageRoute(builder: (context) => ChatPage()));
+                                      },
                                     ),
                                   ),
-                                  title: document['docName'],
-                                  subtitle1: '${document['time']} | In',
-                                  subtitle2: ' 00:05',
-                                  subtitle2Color: Colors.green,
-                                  beginButton: ApplyButton(
-                                    size: size,
-                                    text: 'To begin',
-                                    horizontal: size.width * 0.0002,
-                                    press: () {
-                                      // Navigator.push(context,
-                                      //     MaterialPageRoute(builder: (context) => ChatPage()));
-                                    },
-                                  ),
                                 ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    );
-                  }),
+                              )
+                              .toList(),
+                        ),
+                      );
+                    }),
 
-              // Padding(
-              //   padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
-              //   child: TodaySessionOption(
-              //     size: size,
-              //     image: Image.asset('assets/images/peter.png'),
-              //     title: 'Vetrov Peter',
-              //     subtitle1: '18:30 | In ',
-              //     subtitle2: ' 01:45',
-              //     subtitle2Color: Colors.blue,
-              //   ),
-              // )
-            ],
+       
+              ],
+            ),
           ),
         ),
       ),

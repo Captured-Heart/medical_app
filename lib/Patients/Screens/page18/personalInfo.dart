@@ -39,6 +39,15 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     });
   }
 
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _surnameController = TextEditingController();
+  TextEditingController _langController = TextEditingController();
+  TextEditingController _eduController = TextEditingController();
+  TextEditingController _yearsPassController = TextEditingController();
+  TextEditingController _aboutController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _currentPassController = TextEditingController();
+  TextEditingController _repeatController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -119,7 +128,16 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                   ],
                 ),
               ),
-              FormInputEmail(size: size, text: 'Specialization'),
+              Row(
+                children: [
+                  Expanded(
+                    child:
+                        LanguageFormInput(size: size, text: 'Specialization'),
+                  ),
+                  SizedBox(width: 12),
+                  Icon(Icons.add_box_rounded, size: 32),
+                ],
+              ),
               DepressionAcceptingRow(size: size),
               SizedBox(height: size.height * 0.03),
               FormInputEmail(size: size, text: 'E-mail'),
@@ -141,11 +159,11 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                   children: [
                     FormInputPassword(
                       size: size,
-                      text: 'New password',
+                      text: 'Current password',
                     ),
                     FormInputPassword(
                       size: size,
-                      text: 'Repeat new password',
+                      text: 'New password',
                     ),
                   ],
                 ),
@@ -165,10 +183,12 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
 class CommentBox extends StatelessWidget {
   final int? maxLength, minLength;
 
+  final TextEditingController ? controller;
+
   const CommentBox({
     Key? key,
     this.maxLength,
-    this.minLength,
+    this.minLength, this.controller,
   }) : super(key: key);
 
   @override
@@ -176,6 +196,7 @@ class CommentBox extends StatelessWidget {
     return TextFormField(
         maxLines: null,
         // expands: true,
+        controller: controller,
         maxLength: maxLength,
         minLines: minLength,
         textAlignVertical: TextAlignVertical.top,

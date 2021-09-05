@@ -1,12 +1,16 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medical_app/Patients/Screens/page18/specialistOffice.dart';
 import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
+import 'package:medical_app/firebase_Utils/authMethods.dart';
+import 'package:medical_app/firebase_Utils/database.dart';
+import 'package:path/path.dart';
 
-import 'package:medical_app/themes/theme_switch.dart';
 
 class ProfileSettings extends StatefulWidget {
   @override
@@ -38,78 +42,163 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     });
   }
 
+  // dynamic name;
+  // dynamic email;
+  // AuthMethods authMethods = AuthMethods();
+  // Future<dynamic> getData(BuildContext context) async {
+  //   final uid = await authMethods.getCurrentUID();
+
+  //   final DocumentReference document = FirebaseFirestore.instance
+  //       .collection('patients')
+  //       .doc('patientsID')
+  //       .collection('Profile')
+  //       .doc();
+
+  //   await document.get().then<dynamic>((DocumentSnapshot snapshot) async {
+  //     setState(() {
+  //       name = snapshot['name'];
+  //       email = snapshot['email'];
+  //       // data = snapshot.docs.first;
+  //       // print(docId);
+  //     });
+  //   });
+  //   // docId = document.document().documentID;
+  // }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getData(context);
+  //   print(name);
+  // }
+  static final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
+
+  DataBaseService dataBaseService = DataBaseService();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _langController = TextEditingController();
+  TextEditingController _currentPassController = TextEditingController();
+  TextEditingController _repeatController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      resizeToAvoidBottomInset: false,
-      extendBody: true,
+      // resizeToAvoidBottomInset: false,
+      // extendBody: true,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
-        title: ChangeThemeButtonWidget(),
         leading: BackIcon(),
       ),
       body: Container(
         height: size.height,
         width: size.width,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: size.width * 0.06),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ChangePhotoColumn(
-                size: size,
-                pickImage: _pickImage,
-                imgFile: _imgFile,
-              ),
-              // InputColumn(size: size, changePassword: _changePassword),
-              InputColumn(
-                size: size,
-                changePassword: !_changePassword,
-                press: () {
-                  setState(() {
-                    _changePassword = !_changePassword;
-                  });
-                },
-              ),
-              Container(
-                height: _changePassword ? size.height * 0.22 : 0,
-                child: Column(
-                  children: [
-                    FormInputPassword(
-                      size: size,
-                      text: 'New password',
-                    ),
-                    FormInputPassword(
-                      size: size,
-                      text: 'Repeat new password',
-                    ),
-                  ],
-                ),
-              ),
-              Spacer(flex: _changePassword ? 4 : 3),
-              ApplyButton(
-                size: size,
-                text: 'Save changes',
-                horizontal: 0.22,
-                press: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SpecialistOffice(),
-                    ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: size.width * 0.06),
+            child: FutureBuilder(
+                future: getProfile(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ChangePhotoColumn(
+                        size: size,
+                        pickImage: _pickImage,
+                        imgFile: _imgFile,
+                      ),
+                      // InputColumn(size: size, changePassword: _changePassword),
+                      InputColumn(
+                        size: size,
+                        changePassword: !_changePassword,
+                        nameController: _nameController,
+                        emailController: _emailController,
+                        langController: _langController,
+                        press: () {
+                          setState(() {
+                            _changePassword = !_changePassword;
+                          });
+                        },
+                      ),
+                      Container(
+                        height: _changePassword ? size.height * 0.22 : 0,
+                        child: Column(
+                          children: [
+                            FormInputPassword(
+                              size: size,
+                              text: 'Current password',
+                              passwordController: _currentPassController,
+                            ),
+                            FormInputPassword(
+                              passwordController: _repeatController,
+                              size: size,
+                              text: 'New password',
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Spacer(flex: _changePassword ? 4 : 3),
+                      SizedBox(height:_changePassword ? 4 : size.height * 0.24),
+                      ApplyButton(
+                        size: size,
+                        text: 'Save changes',
+                        horizontal: 0.22,
+                        press: () {
+                          try {
+                              // String fileName = basename(widget.emailController.text  + ' ${dateFormatted()}');
+                            // StorageReference firebaseStorageRef =
+                            //     FirebaseStorage.instance.ref().child('Profile_Pic').child(fileName);
+                            // StorageUploadTask uploadTask =
+                            //     firebaseStorageRef.putFile(_imgFile);
+                            // StorageTaskSnapshot taskSnapshot =
+                            //     await uploadTask.onComplete;
+                            // final String downloadUrl =
+                            //     await taskSnapshot.ref.getDownloadURL();
+                            // dataBaseService.changePassword(
+                            //     _currentPassController.text,
+                            //     _repeatController.text);
+                            // // <String, dynamic> profileMap
+                            // if (_formKey1.currentState!.validate()){
+                              
+                            // }
+                            // Map<String, String> userInfoMap = {
+                            //   'docName': widget.docName!,
+                            //   'date': widget.date!,
+                            //   'time': widget.time!,
+                            //   'docId': widget.docId!,
+                            //   'imageUrl': widget.imageUrl!,
+                            // };
+                            // dataBaseService.setPatientsProfile(profileMap);
+                          } catch (e) {}
+                  
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SpecialistOffice(),
+                            ),
+                          );
+                        },
+                      ),
+                      // Spacer(flex: _changePassword ? 8 : 1),
+                    ],
                   );
-                },
-              ),
-              Spacer(flex: _changePassword ? 8 : 1),
-            ],
+                }),
           ),
         ),
       ),
     );
   }
+
+//TODO: CHANGE THE UUID TO CURRENTUID!!!!!!!!
+  var db = FirebaseFirestore.instance;
+
+  Future<QuerySnapshot> getProfile() async => await db
+      .collection('patients')
+      .doc('patientsID')
+      .collection('Profile')
+      .get();
 }
 
 class InputColumn extends StatelessWidget {
@@ -118,12 +207,19 @@ class InputColumn extends StatelessWidget {
     required this.size,
     required bool changePassword,
     this.press,
+    this.nameController,
+    this.emailController,
+    this.langController,
   })  : _changePassword = changePassword,
         super(key: key);
 
   final Size size;
   final bool _changePassword;
   final press;
+  final TextEditingController? nameController;
+  final TextEditingController? emailController;
+  final TextEditingController? langController;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -132,14 +228,17 @@ class InputColumn extends StatelessWidget {
         FormInputEmail(
           size: size,
           text: 'Name',
+          controller: nameController,
         ),
         LanguageFormInput(
           size: size,
           text: 'Language',
+          langController: langController,
         ),
         FormInputEmail(
           size: size,
           text: 'E-mail',
+          controller: emailController,
         ),
         _changePassword ? ChangePassword(press: press) : Text('')
       ],
@@ -175,10 +274,12 @@ class LanguageFormInput extends StatefulWidget {
     Key? key,
     required this.size,
     required this.text,
+    this.langController,
   }) : super(key: key);
 
   final Size size;
   final String text;
+  final TextEditingController? langController;
 
   @override
   _LanguageFormInputState createState() => _LanguageFormInputState();
@@ -209,6 +310,7 @@ class _LanguageFormInputState extends State<LanguageFormInput> {
               keyboardType: TextInputType.emailAddress,
               cursorColor: Theme.of(context).buttonColor,
               obscureText: _obscureText,
+              controller: widget.langController,
               decoration: InputDecoration(
                 suffixIconConstraints: BoxConstraints(),
                 contentPadding: EdgeInsets.all(0),
