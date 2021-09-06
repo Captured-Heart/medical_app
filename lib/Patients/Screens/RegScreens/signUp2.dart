@@ -4,13 +4,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:intl/intl.dart';
+import 'package:medical_app/Doctors/RegDoctor/page18/profileSettings.dart';
 import 'package:medical_app/Patients/Screens/RegScreens/SignUp1.dart';
-import 'package:medical_app/Patients/Screens/page18/profileSettings.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/main.dart';
 

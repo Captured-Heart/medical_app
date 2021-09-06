@@ -3,9 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:medical_app/Doctors/RegDoctor/page18/profileSettings.dart';
 import 'package:medical_app/Patients/Screens/page11-14/docProfileRegistered.dart';
-import 'package:medical_app/Patients/Screens/page18/profileSettings.dart';
-import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/Patients/Widgets/page15/RecordsProfileOptions.dart';
 import 'package:medical_app/Patients/Widgets/page15/correspondenceProfileOptions.dart';
@@ -19,7 +18,6 @@ import 'package:medical_app/Patients/Widgets/page15/recordssubSection.dart';
 import 'package:medical_app/Patients/Widgets/page15/todaySessionOption.dart';
 import 'package:medical_app/firebase_Utils/authMethods.dart';
 import 'package:medical_app/themes/theme.dart';
-import 'package:medical_app/themes/theme_switch.dart';
 import 'package:provider/provider.dart';
 
 import 'chatPage.dart';
@@ -67,7 +65,7 @@ class _PatientsProfileState extends State<PatientsProfile> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       FutureBuilder(
-                          future: getRecords(),
+                          future: getProfile(),
                           builder:
                               (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                             if (!snapshot.hasData) {
@@ -80,7 +78,7 @@ class _PatientsProfileState extends State<PatientsProfile> {
                                         (document) => ProfPicAndName(
                                           size: size,
                                           imageUrl: document['imageUrl'],
-                                          // 'assets/images/oleg.jpg',
+                                          surName: document['surname'],
                                           name: document['name'],
                                         ),
                                       )
@@ -150,7 +148,7 @@ class _PatientsProfileState extends State<PatientsProfile> {
                         margin:
                             EdgeInsets.symmetric(vertical: size.height * 0.012),
                         child: FutureBuilder(
-                            future: getProfile(),
+                            future: getRecords(),
                             builder: (context,
                                 AsyncSnapshot<QuerySnapshot> snapshot) {
                               if (!snapshot.hasData) {
@@ -170,7 +168,10 @@ class _PatientsProfileState extends State<PatientsProfile> {
                                               ),
                                               child: RecordsSubSection(
                                                 size: size,
-                                                title: 'May 23, 17:00',
+                                                title: '${document['date']}, ' +
+                                                    '${document['price']}',
+                                                // date: '${document['date']}, '+  '${document['price']}' ,
+
                                                 trailingWidget:
                                                     Text(document['name']),
                                                 leadingWidget: VerticalDivider(
@@ -228,12 +229,30 @@ class _PatientsProfileState extends State<PatientsProfile> {
                                               child: CorrespondenceSubSection(
                                                   size: size,
                                                   title: document['name'],
-                                                  trailingWidget: Text(
-                                                    'Look',
-                                                    style: TextStyle(
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                      color: Colors.blue,
+                                                  trailingWidget:
+                                                      GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ChatPage(
+                                                            imageUrl: document[
+                                                                'imageUrl'],
+                                                            name: document[
+                                                                'name'],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: Text(
+                                                      'Look',
+                                                      style: TextStyle(
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
+                                                        color: Colors.blue,
+                                                      ),
                                                     ),
                                                   ),
                                                   leadingWidget:
@@ -291,55 +310,70 @@ class _PatientsProfileState extends State<PatientsProfile> {
                         future: getPayments(),
                         builder:
                             (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                          if (snapshot.hasData) {
-                            return Container(
-                              color: Theme.of(context).primaryColor,
-                              margin: EdgeInsets.symmetric(
-                                vertical: size.height * 0.012,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: size.width * 0.047,
-                                      right: size.width * 0.047,
-                                      top: size.height * 0.03,
-                                    ),
-                                    child: NumberSessionSumRow(),
-                                  ),
+                          // if(snapshot.hasError){
+                          //   return Text(' no records');
+                          // }
 
-                                  //?PAYMENT_OPTION_ROW
-                                  ListView(
-                                    children: snapshot.data!.docs
-                                        .map(
-                                          (document) => Padding(
-                                            padding: EdgeInsets.only(
-                                              left: size.width * 0.047,
-                                              right: size.width * 0.047,
-                                              top: size.height * 0.01,
-                                            ),
-                                            child: PaymentNumberSessionRow(
-                                                leading: document['number'],
-                                                // '345365',
-                                                name: document['name'],
-                                                // 'Ivanov Ivan',
-                                                date: document['date'],
-                                                //  'May 21, 17:00',
-                                                sum: '${document['price']}₽'
-                                                // '2900₽',
-                                                ),
-                                          ),
-                                        )
-                                        .toList(),
-                                    shrinkWrap: true,
-                                  ),
-                                ],
-                              ),
-                            );
-                          } else {
+                          if (!snapshot.hasData) {
                             return Center(child: CircularProgressIndicator());
                           }
+                          if (snapshot.hasError) {
+                            return Center(child: Text('Error loading widget'));
+                          }
+
+                          if (snapshot.connectionState ==
+                              ConnectionState.none) {
+                            return Center(
+                                child: Text(
+                                    'Please check your network connection !'));
+                          }
+
+                          return Container(
+                            color: Theme.of(context).primaryColor,
+                            margin: EdgeInsets.symmetric(
+                              vertical: size.height * 0.012,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: size.width * 0.047,
+                                    right: size.width * 0.047,
+                                    top: size.height * 0.03,
+                                  ),
+                                  child: NumberSessionSumRow(),
+                                ),
+
+                                //?PAYMENT_OPTION_ROW
+                                ListView(
+                                  children: snapshot.data!.docs
+                                      .map(
+                                        (document) => Padding(
+                                          padding: EdgeInsets.only(
+                                            left: size.width * 0.047,
+                                            right: size.width * 0.047,
+                                            top: size.height * 0.01,
+                                          ),
+                                          child: PaymentNumberSessionRow(
+                                              leading: document['number'],
+                                              name: document['name'],
+                                              date: '${document['date']}, ' +
+                                                  '${document['price']}',
+                                              sum: '${document['price']}₽'
+                                              // '2900₽',
+                                              ),
+                                        ),
+                                      )
+                                      .toList(),
+                                  shrinkWrap: true,
+                                ),
+                              ],
+                            ),
+                          );
+                          // else {
+                          //   return Center(child: CircularProgressIndicator());
+                          // }
                         })
                     : Container(),
 
@@ -471,8 +505,6 @@ class _PatientsProfileState extends State<PatientsProfile> {
                         ),
                       );
                     }),
-
-       
               ],
             ),
           ),
@@ -492,25 +524,35 @@ class _PatientsProfileState extends State<PatientsProfile> {
         .get();
   }
 
-  Future<QuerySnapshot> getRecords() async => await db
-      .collection('patients')
-      .doc('patientsID')
-      .collection('Records')
-      .get();
+  Future<QuerySnapshot> getRecords() async {
+    final uid = await authMethods.getCurrentUID();
 
-  Future<QuerySnapshot> getCorrespondence() async => await db
-      .collection('patients')
-      .doc('patientsID')
-      .collection('favourites')
-      .get();
-  Future<QuerySnapshot> getPayments() async => await db
-      .collection('patients')
-      .doc('patientsID')
-      .collection('Payments')
-      .get();
-  Future<QuerySnapshot> getProfile() async => await db
-      .collection('patients')
-      .doc('patientsID')
-      .collection('Profile')
-      .get();
+    return await db.collection('patients').doc(uid).collection('Records').get();
+  }
+
+  Future<QuerySnapshot> getCorrespondence() async {
+    final uid = await authMethods.getCurrentUID();
+
+    return await db
+        .collection('patients')
+        .doc(uid)
+        .collection('favourites')
+        .get();
+  }
+
+  Future<QuerySnapshot> getPayments() async {
+    final uid = await authMethods.getCurrentUID();
+
+    return await db
+        .collection('patients')
+        .doc(uid)
+        .collection('Payments')
+        .get();
+  }
+
+  Future<QuerySnapshot> getProfile() async {
+    final uid = await authMethods.getCurrentUID();
+
+    return await db.collection('patients').doc(uid).collection('Profile').get();
+  }
 }

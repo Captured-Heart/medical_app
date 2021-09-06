@@ -8,7 +8,7 @@ import 'package:medical_app/firebase_Utils/database.dart';
 
 class LinkCardPage extends StatefulWidget {
   static const String routes = 'linkCardPage';
-  final String? time, date, docId, imageUrl, docName;
+  final String? time, date, docId, imageUrl, docName, price;
 
   LinkCardPage({
     Key? key,
@@ -17,6 +17,7 @@ class LinkCardPage extends StatefulWidget {
     this.docId,
     this.imageUrl,
     this.docName,
+    this.price,
   }) : super(key: key);
 
   @override
@@ -163,7 +164,22 @@ Without confirmation, the recording will be canceled after 40 minutes.''',
                           'docId': widget.docId!,
                           'imageUrl': widget.imageUrl!,
                         };
-
+                        Map<String, String> paymentMap = {
+                          'date': widget.date!,
+                          'name': widget.docName!,
+                          //!change this to number
+                          'number': widget.time!,
+                          'price': widget.price!,
+                          // 'imageUrl': widget.imageUrl!,
+                        };
+                        Map<String, String> recordMap = {
+                          'name': widget.docName!,
+                          'imageUrl': widget.imageUrl!,
+                          'time': widget.time!
+                          // 'imageUrl': widget.imageUrl!,
+                        };
+                        dataBaseService.setPatientsRecords(recordMap);
+                        dataBaseService.setPatientsPayment(paymentMap);
                         dataBaseService.setPatientsAppointment(userInfoMap);
                         Navigator.push(
                           context,
@@ -223,7 +239,8 @@ class FormInputPassword extends StatefulWidget {
   const FormInputPassword({
     Key? key,
     required this.size,
-    required this.text, this.passwordController,
+    required this.text,
+    this.passwordController,
   }) : super(key: key);
 
   final Size size;
@@ -293,7 +310,8 @@ class FormInputEmail extends StatelessWidget {
   const FormInputEmail({
     Key? key,
     required this.size,
-    required this.text, this.controller,
+    required this.text,
+    this.controller,
   }) : super(key: key);
   final Size size;
   final String text;

@@ -4,12 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:medical_app/Patients/Screens/page18/specialistOffice.dart';
 import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/firebase_Utils/authMethods.dart';
 import 'package:medical_app/firebase_Utils/database.dart';
 import 'package:path/path.dart';
+
+import 'specialistOffice.dart';
 
 
 class ProfileSettings extends StatefulWidget {
@@ -286,7 +287,7 @@ class LanguageFormInput extends StatefulWidget {
 }
 
 class _LanguageFormInputState extends State<LanguageFormInput> {
-  bool _obscureText = true;
+  bool _obscureText = false;
 
   @override
   Widget build(BuildContext context) {
@@ -309,7 +310,7 @@ class _LanguageFormInputState extends State<LanguageFormInput> {
             child: TextFormField(
               keyboardType: TextInputType.emailAddress,
               cursorColor: Theme.of(context).buttonColor,
-              obscureText: _obscureText,
+              // obscureText: _obscureText,
               controller: widget.langController,
               decoration: InputDecoration(
                 suffixIconConstraints: BoxConstraints(),

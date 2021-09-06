@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,10 +8,15 @@ import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
 import 'package:medical_app/Patients/Screens/page5_7/worriesPage.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/Patients/Widgets/page1-4_Widgets/topHeader.dart';
-
+import 'package:medical_app/firebase_Utils/database.dart';
+import 'package:path/path.dart' as path;
 import 'profileSettings.dart';
 
 class PersonalInformationPage extends StatefulWidget {
+  final String docId;
+
+  const PersonalInformationPage({Key? key, required this.docId})
+      : super(key: key);
   @override
   _PersonalInformationPageState createState() =>
       _PersonalInformationPageState();
@@ -20,6 +26,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   bool changePassword = true;
   final ImagePicker picker = ImagePicker();
   File? _imgFile;
+  DataBaseService dataBaseService = DataBaseService();
 
   Future _pickImage() async {
     final selected = await picker.pickImage(
@@ -47,7 +54,55 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   TextEditingController _aboutController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _currentPassController = TextEditingController();
-  TextEditingController _repeatController = TextEditingController();
+  TextEditingController _repeatPassController = TextEditingController();
+  TextEditingController _specController = TextEditingController();
+  TextEditingController _salaryController = TextEditingController();
+  TextEditingController _occupationController = TextEditingController();
+
+  Future _upload() async {
+    try {
+      String fileName = path.basename(_nameController.text);
+
+      Reference firebaseStorage = FirebaseStorage.instance
+          .ref()
+          .child('Doc_ProfilePic')
+          .child(fileName);
+      UploadTask uploadTask = firebaseStorage.putFile(_imgFile!);
+      TaskSnapshot taskSnapshot =
+          await uploadTask.whenComplete(() => firebaseStorage.getDownloadURL());
+      final String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+      Map<String, dynamic> docProfileMap = {
+        'about': _aboutController.text,
+        'edu': [
+          _eduController.text,
+          _eduController.text,
+          _eduController.text,
+        ],
+        'imageUrl': downloadUrl,
+        'name': _nameController.text,
+        'surname': _surnameController.text,
+        'language': _langController.text,
+        'occupation': _occupationController.text,
+        'rating': '4',
+        'salary': _salaryController.text,
+        'spec': [
+          _specController.text,
+          _specController.text,
+          _specController.text
+        ],
+        'time': '12:30',
+        'years': _yearsPassController.text,
+        'email': _emailController.text
+      };
+      dataBaseService.updateDoctorsDetails(docProfileMap, widget.docId);
+      dataBaseService.updateAllDoctorsDetails(docProfileMap, widget.docId);
+      // dataBaseService.setDocProfile(docProfileMap);
+      // dataBaseService.setAllDocProfile(docProfileMap);
+      Navigator.pop(context);
+    } catch (e) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -75,10 +130,12 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
               FormInputEmail(
                 size: size,
                 text: 'Name',
+                controller: _nameController,
               ),
               FormInputEmail(
                 size: size,
                 text: 'Surname',
+                controller: _surnameController,
               ),
               Row(
                 children: [
@@ -86,6 +143,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                     child: LanguageFormInput(
                       size: size,
                       text: 'Language',
+                      langController: _langController,
                     ),
                   ),
                   SizedBox(width: 12),
@@ -107,12 +165,21 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
               ),
               SizedBox(height: 15),
               FormInputEmail(
+                  size: size, text: 'Education', controller: _eduController),
+              FormInputEmail(
                 size: size,
-                text: 'Education',
+                text: 'Occupation',
+                controller: _occupationController,
+              ),
+              FormInputEmail(
+                size: size,
+                text: 'Salary',
+                controller: _salaryController,
               ),
               FormInputEmail(
                 size: size,
                 text: 'Years of Experience',
+                controller: _yearsPassController,
               ),
               Container(
                 height: size.height * 0.35,
@@ -124,6 +191,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                     CommentBox(
                       maxLength: 600,
                       minLength: 7,
+                      controller: _aboutController,
                     ),
                   ],
                 ),
@@ -131,8 +199,11 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
               Row(
                 children: [
                   Expanded(
-                    child:
-                        LanguageFormInput(size: size, text: 'Specialization'),
+                    child: LanguageFormInput(
+                      size: size,
+                      text: 'Specialization',
+                      langController: _specController,
+                    ),
                   ),
                   SizedBox(width: 12),
                   Icon(Icons.add_box_rounded, size: 32),
@@ -140,7 +211,11 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
               ),
               DepressionAcceptingRow(size: size),
               SizedBox(height: size.height * 0.03),
-              FormInputEmail(size: size, text: 'E-mail'),
+              FormInputEmail(
+                size: size,
+                text: 'E-mail',
+                controller: _emailController,
+              ),
               changePassword
                   ? ChangePassword(press: () {
                       setState(() {
@@ -170,7 +245,11 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
               ),
               Center(
                   child: ApplyButton(
-                      size: size, text: 'Save changes', horizontal: 0.2)),
+                size: size,
+                text: 'Save changes',
+                horizontal: 0.2,
+                press: _upload,
+              )),
               SizedBox(height: 25)
             ],
           ),
@@ -183,12 +262,13 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
 class CommentBox extends StatelessWidget {
   final int? maxLength, minLength;
 
-  final TextEditingController ? controller;
+  final TextEditingController? controller;
 
   const CommentBox({
     Key? key,
     this.maxLength,
-    this.minLength, this.controller,
+    this.minLength,
+    this.controller,
   }) : super(key: key);
 
   @override

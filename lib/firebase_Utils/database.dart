@@ -119,12 +119,12 @@ class DataBaseService {
 
   //! CREATE ALL DOCTORS PROFILE
   Future setAllDocProfile(docProfileMap) async {
-    // final uuid = await authMethods.getCurrentUID();
+    final uuid = await authMethods.getCurrentUID();
     final DocumentReference userDetails = FirebaseFirestore.instance
         .collection('doctors')
         .doc('doctorsID')
         .collection('Profiles')
-        .doc();
+        .doc(uuid);
     return await userDetails.set(docProfileMap);
   }
 
@@ -182,6 +182,15 @@ class DataBaseService {
         .doc(uuid)
         .collection('Profile')
         .doc(path);
+    return await userDetails.update(userMap);
+  }
+  Future updateAllDoctorsDetails(userMap, String path) async {
+    final uuid = await authMethods.getCurrentUID();
+    final DocumentReference userDetails = FirebaseFirestore.instance
+        .collection('doctors')
+        .doc('doctorsID')
+        .collection('Profiles')
+        .doc(uuid);
     return await userDetails.update(userMap);
   }
 

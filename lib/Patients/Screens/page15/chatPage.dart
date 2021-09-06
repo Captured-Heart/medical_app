@@ -50,9 +50,9 @@ class _ChatPageState extends State<ChatPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                width: 80,
-                height: size.height * 0.07,
-                
+                width: 60,
+                height: size.height * 0.05,
+
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage(

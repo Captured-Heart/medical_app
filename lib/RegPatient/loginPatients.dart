@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:medical_app/RegDoctor/loginDoc.dart';
+import 'package:medical_app/Doctors/RegDoctor/loginDoc.dart';
 import 'package:medical_app/RegPatient/loginPatientEmail.dart';
 import 'package:medical_app/main.dart';
 import 'package:medical_app/main2.dart';

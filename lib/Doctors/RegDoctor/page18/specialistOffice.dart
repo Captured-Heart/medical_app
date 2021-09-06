@@ -8,6 +8,7 @@ import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/Patients/Widgets/page15/profilePicAndName.dart';
 import 'package:medical_app/Patients/Widgets/page15/todaySessionOption.dart';
+import 'package:medical_app/firebase_Utils/authMethods.dart';
 import 'package:medical_app/themes/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +17,62 @@ import 'personalInfo.dart';
 import 'post.dart';
 import 'salaryPage.dart';
 
-class SpecialistOffice extends StatelessWidget {
+class SpecialistOffice extends StatefulWidget {
+  @override
+  _SpecialistOfficeState createState() => _SpecialistOfficeState();
+}
+
+class _SpecialistOfficeState extends State<SpecialistOffice> {
+  dynamic docId;
+  Future<dynamic> getDocData(BuildContext context) async {
+    final uid = await authMethods.getCurrentUID();
+
+    final CollectionReference document = FirebaseFirestore.instance
+        .collection('doctors')
+        .doc(uid)
+        .collection('Profile');
+
+    // return docId = document.get();
+    await document.get().then<dynamic>(
+      (QuerySnapshot snapshot) async {
+        setState(() {
+          docId = snapshot.docs.first.id;
+          // data = snapshot.docs.first;
+          print(docId);
+        });
+      },
+    );
+    // docId = document.document().documentID;
+  }
+  // Future<dynamic> getAllDocData(BuildContext context) async {
+  //   // final uid = await authMethods.getCurrentUID();
+
+  //   final CollectionReference document = FirebaseFirestore.instance
+  //       .collection('doctors')
+  //       .doc('doctorsID')
+  //       .collection('Profiles');
+
+  //   // return docId = document.get();
+  //   await document.get().then<dynamic>(
+  //     (QuerySnapshot snapshot) async {
+  //       setState(() {
+  //         docId = snapshot.docs.where((element) => element.id);
+  //         // data = snapshot.docs.first;
+  //         print(docId);
+  //       });
+  //     },
+  //   );
+  //   // docId = document.document().documentID;
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+    getDocData(context);
+
+    // print(docId);
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -42,8 +98,8 @@ class SpecialistOffice extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    FutureBuilder(
-                        future: getRecords(),
+                    StreamBuilder(
+                        stream: getProfile(),
                         builder:
                             (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                           if (!snapshot.hasData) {
@@ -51,6 +107,7 @@ class SpecialistOffice extends StatelessWidget {
                           }
                           if (snapshot.hasData) {
                             return Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: snapshot.data!.docs
                                     .map(
                                       (document) => ProfPicAndName(
@@ -58,6 +115,7 @@ class SpecialistOffice extends StatelessWidget {
                                         imageUrl: document['imageUrl'],
                                         // 'assets/images/oleg.jpg',
                                         name: document['name'],
+                                        surName: document['surname'],
                                       ),
                                     )
                                     .toList());
@@ -102,6 +160,7 @@ class SpecialistOffice extends StatelessWidget {
                     // setState(() {
                     //   recordsExpand = !recordsExpand;
                     // });
+
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => PostPage()));
                   },
@@ -170,7 +229,9 @@ class SpecialistOffice extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PersonalInformationPage()));
+                            builder: (context) => PersonalInformationPage(
+                                  docId: docId,
+                                )));
                   },
                   leadingWidget: Container(
                     padding: EdgeInsets.all(10),
@@ -270,11 +331,12 @@ class SpecialistOffice extends StatelessWidget {
 
   final db = FirebaseFirestore.instance;
 
-  Future<QuerySnapshot> getRecords() async => await db
-      .collection('patients')
-      .doc('patientsID')
-      .collection('Records')
-      .get();
+  final AuthMethods authMethods = AuthMethods();
+
+  Stream<QuerySnapshot> getProfile() async* {
+    final uid = await authMethods.getCurrentUID();
+    yield* db.collection('doctors').doc(uid).collection('Profile').snapshots();
+  }
 }
 
 class SpecialistProfileOptions extends StatelessWidget {

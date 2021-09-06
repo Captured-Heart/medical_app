@@ -6,11 +6,11 @@ class ProfPicAndName extends StatelessWidget {
     Key? key,
     required this.size,
     required this.imageUrl,
-    required this.name,
+    required this.name,  this.surName,
   }) : super(key: key);
 
   final Size size;
-  final String imageUrl, name;
+  final String ? imageUrl, name,  surName;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -25,7 +25,7 @@ class ProfPicAndName extends StatelessWidget {
               width: size.width * 0.17,
               decoration: BoxDecoration(shape: BoxShape.circle),
               child: CachedNetworkImage(
-                        imageUrl: imageUrl,
+                        imageUrl: imageUrl!,
                         placeholder: (context, url) => Center(
                             child: CircularProgressIndicator(
                           color: Theme.of(context).buttonColor,
@@ -40,24 +40,25 @@ class ProfPicAndName extends StatelessWidget {
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                name,
+                name!,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 20,
                   
                 ),
               ),
-              // SizedBox(height: 5),
-              //  Text(
-              //   name,
-              //   style: TextStyle(
-              //     fontWeight: FontWeight.w600,
-              //     fontSize: 20,
+              SizedBox(height: 5),
+               Text(
+                surName!,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
                   
-              //   ),
-              // ),
+                ),
+              ),
             ],
           )
         ],

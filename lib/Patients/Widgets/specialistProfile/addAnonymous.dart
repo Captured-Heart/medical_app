@@ -1,22 +1,21 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:medical_app/Patients/Screens/page18/personalInfo.dart';
+import 'package:medical_app/Doctors/RegDoctor/page18/personalInfo.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
-import 'package:medical_app/Patients/Widgets/specialistProfile/ratings.dart';
-import 'package:medical_app/Patients/Widgets/specialistProfile/reviewsContainer.dart';
 import 'package:flash/flash.dart';
+import 'package:medical_app/firebase_Utils/database.dart';
 
 class AddAnnonymousReview extends StatefulWidget {
   // final press;
 
   final String ratings;
-final String ? docId;
+  final String? docId;
   const AddAnnonymousReview({
     Key? key,
     required this.size,
     // required this.press,
-    required this.ratings, this.docId,
+    required this.ratings,
+    this.docId,
   }) : super(key: key);
 
   final Size size;
@@ -27,6 +26,8 @@ final String ? docId;
 
 class _AddAnnonymousReviewState extends State<AddAnnonymousReview> {
   TextEditingController reviewTextController = TextEditingController();
+
+  late final String ratingsUpdated;
   void _showDialogFlash({
     bool persistent = true,
     double vertical = 22,
@@ -49,10 +50,9 @@ class _AddAnnonymousReviewState extends State<AddAnnonymousReview> {
     );
   }
 
+  DataBaseService dataBaseService = DataBaseService();
   @override
-  
   Widget build(BuildContext context) {
-    
     return GestureDetector(
       onTap: () {
         showModalBottomSheet(
@@ -111,7 +111,7 @@ class _AddAnnonymousReviewState extends State<AddAnnonymousReview> {
                         initialRating: double.parse(widget.ratings),
                         minRating: 1,
                         direction: Axis.horizontal,
-                        allowHalfRating: true,
+                        allowHalfRating: false,
                         itemCount: 5,
                         ratingWidget: RatingWidget(
                           empty: Icon(
@@ -130,7 +130,9 @@ class _AddAnnonymousReviewState extends State<AddAnnonymousReview> {
 
                         //!INCASE IN NEEDS TO BE STORED ON THE FIRESTORE, WE USE THE UPDATE HERE
                         onRatingUpdate: (rating) {
-                          print(rating);
+                          setState(() {
+                            ratingsUpdated = rating.toString();
+                          });
                         },
                       ),
                     ),
@@ -151,7 +153,13 @@ class _AddAnnonymousReviewState extends State<AddAnnonymousReview> {
                         horizontal: 0.22,
                         press: () {
                           print(reviewTextController.text.toString());
-                          //! SAVE REVIEWS TO DOC 
+                          //! SAVE REVIEWS TO DOC
+                          Map<String, String> reviewsMap = {
+                            'ratings': ratingsUpdated,
+                            'reviews': reviewTextController.text
+                          };
+                          dataBaseService.setPatientsReviews(
+                              reviewsMap, widget.docId!);
                           Navigator.pop(context);
 
                           _showDialogFlash(
@@ -178,5 +186,4 @@ class _AddAnnonymousReviewState extends State<AddAnnonymousReview> {
       ),
     );
   }
-  
 }

@@ -123,6 +123,7 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                       reviewsId: widget.docId,
                       docName: widget.name,
                       imageUrl: widget.imageUrl,
+                      price:widget.salary
                     ),
                   ),
                 );

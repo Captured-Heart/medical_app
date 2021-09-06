@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 
-import 'package:medical_app/RegDoctor/loginDoc.dart';
 import 'package:medical_app/RegPatient/loginPatients.dart';
+
+import 'Doctors/RegDoctor/loginDoc.dart';
 
 class StartPage extends StatefulWidget {
   @override

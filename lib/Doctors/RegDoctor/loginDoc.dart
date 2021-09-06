@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:group_button/group_button.dart';
-import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
-import 'package:medical_app/RegDoctor/loginDocEmail.dart';
-import 'package:medical_app/RegPatient/loginPatientEmail.dart';
+import 'package:medical_app/Doctors/RegDoctor/loginDocEmail.dart';
 import 'package:medical_app/RegPatient/loginPatients.dart';
 
 class LoginPageDocEmail extends StatefulWidget {
@@ -25,7 +22,7 @@ class _LoginPageDocEmailState extends State<LoginPageDocEmail> {
             children: [
               Spacer(flex: 2),
               Text(
-                'Welcome to (app name), \n patient',
+                'Welcome to (app name), \n Doctor',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 22,
