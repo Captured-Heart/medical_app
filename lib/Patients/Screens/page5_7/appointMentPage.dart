@@ -9,13 +9,13 @@ import 'linkCard.dart';
 
 class AppointMentPage extends StatefulWidget {
   static const String routes = 'appointmentPage';
-  final String? reviewsId, docName, imageUrl,price;
+  final String? reviewsId, docName, imageUrl,price, surname;
   const AppointMentPage(
       {Key? key,
       this.reviewsId,
       this.docName,
       this.imageUrl,
-       this.price})
+       this.price, this.surname})
       : super(key: key);
 
   @override
@@ -168,6 +168,8 @@ class _AppointMentPageState extends State<AppointMentPage> {
                             docId: widget.reviewsId!,
                             docName: widget.docName,
                             imageUrl: widget.imageUrl,
+                            price: widget.price,
+                            surname: widget.surname,
                             // price: widget.,
                           )),
                 );

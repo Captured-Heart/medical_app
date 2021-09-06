@@ -8,7 +8,7 @@ import 'package:medical_app/firebase_Utils/database.dart';
 
 class LinkCardPage extends StatefulWidget {
   static const String routes = 'linkCardPage';
-  final String? time, date, docId, imageUrl, docName, price;
+  final String? time, date, docId, imageUrl, docName, surname, price;
 
   LinkCardPage({
     Key? key,
@@ -18,6 +18,7 @@ class LinkCardPage extends StatefulWidget {
     this.imageUrl,
     this.docName,
     this.price,
+    this.surname,
   }) : super(key: key);
 
   @override
@@ -157,37 +158,90 @@ Without confirmation, the recording will be canceled after 40 minutes.''',
                         setState(() {
                           _showDialogFlash();
                         });
-                        Map<String, String> userInfoMap = {
+
+                        Map<String, String> appointmentMap = {
                           'docName': widget.docName!,
                           'date': widget.date!,
                           'time': widget.time!,
                           'docId': widget.docId!,
                           'imageUrl': widget.imageUrl!,
+                          'surname': widget.surname!,
                         };
                         Map<String, String> paymentMap = {
                           'date': widget.date!,
                           'name': widget.docName!,
                           //!change this to number
                           'number': widget.time!,
+                          'time': widget.time!,
                           'price': widget.price!,
-                          // 'imageUrl': widget.imageUrl!,
+                          'surname': widget.surname!,
+                          'imageUrl': widget.imageUrl!,
                         };
                         Map<String, String> recordMap = {
+                          'date': widget.date!,
                           'name': widget.docName!,
+                          'surname': widget.surname!,
+                          //!change this to number
+                          'time': widget.time!,
                           'imageUrl': widget.imageUrl!,
-                          'time': widget.time!
+                          // 'imageUrl': widget.imageUrl!,
+                        };
+
+                        //?DOCTORS_MAP
+
+                        //??? PAYMENT_DOC_MAP
+                         Map<String, String> paymentMapDoc = {
+                          'date': widget.date!,
+                          //!the name here should be the patients name!!
+                          'name': widget.docName!,
+                          //!change this to Card number
+                          'number': widget.time!,
+                          'time': widget.time!,
+                          'price': widget.price!,
+                          //!the surname here should be the patients surname!!
+                          'surname': widget.surname!,
+                          //!the image here should be the patients imageUrl!!
+                          'imageUrl': widget.imageUrl!,
+                        };
+
+                        //? APPOINTMENT_DOC_MAP
+                        Map<String, String> appointmentMapDoc = {
+                          //!the name here should be the patients name!!
+                          'docName': widget.docName!,
+                          'date': widget.date!,
+                          'time': widget.time!,
+                          'docId': widget.docId!,
+                          //!the image here should be the patients imageUrl!!
+                          'imageUrl': widget.imageUrl!,
+                          //!the surname here should be the patients surname!!
+                          'surname': widget.surname!,
+                        };
+
+                        //?RECORD_DOC_MAP
+                         Map<String, String> recordMapDoc = {
+                          'date': widget.date!,
+                          //!the name here should be the patients name!!
+                          'name': widget.docName!,
+                          //!the surname here should be the patients surname!!
+                          'surname': widget.surname!,
+                          'time': widget.time!,
+                          //!the image here should be the patients imageUrl!!
+                          'imageUrl': widget.imageUrl!,
                           // 'imageUrl': widget.imageUrl!,
                         };
                         dataBaseService.setPatientsRecords(recordMap);
                         dataBaseService.setPatientsPayment(paymentMap);
-                        dataBaseService.setPatientsAppointment(userInfoMap);
+                        dataBaseService.setPatientsAppointment(appointmentMap);
+                        dataBaseService.setDocPayments(paymentMapDoc, widget.docId);
+                        dataBaseService.setDocCorrespondence(appointmentMapDoc, widget.docId);
+                        dataBaseService.setDocRecords(recordMapDoc, widget.docId);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => RegDocProfile(
-                              docID: widget.docId,
-                              date: widget.date,
-                              time: widget.time,
+                              docID: widget.docId!,
+                              date: widget.date!,
+                              time: widget.time!,
                             ),
                           ),
                         );

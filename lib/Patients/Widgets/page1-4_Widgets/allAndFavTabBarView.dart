@@ -121,21 +121,22 @@ class _AllAndFavTabBarViewState extends State<AllAndFavTabBarView> {
     }
 
     return DoctorsProfileCard(
-      size: widget.size,
-      name: document['name'],
-      imageUrl: document['imageUrl'],
-      occupation: document['occupation'],
-      years: document['years'],
-      about: document['about'],
-      salary: document['salary'],
-      time: document['time'],
-      ratings: document['rating'],
-      docId: document.id,
-      spec: document['spec'],
-      education: document['edu'],
+        size: widget.size,
+        name: document['name'],
+        imageUrl: document['imageUrl'],
+        occupation: document['occupation'],
+        years: document['years'],
+        about: document['about'],
+        salary: document['salary'],
+        time: document['time'],
+        ratings: document['rating'],
+        docId: document.id,
+        spec: document['spec'],
+        education: document['edu'],
+        surname: document['surname']
 
-      // reviewsId: ,
-    );
+        // reviewsId: ,
+        );
   }
 
   DoctorsProfileCard buildDoctorsFavProfileCard(
@@ -151,21 +152,21 @@ class _AllAndFavTabBarViewState extends State<AllAndFavTabBarView> {
     }
 
     return DoctorsProfileCard(
-      docId: documents.id,
-      size: widget.size,
-      name: documents['name'],
-      imageUrl: documents['imageUrl'],
-      occupation: documents['occupation'],
-      years: documents['years'],
-      about: documents['about'],
-      salary: documents['salary'],
-      time: documents['time'],
-      ratings: documents['ratings'],
-      spec: documents['spec'],
-      education: documents['education'],
-
-      // reviewsId: ,
-    );
+        docId: documents.id,
+        size: widget.size,
+        name: documents['name'],
+        imageUrl: documents['imageUrl'],
+        occupation: documents['occupation'],
+        years: documents['years'],
+        about: documents['about'],
+        salary: documents['salary'],
+        time: documents['time'],
+        ratings: documents['ratings'],
+        spec: documents['spec'],
+        education: documents['education'],
+        surname: documents['surname']
+        // reviewsId: ,
+        );
   }
 
   // Stream<QuerySnapshot> getDoctorsStreams(BuildContext context) async* {

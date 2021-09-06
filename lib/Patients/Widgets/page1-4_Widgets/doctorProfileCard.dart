@@ -23,12 +23,12 @@ class DoctorsProfileCard extends StatefulWidget {
     required this.imageUrl,
     this.docId,
     required this.education,
-    required this.spec,
+    required this.spec, required this.surname,
   }) : super(key: key);
 
   final Size size;
   final String? docId;
-  final String name, occupation, years, about, imageUrl, salary, time, ratings;
+  final String name, occupation, years, surname, about, imageUrl, salary, time, ratings;
   final List<dynamic> education, spec;
   @override
   _DoctorsProfileCardState createState() => _DoctorsProfileCardState();
@@ -76,7 +76,8 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                   'salary': widget.salary,
                   'docId': widget.docId!,
                   'education': widget.education,
-                  'spec': widget.spec
+                  'spec': widget.spec,
+                  'surname': widget.surname
                   // 'uid': uid
                 };
 
@@ -123,7 +124,8 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
                       reviewsId: widget.docId,
                       docName: widget.name,
                       imageUrl: widget.imageUrl,
-                      price:widget.salary
+                      price:widget.salary,
+                      surname: widget.surname,
                     ),
                   ),
                 );
@@ -139,7 +141,7 @@ class _DoctorsProfileCardState extends State<DoctorsProfileCard> {
             salary: widget.salary,
             time: widget.time,
             ratings: widget.ratings,
-            name: widget.name,
+            name: widget.name  +  widget.surname,
             navigateToRegDoc: () {
               //!YOU WILL PASS DATA FROM THIS CARD TO THE NEXT PAGE (imageUrl, name, occupation,experienceYears, salary)
 

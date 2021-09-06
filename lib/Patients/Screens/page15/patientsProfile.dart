@@ -169,11 +169,11 @@ class _PatientsProfileState extends State<PatientsProfile> {
                                               child: RecordsSubSection(
                                                 size: size,
                                                 title: '${document['date']}, ' +
-                                                    '${document['price']}',
+                                                    '${document['time']}',
                                                 // date: '${document['date']}, '+  '${document['price']}' ,
 
                                                 trailingWidget:
-                                                    Text(document['name']),
+                                                    Text( 'Specialist: ${document['name'] + document['surname']}'),
                                                 leadingWidget: VerticalDivider(
                                                   thickness: 2,
                                                   color: Color(0xff58A4EB),
@@ -228,7 +228,7 @@ class _PatientsProfileState extends State<PatientsProfile> {
                                               ),
                                               child: CorrespondenceSubSection(
                                                   size: size,
-                                                  title: document['name'],
+                                                  title: document['name']  + document['surname'],
                                                   trailingWidget:
                                                       GestureDetector(
                                                     onTap: () {
@@ -240,7 +240,7 @@ class _PatientsProfileState extends State<PatientsProfile> {
                                                             imageUrl: document[
                                                                 'imageUrl'],
                                                             name: document[
-                                                                'name'],
+                                                                'name'] + document['surname'],
                                                           ),
                                                         ),
                                                       );
@@ -357,9 +357,9 @@ class _PatientsProfileState extends State<PatientsProfile> {
                                           ),
                                           child: PaymentNumberSessionRow(
                                               leading: document['number'],
-                                              name: document['name'],
+                                              name: document['name'] + document['surname'],
                                               date: '${document['date']}, ' +
-                                                  '${document['price']}',
+                                                  '${document['time']}',
                                               sum: '${document['price']}₽'
                                               // '2900₽',
                                               ),
@@ -485,7 +485,7 @@ class _PatientsProfileState extends State<PatientsProfile> {
                                         fit: BoxFit.fill,
                                       ),
                                     ),
-                                    title: document['docName'],
+                                    title: document['docName'] + document['surname'],
                                     subtitle1: '${document['time']} | In',
                                     subtitle2: ' 00:05',
                                     subtitle2Color: Colors.green,
@@ -536,7 +536,7 @@ class _PatientsProfileState extends State<PatientsProfile> {
     return await db
         .collection('patients')
         .doc(uid)
-        .collection('favourites')
+        .collection('Payments')
         .get();
   }
 

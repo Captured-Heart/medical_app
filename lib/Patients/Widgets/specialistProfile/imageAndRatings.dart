@@ -75,7 +75,7 @@ class ImageRatingsAndSignUpButton extends StatelessWidget {
 class RegImageRatingsAndSignUpButton extends StatelessWidget {
   final Function? press;
 
-  final String imageUrl, name, buttonText, ratings;
+  final String imageUrl, name, buttonText, ratings, surname;
 
 
   const RegImageRatingsAndSignUpButton({
@@ -84,7 +84,7 @@ class RegImageRatingsAndSignUpButton extends StatelessWidget {
     this.press,
     required this.imageUrl,
     required this.name,
-    required this.buttonText, required this.ratings,
+    required this.buttonText, required this.ratings, required this.surname,
   }) : super(key: key);
 
   final Size size;
@@ -121,7 +121,7 @@ class RegImageRatingsAndSignUpButton extends StatelessWidget {
             vertical: size.height * 0.0133,
           ),
           child: Text(
-            name,
+            name + surname,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,

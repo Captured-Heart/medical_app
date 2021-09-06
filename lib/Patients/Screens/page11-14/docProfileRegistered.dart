@@ -95,6 +95,7 @@ class _RegDocProfileState extends State<RegDocProfile> {
                           ratings: snapshot.data!['rating'],
                           size: size,
                           name: snapshot.data!['name'],
+                          surname: snapshot.data!['surname'],
                           imageUrl: snapshot.data!['imageUrl'],
                           // 'assets/images/ivan.png',
                           buttonText: 'to write a message',
