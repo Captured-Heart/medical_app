@@ -21,57 +21,54 @@ class TodaySessionOption extends StatelessWidget {
 final Widget ? image;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding:  EdgeInsets.symmetric(horizontal: 14.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(40)),
-        child: Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          // height: size.height * 0.092,
-          // padding: EdgeInsets.symmetric(horizontal: 20),
-          child: ListTile(
-            leading: ClipRRect(
-              child: image,
-              borderRadius: BorderRadius.circular(15),
+    return ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(20)),
+      child: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        // height: size.height * 0.092,
+        // padding: EdgeInsets.symmetric(horizontal: 20),
+        child: ListTile(
+          leading: ClipRRect(
+            child: image,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Text(
+            // 'Ivanov Ivan',
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
+              color: Theme.of(context).highlightColor,
             ),
-            title: Text(
-              // 'Ivanov Ivan',
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 15,
-                color: Theme.of(context).highlightColor,
-              ),
-            ),
-            subtitle: RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: subtitle1,
-                    style: TextStyle(
-                      color: Theme.of(context).highlightColor,
-                    ),
+          ),
+          subtitle: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: subtitle1,
+                  style: TextStyle(
+                    color: Theme.of(context).highlightColor,
                   ),
-                  TextSpan(
-                    text: subtitle2,
-                    style: TextStyle(color: subtitle2Color),
-                  )
-                ],
-              ),
+                ),
+                TextSpan(
+                  text: subtitle2,
+                  style: TextStyle(color: subtitle2Color),
+                )
+              ],
             ),
+          ),
 
-            // Text('17:00 | In 00:05'),
-            trailing: beginButton,
+          // Text('17:00 | In 00:05'),
+          trailing: beginButton,
 
-            // tileColor: Colors.grey,
-            
-            dense: true,
-            shape: Border.all(
-              style: BorderStyle.none,
-            ),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: size.width * 0.038,
-            ),
+          // tileColor: Colors.grey,
+          
+          dense: true,
+          shape: Border.all(
+            style: BorderStyle.none,
+          ),
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: size.width * 0.018,
           ),
         ),
       ),

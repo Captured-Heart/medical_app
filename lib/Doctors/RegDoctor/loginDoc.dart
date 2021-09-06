@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:medical_app/Doctors/RegDoctor/loginDocEmail.dart';
@@ -42,6 +43,12 @@ class _LoginPageDocEmailState extends State<LoginPageDocEmail> {
                       textColor: Theme.of(context).primaryColor,
                       icon: FontAwesomeIcons.facebook,
                       iconcolor: Theme.of(context).primaryColor,
+                      press: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginDocEmail()));
+                      },
                     ),
                     FaceBookLoginButton(
                       size: size,
@@ -50,6 +57,12 @@ class _LoginPageDocEmailState extends State<LoginPageDocEmail> {
                       textColor: Theme.of(context).primaryColor,
                       icon: FontAwesomeIcons.medium,
                       iconcolor: Theme.of(context).primaryColor,
+                      press: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginDocEmail()));
+                      },
                     ),
                     FaceBookLoginButton(
                       size: size,
@@ -158,9 +171,10 @@ class FaceBookLoginButton extends StatelessWidget {
               color: iconcolor,
               size: 30,
             ),
-            Text(
+            AutoSizeText(
               text,
-              style: TextStyle(color: textColor, fontSize: 22),
+              style: TextStyle(color: textColor, fontSize: 18),
+              maxLines: 1,
             ),
           ],
         ),

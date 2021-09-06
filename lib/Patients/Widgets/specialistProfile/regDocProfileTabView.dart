@@ -6,6 +6,7 @@ import 'package:medical_app/Patients/Screens/page5_7/worriesPage.dart';
 import 'package:medical_app/Patients/Widgets/specialistProfile/addAnonymous.dart';
 import 'package:medical_app/Patients/Widgets/specialistProfile/reviewsContainer.dart';
 import 'package:flash/flash.dart';
+
 class RegDocProfileTabBarView extends StatefulWidget {
   const RegDocProfileTabBarView({
     Key? key,
@@ -34,7 +35,7 @@ class _RegDocProfileTabBarViewState extends State<RegDocProfileTabBarView> {
     super.initState();
     getData(context);
   }
-   
+
   @override
   Widget build(BuildContext context) {
     return TabBarView(
@@ -158,12 +159,12 @@ class _RegDocProfileTabBarViewState extends State<RegDocProfileTabBarView> {
         // ),
         Container(
           height: 40,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
+            // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AddAnnonymousReview(
                 size: widget.size,
-                // press: 
+                // press:
                 docId: widget.docId,
                 // widget.press,
                 ratings: '3',

@@ -48,7 +48,7 @@ class _LoginPagePatientsState extends State<LoginPagePatients> {
                       press: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => MyHomePage()),
+                          MaterialPageRoute(builder: (context) => LoginPatientEmail()),
                         );
                       },
                     ),
@@ -62,7 +62,7 @@ class _LoginPagePatientsState extends State<LoginPagePatients> {
                       press: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => MyHomePage()),
+                          MaterialPageRoute(builder: (context) => LoginPatientEmail()),
                         );
                       },
                     ),

@@ -138,6 +138,37 @@ class DataBaseService {
         .doc();
     return await userDetails.set(docProfileMap);
   }
+   //! CREATE INDIVIDUAL DOCTOR PAYMENTS
+  Future setDocPayments(docProfileMap, docUid) async {
+    // final uuid = await authMethods.getCurrentUID();
+    final DocumentReference userDetails = FirebaseFirestore.instance
+        .collection('doctors')
+        .doc(docUid)
+        .collection('Payments')
+        .doc();
+    return await userDetails.set(docProfileMap);
+  }
+    //! CREATE INDIVIDUAL DOCTOR CORRESPODENCE
+  Future setDocCorrespondence(docProfileMap, docUid) async {
+    // final uuid = await authMethods.getCurrentUID();
+    final DocumentReference userDetails = FirebaseFirestore.instance
+        .collection('doctors')
+        .doc(docUid)
+        .collection('Correspodence')
+        .doc();
+    return await userDetails.set(docProfileMap);
+  }
+
+    //! CREATE INDIVIDUAL DOCTOR RECORDS
+   Future setDocRecords(docRecordsMap, docUid) async {
+    // final uuid = await authMethods.getCurrentUID();
+    final DocumentReference userDetails = FirebaseFirestore.instance
+        .collection('doctors')
+        .doc(docUid)
+        .collection('Records')
+        .doc();
+    return await userDetails.set(docRecordsMap);
+  }
 
   //! CREATE INDIVIDUAL DOCTOR CHAT
   Future setDocChat(docChatMap) async {

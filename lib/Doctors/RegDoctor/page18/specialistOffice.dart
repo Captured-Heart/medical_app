@@ -44,33 +44,11 @@ class _SpecialistOfficeState extends State<SpecialistOffice> {
     );
     // docId = document.document().documentID;
   }
-  // Future<dynamic> getAllDocData(BuildContext context) async {
-  //   // final uid = await authMethods.getCurrentUID();
-
-  //   final CollectionReference document = FirebaseFirestore.instance
-  //       .collection('doctors')
-  //       .doc('doctorsID')
-  //       .collection('Profiles');
-
-  //   // return docId = document.get();
-  //   await document.get().then<dynamic>(
-  //     (QuerySnapshot snapshot) async {
-  //       setState(() {
-  //         docId = snapshot.docs.where((element) => element.id);
-  //         // data = snapshot.docs.first;
-  //         print(docId);
-  //       });
-  //     },
-  //   );
-  //   // docId = document.document().documentID;
-  // }
 
   @override
   void initState() {
     super.initState();
     getDocData(context);
-
-    // print(docId);
   }
 
   @override
