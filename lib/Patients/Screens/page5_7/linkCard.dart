@@ -6,6 +6,7 @@ import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:flash/flash.dart';
 import 'package:medical_app/firebase_Utils/authMethods.dart';
 import 'package:medical_app/firebase_Utils/database.dart';
+import 'package:medical_app/main.dart';
 
 class LinkCardPage extends StatefulWidget {
   static const String routes = 'linkCardPage';
@@ -49,8 +50,10 @@ class _LinkCardPageState extends State<LinkCardPage> {
       ),
     );
   }
-  dynamic docId;
-  Future<dynamic> getDocData(BuildContext context) async {
+
+  dynamic patientUid, patientsName, patientsImageUrl, patientsSurname;
+
+  Future<dynamic> getPatientsData(BuildContext context) async {
     final uid = await authMethods.getCurrentUID();
 
     final CollectionReference document = FirebaseFirestore.instance
@@ -58,21 +61,30 @@ class _LinkCardPageState extends State<LinkCardPage> {
         .doc(uid)
         .collection('Profile');
 
-    // return docId = document.get();
     await document.get().then<dynamic>(
       (QuerySnapshot snapshot) async {
         setState(() {
-          docId = snapshot.docs.first.id;
+          // patientUid = snapshot.docs.first.id;
+          patientUid = uid;
+          patientsSurname = snapshot.docs.first.get('surname');
+          patientsName = snapshot.docs.first.get('name');
+          patientsImageUrl = snapshot.docs.first.get('imageUrl');
           // data = snapshot.docs.first;
-          print(docId);
         });
       },
     );
     // docId = document.document().documentID;
   }
 
-AuthMethods authMethods = AuthMethods();
+  AuthMethods authMethods = AuthMethods();
   DataBaseService dataBaseService = DataBaseService();
+
+  @override
+  void initState() {
+    super.initState();
+    getPatientsData(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -120,6 +132,18 @@ AuthMethods authMethods = AuthMethods();
                       );
                     }),
               ),
+              // GestureDetector(
+              //   onTap: () {
+              //     setState(() {
+              //       print(patientUid);
+              //       print(patientsImageUrl);
+              //       print(patientsName);
+              //       print(patientsSurname);
+
+              //     });
+              //   },
+              //   child: Text('dsdsi'),
+              // ),
               Container(
                 height: size.height * 0.17,
                 margin: EdgeInsets.symmetric(
@@ -198,12 +222,16 @@ Without confirmation, the recording will be canceled after 40 minutes.''',
                           'time': widget.time!,
                           'price': widget.price!,
                           'surname': widget.surname!,
+                          'docId': widget.docId!,
+
                           'imageUrl': widget.imageUrl!,
                         };
                         Map<String, String> recordMap = {
                           'date': widget.date!,
                           'name': widget.docName!,
                           'surname': widget.surname!,
+                          'docId': widget.docId!,
+
                           //!change this to number
                           'time': widget.time!,
                           'imageUrl': widget.imageUrl!,
@@ -213,61 +241,63 @@ Without confirmation, the recording will be canceled after 40 minutes.''',
                         //?DOCTORS_MAP
 
                         //??? PAYMENT_DOC_MAP
-                         Map<String, String> paymentMapDoc = {
+                        Map<String, dynamic> paymentMapDoc = {
                           'date': widget.date!,
-                          //!the name here should be the patients name!!
-                          'name': widget.docName!,
+                          'name': patientsName,
                           //!change this to Card number
                           'number': widget.time!,
                           'time': widget.time!,
                           'price': widget.price!,
-                          //!the surname here should be the patients surname!!
-                          'surname': widget.surname!,
-                          //!the image here should be the patients imageUrl!!
-                          'imageUrl': widget.imageUrl!,
+                          'surname': patientsSurname,
+                          'imageUrl': patientsImageUrl,
+                          'patientUid': patientUid,
                         };
 
-                        //? APPOINTMENT_DOC_MAP
-                        Map<String, String> appointmentMapDoc = {
-                          //!the name here should be the patients name!!
-                          'docName': widget.docName!,
+                        //? CORRESPODENCE_DOC_MAP
+                        //! ADD 'BADGE, TO THIS MAP, SO THAT IT CAN LOAD THE NUMBER OF MESSAGES 
+                        Map<String, dynamic> appointmentMapDoc = {
+                          'docName': patientsName,
                           'date': widget.date!,
                           'time': widget.time!,
-                          'docId': widget.docId!,
-                          //!the image here should be the patients imageUrl!!
-                          'imageUrl': widget.imageUrl!,
-                          //!the surname here should be the patients surname!!
-                          'surname': widget.surname!,
+                          'patientUid': patientUid,
+                          'imageUrl': patientsImageUrl,
+                          'surname': patientsSurname,
                         };
 
                         //?RECORD_DOC_MAP
-                         Map<String, String> recordMapDoc = {
+                        Map<String, dynamic> recordMapDoc = {
                           'date': widget.date!,
-                          //!the name here should be the patients name!!
-                          'name': widget.docName!,
-                          //!the surname here should be the patients surname!!
-                          'surname': widget.surname!,
+                          'name': patientsName,
+                          'surname': patientsSurname,
                           'time': widget.time!,
-                          //!the image here should be the patients imageUrl!!
-                          'imageUrl': widget.imageUrl!,
+                          'imageUrl': patientsImageUrl,
+                          'patientUid': patientUid,
+
                           // 'imageUrl': widget.imageUrl!,
                         };
                         dataBaseService.setPatientsRecords(recordMap);
                         dataBaseService.setPatientsPayment(paymentMap);
                         dataBaseService.setPatientsAppointment(appointmentMap);
-                        dataBaseService.setDocPayments(paymentMapDoc, widget.docId);
-                        dataBaseService.setDocCorrespondence(appointmentMapDoc, widget.docId);
-                        dataBaseService.setDocRecords(recordMapDoc, widget.docId);
+                        dataBaseService.setDocPayments(
+                            paymentMapDoc, widget.docId);
+                        dataBaseService.setDocCorrespondence(
+                            appointmentMapDoc, widget.docId);
+                        dataBaseService.setDocRecords(
+                            recordMapDoc, widget.docId);
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RegDocProfile(
-                              docID: widget.docId!,
-                              date: widget.date!,
-                              time: widget.time!,
-                            ),
-                          ),
-                        );
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MyHomePage()));
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => RegDocProfile(
+                        //       docID: widget.docId!,
+                        //       date: widget.date!,
+                        //       time: widget.time!,
+                        //     ),
+                        //   ),
+                        // );
                       },
                     ),
                   ],

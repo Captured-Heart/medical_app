@@ -2,7 +2,9 @@ import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:medical_app/Patients/Screens/page15/chatPage.dart';
 import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
+import 'package:medical_app/firebase_Utils/authMethods.dart';
 
 class CorrespondencePage extends StatelessWidget {
   final db = FirebaseFirestore.instance;
@@ -44,9 +46,10 @@ class CorrespondencePage extends StatelessWidget {
                               (document) => CorrespondenceOptions(
                                 size: size,
                                 imageUrl: document['imageUrl'],
-                                name: document['name'],
+                                name: '${document['docName']} ' +
+                                    document['surname'],
                                 showBadge: true,
-                                badgeNumber: document['badge'],
+                                badgeNumber: '3',
                               ),
                             )
                             .toList(),
@@ -63,13 +66,14 @@ class CorrespondencePage extends StatelessWidget {
     );
   }
 
+  final AuthMethods authMethods = AuthMethods();
   Stream<QuerySnapshot> getCorrespondenceStreams(BuildContext context) async* {
+    final uid = await authMethods.getCurrentUID();
     yield* db
         .collection('doctors')
-        .doc('doctorsID')
-        .collection('Profiles')
-        .doc('kwJxtEME34ghgT72wEe0')
-        .collection('Correspondence')
+        .doc(uid)
+        .collection('Correspodence')
+
         // .orderBy('dateCreated', descending: true)
         .snapshots();
   }
@@ -94,51 +98,64 @@ class CorrespondenceOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 140,
-      height: 60,
-      padding: EdgeInsets.only(top: size.height * 0.009),
-      child: Row(
-        children: [
-          Container(
-            height: 37,
-            width: 65,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatPage(
+              imageUrl: imageUrl,
+              name: name,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        width: 140,
+        height: 60,
+        padding: EdgeInsets.only(top: size.height * 0.009),
+        child: Row(
+          children: [
+            Container(
+              height: 37,
+              width: 65,
 
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: CachedNetworkImageProvider(
-                    imageUrl,
-                    maxHeight: 105,
-                  ),
-                )),
-            // child: leadingWidget,
-          ),
-          SizedBox(width: 10),
-          Badge(
-            badgeContent: Text(
-              badgeNumber,
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: 12,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: CachedNetworkImageProvider(
+                      imageUrl,
+                      maxHeight: 105,
+                    ),
+                  )),
+              // child: leadingWidget,
+            ),
+            SizedBox(width: 10),
+            Badge(
+              badgeContent: Text(
+                badgeNumber,
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 12,
+                ),
               ),
+              showBadge: showBadge,
+              alignment: Alignment.topRight,
+              padding: EdgeInsets.all(3),
+              position: BadgePosition.topEnd(end: -15),
+              child: Text(name),
             ),
-            showBadge: showBadge,
-            alignment: Alignment.topRight,
-            padding: EdgeInsets.all(3),
-            position: BadgePosition.topEnd(end: -15),
-            child: Text(name),
-          ),
-          Spacer(),
-          Text(
-            'Look',
-            style: TextStyle(
-              color: Theme.of(context).buttonColor,
-              decoration: TextDecoration.underline,
-              decorationStyle: TextDecorationStyle.solid,
-            ),
-          )
-        ],
+            Spacer(),
+            Text(
+              'Look',
+              style: TextStyle(
+                color: Theme.of(context).buttonColor,
+                decoration: TextDecoration.underline,
+                decorationStyle: TextDecorationStyle.solid,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

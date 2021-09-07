@@ -18,27 +18,28 @@ class AllAndFavTabBarView extends StatefulWidget {
 class _AllAndFavTabBarViewState extends State<AllAndFavTabBarView> {
   AuthMethods authMethods = AuthMethods();
   var db = FirebaseFirestore.instance;
-  dynamic data;
-  dynamic docId;
+  dynamic name, surname, imageUrl ;
+  dynamic patId;
 
-  // Future<dynamic> getData(BuildContext context) async {
-  //   // final uid = await authMethods.getCurrentUID();
+  Future<dynamic> getData(BuildContext context) async {
+    final uid = await authMethods.getCurrentUID();
 
-  //   final DocumentReference document = FirebaseFirestore.instance
-  //       .collection('doctors')
-  //       .doc('doctorsID')
-  //       .collection('Profiles')
-  //       .doc('kwJxtEME34ghgT72wEe0');
+    final DocumentReference document = FirebaseFirestore.instance
+        .collection('patients')
+        .doc(uid)
+        .collection('Profile')
+        .doc();
 
-  //   await document.get().then<dynamic>((DocumentSnapshot snapshot) async {
-  //     setState(() {
-  //       docId = snapshot.id;
-  //       // data = snapshot.docs.first;
-  //       // print(docId);
-  //     });
-  //   });
-  //   // docId = document.document().documentID;
-  // }
+    await document.get().then<dynamic>((DocumentSnapshot snapshot) async {
+      setState(() {
+        patId = uid;
+        // data = snapshot.reference.snapshots();
+        // data = snapshot.docs.first;
+        // print(docId);
+      });
+    });
+    // docId = document.document().documentID;
+  }
 
   @override
   void initState() {

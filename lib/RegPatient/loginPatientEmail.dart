@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medical_app/Doctors/RegDoctor/patSignUp.dart';
@@ -25,6 +26,17 @@ class _LoginPatientEmailState extends State<LoginPatientEmail> {
   var signUpEmailController = TextEditingController();
   var signUpPassController = TextEditingController();
 
+void _showSnackBar(dynamic error){
+  final _snackBar = SnackBar(
+      content: AutoSizeText(
+        error,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  ScaffoldMessenger.of(context).showSnackBar(_snackBar);
+}
   void _toLogin() async {
     try {
       print(emailController.text);
@@ -45,7 +57,7 @@ class _LoginPatientEmailState extends State<LoginPatientEmail> {
         // _showSnackBar('Please Verify your Email before you can Login');
       }
     } catch (e) {
-      print('errrrrroooooorrrr');
+      _showSnackBar(e.toString());
     }
   }
 
@@ -69,6 +81,7 @@ class _LoginPatientEmailState extends State<LoginPatientEmail> {
 
       await firebaseUser!.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
+      _showSnackBar(e.message);
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
@@ -294,7 +307,7 @@ class _LoginPatientEmailState extends State<LoginPatientEmail> {
                       // SizedBox(height: 80),
                       ApplyButton(
                         size: size,
-                        text: 'Complete Sign up',
+                        text: 'Login',
                         horizontal: 0.3,
                         press: _toLogin,
                       )

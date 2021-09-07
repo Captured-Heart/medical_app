@@ -1,8 +1,10 @@
 import 'package:badges/badges.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:medical_app/Patients/Screens/page11-14/docProfileRegistered.dart';
 import 'package:medical_app/Patients/Screens/page15/patientsProfile.dart';
 import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
@@ -259,46 +261,92 @@ class _SpecialistOfficeState extends State<SpecialistOffice> {
 
                 //? TODAY SESSION
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
+                  padding: EdgeInsets.symmetric(vertical: size.height * 0.03),
                   child: Center(
-                    child: Text(
-                      'Today\'s sessions',
-                    ),
+                    child: Text('Today\'s sessions',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
+                        )),
                   ),
                 ),
-                TodaySessionOption(
-                  size: size,
-                  title: 'Oleg',
-                  subtitle1: '17:00 | In',
-                  subtitle2: ' 00:05',
-                  subtitle2Color: Colors.green,
-                  image: Image.asset('assets/images/oleg.jpg'),
-                  beginButton: ApplyButton(
-                    size: size,
-                    text: 'To begin',
-                    horizontal: size.width * 0.0002,
-                    press: () {
-                      // Navigator.push(context,
-                      //     MaterialPageRoute(builder: (context) => PostPage()));
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
-                  child: TodaySessionOption(
-                    size: size,
-                    title: 'Календарь',
-                    subtitle1: '17:00 | In',
-                    subtitle2: ' 00:05',
-                    subtitle2Color: Colors.green,
-                    image: Image.asset('assets/images/another.png'),
-                    beginButton: ApplyButton(
-                      size: size,
-                      text: 'To begin',
-                      horizontal: size.width * 0.0002,
-                    ),
-                  ),
-                ),
+                FutureBuilder(
+                    future: getCorrespondence(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (!snapshot.hasData)
+                        return Center(child: CircularProgressIndicator());
+                      if (snapshot.connectionState == ConnectionState.none)
+                        return Center(
+                          child: Icon(
+                            Icons.error,
+                            size: 100,
+                          ),
+                        );
+                      return Container(
+                        height: size.height * 0.23,
+                        width: size.width * 0.99,
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        child: ListView(
+                          children: snapshot.data!.docs
+                              .map(
+                                (document) => Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: size.height * 0.02),
+                                  child: TodaySessionOption(
+                                    size: size,
+                                    image: GestureDetector(
+                                      onTap: () {},
+                                      child: CachedNetworkImage(
+                                        width: size.width * 0.12,
+                                        height: size.height * 0.1,
+                                        imageUrl: document['imageUrl'],
+                                        placeholder: (context, url) => Center(
+                                            child: CircularProgressIndicator(
+                                          color: Theme.of(context).buttonColor,
+                                        )),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                    title:
+                                        document['name'] + document['surname'],
+                                    subtitle1: '${document['time']} | In',
+                                    subtitle2: ' 00:05',
+                                    subtitle2Color: Colors.green,
+                                    beginButton: ApplyButton(
+                                      size: size,
+                                      text: 'To begin',
+                                      horizontal: size.width * 0.0002,
+                                      press: () {
+                                        // Navigator.push(context,
+                                        //     MaterialPageRoute(builder: (context) => ChatPage()));
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                              shrinkWrap: true,
+                        ),
+                      );
+                    }),
+                // Padding(
+                //   padding: EdgeInsets.symmetric(vertical: size.height * 0.02),
+                //   child: TodaySessionOption(
+                //     size: size,
+                //     title: 'Календарь',
+                //     subtitle1: '17:00 | In',
+                //     subtitle2: ' 00:05',
+                //     subtitle2Color: Colors.green,
+                //     image: Image.asset('assets/images/another.png'),
+                //     beginButton: ApplyButton(
+                //       size: size,
+                //       text: 'To begin',
+                //       horizontal: size.width * 0.0002,
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -314,6 +362,12 @@ class _SpecialistOfficeState extends State<SpecialistOffice> {
   Stream<QuerySnapshot> getProfile() async* {
     final uid = await authMethods.getCurrentUID();
     yield* db.collection('doctors').doc(uid).collection('Profile').snapshots();
+  }
+
+  Future<QuerySnapshot> getCorrespondence() async {
+    final uid = await authMethods.getCurrentUID();
+
+    return await db.collection('doctors').doc(uid).collection('Payments').get();
   }
 }
 

@@ -6,6 +6,8 @@ import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/Patients/Widgets/page15/numberSessionSumRow.dart';
 import 'package:medical_app/Patients/Widgets/page15/paymentNumberSessionRow.dart';
 import 'package:flash/flash.dart';
+import 'package:medical_app/firebase_Utils/authMethods.dart';
+import 'package:collection/collection.dart';
 
 class SalaryPage extends StatefulWidget {
   @override
@@ -37,17 +39,17 @@ class _SalaryPageState extends State<SalaryPage> {
     );
   }
 
-  Future<QuerySnapshot> getDoctorSalary() async => await db
-      .collection('doctors')
-      .doc('doctorsID')
-      .collection('Profiles')
-      .doc('kwJxtEME34ghgT72wEe0')
-      .collection('Payments')
-      .get();
+  AuthMethods authMethods = AuthMethods();
+
+  Future<QuerySnapshot> getDoctorSalary() async {
+    final uid = await authMethods.getCurrentUID();
+    return await db.collection('doctors').doc(uid).collection('Payments').get();
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
@@ -68,6 +70,19 @@ class _SalaryPageState extends State<SalaryPage> {
         child: FutureBuilder(
             future: getDoctorSalary(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (!snapshot.hasData)
+                return Center(child: CircularProgressIndicator());
+              if (snapshot.connectionState == ConnectionState.none)
+                return Center(
+                  child: Icon(
+                    Icons.error,
+                    size: 100,
+                  ),
+                );
+              // final list = [9.8,9];
+              // final sum = list.sum;
+
+              //!ADD SUM OF ALL SNAPSHOTS OF 'PRICE'
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -106,9 +121,9 @@ class _SalaryPageState extends State<SalaryPage> {
                     ),
                   ),
                   SizedBox(height: 10),
-                  Text(
-                    '2900 ₽',
-                  ),
+                  Text('${snapshot.data!.docs.first.get('price')} ₽'
+                      // '$snapshot. ₽',
+                      ),
                   SizedBox(height: 5),
                   Container(
                     height: 0.8,
@@ -152,10 +167,13 @@ class _SalaryPageState extends State<SalaryPage> {
                                   (document) => Padding(
                                     padding: EdgeInsets.only(top: 15.0),
                                     child: PaymentNumberSessionRow(
-                                        leading: document['number'],
-                                        name: document['name'],
-                                        date: document['date'],
-                                        sum: '${document['price']}₽'),
+                                      leading: document['number'],
+                                      name: '${document['name']} ' +
+                                          document['surname'],
+                                      date: '${document['date']}, ' +
+                                          '${document['time']}',
+                                      sum: '${document['price']}₽',
+                                    ),
                                   ),
                                 )
                                 .toList(),

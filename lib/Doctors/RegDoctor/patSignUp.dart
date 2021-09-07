@@ -63,6 +63,24 @@ class _PatSignUpState extends State<PatSignUp> {
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
         leading: BackIcon(),
+        // title:
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyHomePage()),
+              );
+            },
+            child: Text(
+              'Skip',
+              style: TextStyle(
+                color: Colors.amber,
+                fontSize: 35,
+              ),
+            ),
+          )
+        ],
       ),
       body: Container(
         height: size.height,
@@ -74,6 +92,10 @@ class _PatSignUpState extends State<PatSignUp> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                Text(
+                  'please fill this form(INCLUDING PIC) the first time, you can skip after first login',
+                  style: TextStyle(color: Colors.red, fontSize: 22),
+                ),
                 ChangePhotoColumn(
                   size: size,
                   pickImage: _pickImage,
@@ -120,7 +142,7 @@ class _PatSignUpState extends State<PatSignUp> {
                 SizedBox(height: 30),
                 ApplyButton(
                   size: size,
-                  text: 'Login',
+                  text: 'Complete Sign Up',
                   horizontal: 0.22,
                   press: () async {
                     try {

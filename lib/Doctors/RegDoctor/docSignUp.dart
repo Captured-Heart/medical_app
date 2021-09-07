@@ -119,6 +119,23 @@ class _DocSignUpState extends State<DocSignUp> {
       appBar: AppBar(
         elevation: 0,
         leading: BackIcon(),
+         actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SpecialistOffice()),
+              );
+            },
+            child: Text(
+              'Skip',
+              style: TextStyle(
+                color: Colors.amber,
+                fontSize: 35,
+              ),
+            ),
+          )
+        ],
       ),
       body: Container(
         height: size.height,
@@ -129,6 +146,10 @@ class _DocSignUpState extends State<DocSignUp> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              Text(
+                'please fill this form(INCLUDING PICTURE) the first time, you can skip after first login',
+                style: TextStyle(color: Colors.red, fontSize: 22),
+              ),
               ChangePhotoColumn(
                 size: size,
                 pickImage: _pickImage,

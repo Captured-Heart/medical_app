@@ -118,8 +118,8 @@ class ScheduleOptions extends StatelessWidget {
   }
 }
 
-class CreateRecordingTime extends StatelessWidget {
-  const CreateRecordingTime({
+class CreateRecordingTime extends StatefulWidget {
+  CreateRecordingTime({
     Key? key,
     required this.size,
   }) : super(key: key);
@@ -127,9 +127,24 @@ class CreateRecordingTime extends StatelessWidget {
   final Size size;
 
   @override
+  _CreateRecordingTimeState createState() => _CreateRecordingTimeState();
+}
+
+class _CreateRecordingTimeState extends State<CreateRecordingTime> {
+  final List<String> days = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+
+  String? monday, tuesday, wed, thurs, fri, sat, sun;
+  List<String> daysChosenAll = [];
+  @override
+  void initState() {
+    super.initState();
+    monday = days[0];
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      height: size.height / 2.2,
+      height: widget.size.height / 2.2,
       decoration: BoxDecoration(
         color:
             // Colors.amber,
@@ -149,23 +164,27 @@ class CreateRecordingTime extends StatelessWidget {
               isRadio: false,
               spacing: 8,
               runSpacing: 10,
-              
+
               mainGroupAlignment: MainGroupAlignment.start,
               groupRunAlignment: GroupRunAlignment.center,
               crossGroupAlignment: CrossGroupAlignment.start,
-              onSelected: (index, isSelected) =>
-                  print('$index button is selected'),
-              buttons: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+              onSelected: (index, isSelected) {
+                setState(() {
+                  // daysChosenAll = days[index]
+                });
+              print('$index button is ${isSelected ? 'selected' : 'unSe'}');
+
+              },
+              buttons: days,
               unselectedTextStyle: TextStyle(
                 fontWeight: FontWeight.normal,
                 color: Theme.of(context).highlightColor,
                 // fontSize: 7
               ),
               borderRadius: BorderRadius.circular(14),
-              
               // height: size.height * 0.087,
-              buttonWidth: size.width * 0.109,
-              buttonHeight: size.height * 0.08,
+              buttonWidth: widget.size.width * 0.109,
+              buttonHeight: widget.size.height * 0.08,
               unselectedColor: Colors.transparent,
               selectedColor: Theme.of(context).buttonColor,
               // borderRadius: BorderRadius.circular(30),
@@ -221,7 +240,7 @@ class CreateRecordingTime extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: size.width * 0.2),
+            margin: EdgeInsets.symmetric(horizontal: widget.size.width * 0.2),
             height: 110,
             child: Center(
               child: TextField(
@@ -265,7 +284,7 @@ class CreateRecordingTime extends StatelessWidget {
               ),
             ),
           ),
-          ApplyButton(size: size, text: 'Add', horizontal: 0.28)
+          ApplyButton(size: widget.size, text: 'Add', horizontal: 0.28)
         ],
       ),
     );
@@ -331,10 +350,7 @@ class RecordingTimesOptions extends StatelessWidget {
         days,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontWeight: FontWeight.w300,
-          fontSize: 16,
-          color: Colors.grey
-        ),
+            fontWeight: FontWeight.w300, fontSize: 16, color: Colors.grey),
       ),
       trailing: GestureDetector(
         onTap: press,

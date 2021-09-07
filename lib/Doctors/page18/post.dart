@@ -55,7 +55,7 @@ class _PostPageState extends State<PostPage> {
             Expanded(
               child: Container(
                 child: TableCalendar(
-                  rowHeight: 45,
+                  rowHeight: 40,
                   focusedDay: DateTime.now(),
                   firstDay: DateTime.utc(2010, 3, 14),
                   lastDay: DateTime.utc(2030, 3, 14),

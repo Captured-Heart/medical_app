@@ -70,7 +70,7 @@ class _AppointMentPageState extends State<AppointMentPage> {
               ),
               child: TableCalendar(
                 focusedDay: _focusedDay,
-                rowHeight: 50,
+                rowHeight: 43,
                 // availableCalendarFormats: ,
                 firstDay: DateTime.utc(2010, 3, 14),
                 lastDay: DateTime.utc(2030, 3, 14),
