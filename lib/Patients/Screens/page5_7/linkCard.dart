@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:medical_app/Patients/Screens/page11-14/docProfileRegistered.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:flash/flash.dart';
+import 'package:medical_app/firebase_Utils/authMethods.dart';
 import 'package:medical_app/firebase_Utils/database.dart';
 
 class LinkCardPage extends StatefulWidget {
@@ -48,7 +49,29 @@ class _LinkCardPageState extends State<LinkCardPage> {
       ),
     );
   }
+  dynamic docId;
+  Future<dynamic> getDocData(BuildContext context) async {
+    final uid = await authMethods.getCurrentUID();
 
+    final CollectionReference document = FirebaseFirestore.instance
+        .collection('patients')
+        .doc(uid)
+        .collection('Profile');
+
+    // return docId = document.get();
+    await document.get().then<dynamic>(
+      (QuerySnapshot snapshot) async {
+        setState(() {
+          docId = snapshot.docs.first.id;
+          // data = snapshot.docs.first;
+          print(docId);
+        });
+      },
+    );
+    // docId = document.document().documentID;
+  }
+
+AuthMethods authMethods = AuthMethods();
   DataBaseService dataBaseService = DataBaseService();
   @override
   Widget build(BuildContext context) {

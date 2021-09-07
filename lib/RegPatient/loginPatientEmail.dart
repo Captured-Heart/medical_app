@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:medical_app/Doctors/RegDoctor/patSignUp.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/firebase_Utils/database.dart';
 import 'package:medical_app/firebase_Utils/users.dart';
@@ -37,8 +38,8 @@ class _LoginPatientEmailState extends State<LoginPatientEmail> {
       if (_user.user!.emailVerified) {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MyHomePage()),
-        );
+          MaterialPageRoute(builder: (context) => PatSignUp(email: emailController.text),
+        ));
       } else {
         print('no sign in');
         // _showSnackBar('Please Verify your Email before you can Login');
@@ -293,7 +294,7 @@ class _LoginPatientEmailState extends State<LoginPatientEmail> {
                       // SizedBox(height: 80),
                       ApplyButton(
                         size: size,
-                        text: 'Login',
+                        text: 'Complete Sign up',
                         horizontal: 0.3,
                         press: _toLogin,
                       )

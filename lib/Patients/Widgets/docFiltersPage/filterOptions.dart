@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
-import 'package:medical_app/Doctors/RegDoctor/page18/profileSettings.dart';
+import 'package:medical_app/Doctors/page18/profileSettings.dart';
 import 'package:medical_app/Patients/Screens/page5_7/worriesPage.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/advSettings.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';

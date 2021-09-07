@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:medical_app/Doctors/RegDoctor/page18/profileSettings.dart';
+import 'package:medical_app/Doctors/page18/profileSettings.dart';
 import 'package:medical_app/Patients/Screens/page11-14/docProfileRegistered.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/Patients/Widgets/page15/RecordsProfileOptions.dart';

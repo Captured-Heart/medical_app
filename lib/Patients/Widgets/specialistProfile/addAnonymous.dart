@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:medical_app/Doctors/RegDoctor/page18/personalInfo.dart';
+import 'package:medical_app/Doctors/page18/personalInfo.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:flash/flash.dart';
 import 'package:medical_app/firebase_Utils/database.dart';

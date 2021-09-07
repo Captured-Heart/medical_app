@@ -4,15 +4,15 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:medical_app/Doctors/RegDoctor/page18/specialistOffice.dart';
+import 'package:medical_app/Doctors/page18/personalInfo.dart';
+import 'package:medical_app/Doctors/page18/profileSettings.dart';
+import 'package:medical_app/Doctors/page18/specialistOffice.dart';
 import 'package:medical_app/Patients/Screens/page5_7/linkCard.dart';
 import 'package:medical_app/Patients/Screens/page5_7/worriesPage.dart';
 import 'package:medical_app/Patients/Widgets/docFiltersPage/applyButton.dart';
 import 'package:medical_app/Patients/Widgets/page1-4_Widgets/topHeader.dart';
 import 'package:medical_app/firebase_Utils/database.dart';
 
-import 'page18/personalInfo.dart';
-import 'page18/profileSettings.dart';
 import 'package:path/path.dart' as path;
 
 class DocSignUp extends StatefulWidget {
